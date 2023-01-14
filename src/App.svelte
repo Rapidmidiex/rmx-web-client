@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
-    import Home from './pages/Home.svelte';
+    import Home from './lib/pages/Home.svelte';
 </script>
 
 <main>

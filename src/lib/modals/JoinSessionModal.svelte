@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { api } from '../api/api';
+    import { api } from '../../api/api';
     import { onMount } from 'svelte';
-    import Modal from '../lib/Modal.svelte';
-    import type { Session } from '../models/session';
+    import Modal from '../components/Modal.svelte';
+    import type { Session } from '../../models/session';
 
     export let closeFunc;
 

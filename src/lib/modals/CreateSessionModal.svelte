@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { api } from '../api/api';
-    import Modal from '../lib/Modal.svelte';
+    import { api } from '../../api/api';
+    import Modal from '../components/Modal.svelte';
 
     export let closeFunc;
 
