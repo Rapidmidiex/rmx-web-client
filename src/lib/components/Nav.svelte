@@ -18,7 +18,7 @@
             <p>Learn</p></Link>
 
         <a
-            href="https://github.com/rog-golang-buddies/rapidmidiex"
+            href="https://github.com/Rapidmidiex/rmx-web-client"
             target="_blank"
             rel="noopener noreferrer">
             <Icon name="github" />
