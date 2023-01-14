@@ -39,7 +39,7 @@
 </Modal>
 
 <style lang="scss">
-    .new_session-form {
+    form {
         width: 25rem;
         padding: 1rem;
         display: flex;

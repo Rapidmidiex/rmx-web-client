@@ -8,17 +8,17 @@
     export let height = 'auto';
 </script>
 
-<div transition:fade class="modal-con {className}" on:click|self={closeFunc}>
+<div transition:fade class="modal {className}" on:click|self={closeFunc}>
     <div
         transition:scale
         style="width: {width};height: {height};"
-        class="modal">
+    > 
         <slot />
     </div>
 </div>
 
 <style lang="scss">
-    .modal-con {
+    .modal {
         position: fixed;
         top: 0;
         left: 0;
@@ -29,7 +29,7 @@
         align-items: center;
         justify-content: center;
 
-        & > .modal {
+        & > div {
             background-color: #fff;
             border-radius: 0.3rem;
             box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
