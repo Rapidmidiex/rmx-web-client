@@ -8,8 +8,8 @@
     let bpm: number;
     function CreateSession() {
         api.post('/jam')
-            .then((res) => {
-                alert('session created. redirecting...');
+            .then(() => {
+                alert('Jam created. redirecting...');
             })
             .finally(() => {
                 closeFunc();
@@ -19,21 +19,21 @@
 
 <Modal {closeFunc}>
     <form class="new_session-form" on:submit|preventDefault={CreateSession}>
-        <h3>Start a new session</h3>
+        <h3>Start a new Jam</h3>
         <input
             bind:value={name}
             class="inpt"
             type="text"
             name="name"
             id="name"
-            placeholder="Session name (optional)" />
+            placeholder="Room name (optional)" />
         <input
             bind:value={bpm}
             class="inpt"
             type="number"
             name="bpm"
             id="bpm"
-            placeholder="BPM (will default to 120)" />
+            placeholder="BPM (default: 80)" />
         <button class="btn" type="submit">Start</button>
     </form>
 </Modal>

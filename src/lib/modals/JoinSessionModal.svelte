@@ -2,21 +2,20 @@
     import { api } from '../../api/api';
     import { onMount } from 'svelte';
     import Modal from '../components/Modal.svelte';
-    import type { Session } from '../../models/session';
+    import type { Room } from '../../models/room';
 
     export let closeFunc;
 
-    let sessions: Session[] = [];
+    let rooms: Room[] = [];
 
-    function LoadSessions() {
+    function LoadRooms() {
         api.get('/jam').then(({ data }) => {
-            console.log(data);
-            sessions = data['sessions'];
+            rooms = data['rooms'];
         });
     }
 
     onMount(() => {
-        LoadSessions();
+        LoadRooms();
     });
 </script>
 
@@ -29,16 +28,14 @@
                 name="search"
                 id="search"
                 placeholder="Search" />
-            <div>Sort by:</div>
         </div>
-        <ul class="session-list">
-            {#each sessions as session}
-                <li class="session">
+        <ul class="room-list">
+            {#each rooms as room}
+                <li class="room">
                     <div class="info">
                         <div class="name">
-                            {session.name ? session.name : session.sessionId}
+                            {room.name ? room.name : room.roomId}
                         </div>
-                        <div class="owner">not implemented</div>
                     </div>
                     <button class="btn">Join</button>
                 </li>
@@ -67,16 +64,15 @@
             }
         }
 
-        & > .session-list {
+        & > .room-list {
             width: 100%;
-            height: 100%;
-            padding: 2rem 0;
+            padding: 1rem 0;
             list-style: none;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
 
-            & > .session {
+            & > .room {
                 height: 10rem;
                 padding: 0.5rem;
                 box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
