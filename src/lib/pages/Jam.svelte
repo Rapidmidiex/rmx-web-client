@@ -8,7 +8,7 @@
 
     let ws: WebSocket;
     let jam: Jam;
-    let messages: any[] = [];
+    let messageEvents: MessageEvent[] = [];
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -19,7 +19,7 @@
     let mediaStream: MediaStream = null;
     let mediaStreamSource: MediaStreamAudioSourceNode = null;
     let isConfident = false;
-    let sensitivity = 0.05;
+    let sensitivity = 0.02;
     const octaveLength = 12;
     let pitch = 0;
     interface Note {
@@ -57,8 +57,7 @@
             rms += val * val;
         }
         rms = Math.sqrt(rms / SIZE);
-        if (rms < sensitivity)
-            return -1;
+        if (rms < sensitivity) return -1;
         let r1 = 0,
             r2 = SIZE - 1,
             thres = 0.2;
@@ -109,7 +108,7 @@
                 video: false,
             })
             .then((stream) => {
-                mediaStream = stream
+                mediaStream = stream;
                 gotStream();
                 startButtonDisabled = true;
             })
@@ -164,6 +163,9 @@
                     ...noteHistory,
                     { Name: note?.Name, Octave: note.Octave },
                 ];
+                // FIXME: still sends repeated notes.
+                // send new note to websocket
+                ws.send(note.Name);
             }
             note.Name = noteStrings[noteIdx % noteStrings.length];
             note.Octave = Math.floor(noteIdx / octaveLength) - 1;
@@ -183,23 +185,16 @@
 
     function toggleMic() {
         if (!micInit) {
-            initMic()
+            initMic();
+            micInit = true;
         }
 
         micOn = !micOn;
-        
+
         if (mediaStream) {
-            console.log("before loop")
-            console.log(mediaStream.getAudioTracks()[0])
-
-            mediaStream.getAudioTracks().forEach(track => {
-                track.enabled = micOn
-                console.log("in loop")
-                console.log(track)
-            })
-
-            console.log("after loop")
-            console.log(mediaStream.getAudioTracks()[0])
+            mediaStream.getAudioTracks().forEach((track) => {
+                track.enabled = micOn;
+            });
         }
     }
 
@@ -214,10 +209,9 @@
         connecWS();
         ws.onopen = (event: Event) => {
             Success('Connection established.');
-            ws.send('hello world!');
         };
         ws.onmessage = (event: MessageEvent) => {
-            messages.push(event.data);
+            messageEvents = [...messageEvents, event];
         };
         ws.onerror = (event: ErrorEvent) => {
             Failure(event.error);
@@ -233,34 +227,12 @@
     <div class="jam-content">
         <div class="input">
             <div class="notes">
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('G')}>G</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('A')}>A</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('B')}>B</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('C')}>C</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('D')}>D</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('E')}>E</button>
-                <button
-                    class="btn"
-                    type="button"
-                    on:click={() => ws.send('F')}>F</button>
+                {#each noteStrings as note}
+                    <button
+                        class="btn"
+                        type="button"
+                        on:click={() => ws.send(note)}>{note}</button>
+                {/each}
             </div>
             <div class="audio">
                 <button
@@ -271,13 +243,9 @@
             </div>
         </div>
         <div class="messages">
-            {#each messages as msg}
-                <div class="message">
-                    <p>{msg}</p>
-                </div>
+            {#each messageEvents as msg}
+                <p>{msg.data}</p>
             {/each}
-            <p>{JSON.stringify(note)}</p>
-
         </div>
     </div>
     <div class="jam-info">
@@ -296,7 +264,10 @@
 
         .jam-info {
             width: 25rem;
-            background-color: antiquewhite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: aquamarine;
         }
 
         .jam-content {
@@ -318,7 +289,6 @@
                 }
 
                 .notes {
-                    background-color: aquamarine;
                     display: flex;
                     flex-wrap: wrap;
                     align-items: center;
@@ -331,7 +301,6 @@
                 }
 
                 .audio {
-                    background-color: chocolate;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -345,10 +314,21 @@
             }
 
             .messages {
-                background-color: aqua;
                 display: flex;
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: column-reverse;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+                overflow: auto;
+            
+                & > p {
+                    background-color: #000;
+                    padding: 1rem 3rem;
+                    color: #fff;
+                    font-size: 2rem;
+                    border-radius: 0.3rem;
+                    margin: 0.5rem;
+                }
             }
         }
     }
