@@ -5,6 +5,7 @@
     import { JamStore } from '../../store/jam';
     import { Failure, Info, Success } from '../notify/notify';
     import Icon from '../components/Icon.svelte';
+    import { navigate } from 'svelte-navigator';
 
     let ws: WebSocket;
     let jam: Jam;
@@ -199,7 +200,16 @@
     }
 
     function connecWS() {
-        ws = new WebSocket(`ws://${BASE_URL}/ws/jam/${jam.id}`);
+        if (jam) {
+            ws = new WebSocket(`ws://${BASE_URL}/ws/jam/${jam.id}`);
+            return
+        }
+
+        Failure("Jam not found")
+        if(ws) {
+            ws.close()
+        }
+        navigate("/", {replace: true})
     }
 
     onMount(() => {
