@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { BASE_URL } from '../../api/api';
+    import { WS_BASE_URL } from '../../api/api';
     import { onMount } from 'svelte';
     import type { Jam } from '../../models/jam';
     import { JamStore } from '../../store/jam';
@@ -201,7 +201,7 @@
 
     function connecWS() {
         if (jam) {
-            ws = new WebSocket(`ws://${BASE_URL}/ws/jam/${jam.id}`);
+            ws = new WebSocket(`${WS_BASE_URL}/jam/${jam.id}`);
             return
         }
 
