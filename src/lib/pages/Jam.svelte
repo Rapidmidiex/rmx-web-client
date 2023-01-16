@@ -19,7 +19,7 @@
     let mediaStream: MediaStream = null;
     let mediaStreamSource: MediaStreamAudioSourceNode = null;
     let isConfident = false;
-    let sensitivity = 0.02;
+    let sensitivity = 0.05;
     const octaveLength = 12;
     let pitch = 0;
     interface Note {
@@ -240,6 +240,14 @@
                     type="button"
                     on:click={toggleMic}
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></button>
+                <input
+                id="mic-sensitivity"
+                    type="range"
+                    bind:value={sensitivity}
+                    min="0.01"
+                    max="0.2"
+                    step="0.01" />
+                    <label for="mic-sensitivity">the higher the value, the lower the sensitivity</label>
             </div>
         </div>
         <div class="messages">
@@ -302,8 +310,9 @@
 
                 .audio {
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    justify-content: center;
+                    justify-content: space-around;
 
                     & > button {
                         padding: 4rem;
@@ -320,7 +329,7 @@
                 justify-content: center;
                 padding: 1rem;
                 overflow: auto;
-            
+
                 & > p {
                     background-color: #000;
                     padding: 1rem 3rem;
