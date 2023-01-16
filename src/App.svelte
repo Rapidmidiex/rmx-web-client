@@ -1,12 +1,16 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
     import Home from './lib/pages/Home.svelte';
+    import Jam from './lib/pages/Jam.svelte';
 </script>
 
 <main>
     <Router>
         <Route path="/">
             <Home />
+        </Route>
+        <Route path="/jam">
+            <Jam />
         </Route>
     </Router>
 </main>

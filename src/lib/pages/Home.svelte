@@ -25,7 +25,7 @@
             <br />
             <div class="session-con">
                 <button class="btn" on:click={toggleCreateSessionModal}
-                    >Start a new session</button>
+                    >Start a new Jam</button>
                 <button class="btn" on:click={toggleJoinModal}>Join</button>
             </div>
         </section>

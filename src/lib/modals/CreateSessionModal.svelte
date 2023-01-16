@@ -1,15 +1,28 @@
 <script lang="ts">
+    import type { CreateJamData } from '../../models/jam';
     import { api } from '../../api/api';
     import Modal from '../components/Modal.svelte';
+    import type { AxiosError } from 'axios';
+    import { Success, Failure } from '../notify/notify';
 
-    export let closeFunc;
+    export let closeFunc: Function;
 
-    let name: string = "";
+    let name: string;
+    let capacity: number;
     let bpm: number;
     function CreateSession() {
-        api.post('/jam')
+        const payload: CreateJamData = {
+            name,
+            capacity,
+            bpm
+        }
+
+        api.post('/jam', JSON.stringify(payload))
             .then(() => {
-                alert('Jam created. redirecting...');
+                Success("new Jam room created. redirecting...")
+            })
+            .catch((error: AxiosError) => {
+                Failure(error.message)
             })
             .finally(() => {
                 closeFunc();
@@ -28,12 +41,19 @@
             id="name"
             placeholder="Room name (optional)" />
         <input
+            bind:value={capacity}
+            class="inpt"
+            type="number"
+            name="capacity"
+            id="capacity"
+            placeholder="Room capacity (default: 10)" />
+        <input
             bind:value={bpm}
             class="inpt"
             type="number"
             name="bpm"
             id="bpm"
-            placeholder="BPM (default: 80)" />
+            placeholder="BPM (default: 120)" />
         <button class="btn" type="submit">Start</button>
     </form>
 </Modal>
@@ -46,12 +66,17 @@
         align-items: center;
         flex-direction: column;
 
-        & > input {
-            width: 100%;
+        & > h3 {
             margin: 1rem 0;
         }
 
+        & > input {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
         & > button {
+            margin: 1rem 0 0rem 0;
             padding: 1rem;
             width: 100%;
         }
