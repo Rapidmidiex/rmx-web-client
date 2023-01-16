@@ -12,7 +12,7 @@
     let jams: GetJamData[];
 
     function joinJam(id: string) {
-        const jam = jams.find(jam => jam.id = id)
+        const jam = jams.find(jam => jam.id === id)
         JamStore.set({
             id: jam.id,
             name: jam.name,
@@ -24,8 +24,8 @@
     }
 
     function loadJams() {
-        api.get('/jam').then(({ data }) => {
-            jams = data['rooms'];
+        api.get<{rooms: GetJamData[]}>('/jam').then(({ data }) => {
+            jams = data.rooms;
         })
         .catch((error: AxiosError) => {
             Failure(error.message)
