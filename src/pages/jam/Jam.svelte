@@ -117,16 +117,16 @@
         updatePitch();
     }
 
-    function noteFromPitch(frequency) {
+    function noteFromPitch(frequency: number) {
         var noteNum = octaveLength * (Math.log(frequency / 440) / Math.log(2));
         return Math.round(noteNum) + 69;
     }
 
-    function frequencyFromNoteNumber(note) {
+    function frequencyFromNoteNumber(note: number) {
         return 440 * Math.pow(2, (note - 69) / octaveLength);
     }
 
-    function centsOffFromPitch(frequency, note) {
+    function centsOffFromPitch(frequency: number, note: number) {
         return Math.floor(
             (octaveLength *
                 100 *
@@ -135,8 +135,8 @@
         );
     }
 
-    let buflen = 2048;
-    let buf = new Float32Array(buflen);
+    let bufLen = 2048;
+    let buf = new Float32Array(bufLen);
 
     function updatePitch() {
         analyser.getFloatTimeDomainData(buf);
@@ -156,9 +156,9 @@
                     Number: noteNum,
                 };
 
-                let msg: WSMsg = {
+                let msg: WSMsg<MIDIMsg> = {
                     type: WSMsgTyp.MIDI,
-                    msg: midi,
+                    payload: midi,
                 };
 
                 sendWSMsg(msg);
@@ -197,7 +197,7 @@
         }
     }
 
-    function connecWS() {
+    function connectWS() {
         if (jam) {
             JamStore.set({
                 ...jam,
@@ -214,21 +214,18 @@
         navigate('/', { replace: true });
     }
 
-    function sendWSMsg(msg: WSMsg) {
+    function sendWSMsg(msg: WSMsg<any>) {
         jam.ws.send(JSON.stringify(msg));
     }
 
-    function handleWSMsg(msg: WSMsg) {
+    function handleWSMsg(msg: WSMsg<MIDIMsg | string>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
-                JamTextStore.set([...textMsgs, msg.msg]);
-                break;
-            case WSMsgTyp.JSON:
-                console.log(msg.msg);
+                JamTextStore.set([...textMsgs, msg.payload as string]);
                 break;
             case WSMsgTyp.MIDI:
-                midiDiv.scrollTop = midiDiv.scrollHeight
-                JamMIDIStore.set([...midiMsgs, msg.msg]);
+                midiDiv.scrollTop = midiDiv.scrollHeight;
+                JamMIDIStore.set([...midiMsgs, msg.payload as MIDIMsg]);
                 break;
             default:
                 Warning('Unknown message type');
@@ -245,12 +242,12 @@
         JamTextStore.subscribe((v) => {
             textMsgs = v;
         });
-        connecWS();
+
         jam.ws.onopen = (event: Event) => {
             Success('Connection established.');
         };
         jam.ws.onmessage = (event: MessageEvent) => {
-            let msg: WSMsg = JSON.parse(event.data);
+            let msg: WSMsg<any> = JSON.parse(event.data);
             handleWSMsg(msg);
         };
         jam.ws.onerror = (event: ErrorEvent) => {
@@ -260,13 +257,17 @@
         jam.ws.onclose = (event: CloseEvent) => {
             Info('Connection was closed.');
         };
+
+        connectWS();
     });
 </script>
 
 <div class="jam page">
     <div class="jam-content">
         <div class="jam-player">
-            <div bind:this={midiDiv} class="messages">
+            <div
+                bind:this={midiDiv}
+                class="messages">
                 {#if midiMsgs}
                     {#each midiMsgs as msg}
                         <p>{msg.Number}</p>

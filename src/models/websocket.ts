@@ -1,10 +1,9 @@
 export enum WSMsgTyp {
     TEXT,
-    JSON,
-    MIDI
+    MIDI,
 }
 
-export interface WSMsg {
+export interface WSMsg<T> {
     type: WSMsgTyp;
-    msg: any;
-} 
+    payload: T;
+}

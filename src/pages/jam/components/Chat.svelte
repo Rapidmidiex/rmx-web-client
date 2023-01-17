@@ -10,22 +10,22 @@
     let messages: string[];
     let messagesDiv: HTMLDivElement = null;
 
-    function sendWSMsg(msg: WSMsg) {
+    function sendWSMsg(msg: WSMsg<string>) {
         jam.ws.send(JSON.stringify(msg));
     }
 
     function sendMsg() {
-        let msg: WSMsg = {
+        let msg: WSMsg<string> = {
             type: WSMsgTyp.TEXT,
-            msg: message,
+            payload: message,
         };
 
         sendWSMsg(msg);
         // should scroll immediately on user input
         // and listen for new messages then scroll to bottom
         setTimeout(() => {
-            messagesDiv.scrollTop = messagesDiv.scrollHeight
-        }, 500 )
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }, 500);
     }
 
     onMount(() => {
@@ -38,8 +38,10 @@
     });
 </script>
 
-<div  class="chat">
-    <div bind:this={messagesDiv} class="messages">
+<div class="chat">
+    <div
+        bind:this={messagesDiv}
+        class="messages">
         {#if messages}
             {#each messages as msg}
                 <p>{msg}</p>
