@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { CreateJamData } from '../../models/jam';
-    import { api } from '../../api/api';
-    import Modal from '../components/Modal.svelte';
+    import type { CreateJamData } from '../../../models/jam';
+    import Modal from '../../../lib/components/Modal.svelte';
     import type { AxiosError } from 'axios';
-    import { Success, Failure } from '../notify/notify';
+    import { api } from '../../../api/api';
+    import { Failure, Success } from '../../../lib/notify/notify';
 
     export let closeFunc: Function;
 

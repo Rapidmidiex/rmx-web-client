@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { api } from '../../api/api';
+    import { api } from '../../../api/api';
     import { onMount } from 'svelte';
-    import Modal from '../components/Modal.svelte';
-    import type { GetJamData } from '../../models/jam';
+    import Modal from '../../../lib/components/Modal.svelte';
+    import type { GetJamData } from '../../../models/jam';
     import type { AxiosError } from 'axios';
     import { navigate } from 'svelte-navigator';
-    import { JamStore } from '../../store/jam';
-    import { Failure } from '../notify/notify';
+    import { JamStore } from '../../../store/jam';
+    import { Failure } from '../../../lib/notify/notify';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
@@ -18,6 +18,7 @@
             name: jam.name,
             bpm: jam.bpm,
             users: [],
+            ws: null,
         })
 
         navigate("/jam", {replace: true})
@@ -72,7 +73,7 @@
         width: 30rem;
         height: 80vh;
         background-color: #fff;
-        border-radius: 0.3rem;
+        border-radius: 0.5rem;
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -104,12 +105,12 @@
                 margin: 0.5rem 0;
                 padding: 0.5rem;
                 box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
-                border-radius: 0.3rem;
+                border-radius: 0.5rem;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 flex-direction: column;
-                word-wrap: break-word;
+                word-break: break-all;
 
                 & > .info {
                     width: 100%;

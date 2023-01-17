@@ -31,7 +31,7 @@ import { fade, scale } from 'svelte/transition';
 
         & > div {
             background-color: #fff;
-            border-radius: 0.3rem;
+            border-radius: 0.5rem;
             box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
         }
     }

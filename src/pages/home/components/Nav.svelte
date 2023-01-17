@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Link } from 'svelte-navigator';
-    import Icon from './Icon.svelte';
+    import Icon from '../../../lib/components/Icon.svelte';
 </script>
 
 <nav>
@@ -62,7 +62,7 @@
                     justify-content: center;
                     background-color: #000000; // needs theming
                     color: #fff; // needs theming
-                    border-radius: 0.3rem;
+                    border-radius: 0.5rem;
                     text-decoration: none;
                     transition: 0.3s ease;
                 }
@@ -89,7 +89,7 @@
                 width: 4rem;
                 height: 4rem;
                 margin: 0.25rem 0.5rem;
-                border-radius: 0.3rem; // needs theming
+                border-radius: 0.5rem; // needs theming
                 transition: 0.3s ease; // needs theming
             }
 
