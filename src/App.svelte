@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
-    import Home from './lib/pages/Home.svelte';
-    import Jam from './lib/pages/Jam.svelte';
+    import Home from './pages/home/Home.svelte';
+    import Jam from './pages/jam/Jam.svelte';
 </script>
 
 <main>
@@ -32,6 +32,7 @@
     :global(.page) {
         width: 100vw;
         height: 100vh;
+        overflow: hidden;
     }
 
     :global(.inpt) {
@@ -39,8 +40,8 @@
         outline: none;
         border: none;
         background-color: #dadada;
-        border-top-left-radius: 0.3rem;
-        border-top-right-radius: 0.3rem;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
         border-bottom: 3px solid #808080;
         transition: 0.3s ease;
     }
@@ -55,14 +56,14 @@
         outline: none;
         background-color: #000;
         color: #fff;
-        border-radius: 0.3rem;
+        border-radius: 0.5rem;
         font-size: 1rem;
         cursor: pointer;
         transition: 0.3s ease;
     }
 
     :global(.btn:hover) {
-        background-color: #fff;
+        background-color: transparent;
         color: #000;
     }
 </style>
