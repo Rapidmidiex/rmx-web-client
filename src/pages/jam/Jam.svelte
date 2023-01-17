@@ -243,6 +243,9 @@
             textMsgs = v;
         });
 
+        // Initializes websocket and jam variable
+        connectWS();
+
         jam.ws.onopen = (event: Event) => {
             Success('Connection established.');
         };
@@ -257,8 +260,6 @@
         jam.ws.onclose = (event: CloseEvent) => {
             Info('Connection was closed.');
         };
-
-        connectWS();
     });
 </script>
 
