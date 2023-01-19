@@ -2,7 +2,7 @@
     import { api, WS_BASE_URL } from '../../api/api';
     import { onMount } from 'svelte';
     import { NoteState, type GetJamData, type MIDIMsg } from '../../models/jam';
-    import { JamMIDIStore, JamStore, JamTextStore } from '../../store/jam';
+    import { JamStore, JamTextStore } from '../../store/jam';
     import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
     import Icon from '../../lib/components/Icon.svelte';
     import { navigate } from 'svelte-navigator';
@@ -11,6 +11,7 @@
     import type { AxiosError } from 'axios';
 
     export let jamID: string;
+    let midi: MIDIMsg;
     let micOn: boolean = false;
     let micInit: boolean = false;
     let midiDiv: HTMLDivElement;
@@ -211,11 +212,7 @@
                 ]);
                 break;
             case WSMsgTyp.MIDI:
-                midiDiv.scrollTop = midiDiv.scrollHeight;
-                JamMIDIStore.update((items) => [
-                    ...items,
-                    msg.payload as MIDIMsg,
-                ]);
+                midi = msg.payload as MIDIMsg;
                 break;
             default:
                 Warning('Unknown message type');
@@ -248,10 +245,8 @@
             <div
                 bind:this={midiDiv}
                 class="messages">
-                {#if $JamMIDIStore.length > 0}
-                    {#each $JamMIDIStore as msg}
-                        <p>{msg.Number}</p>
-                    {/each}
+                {#if midi}
+                    <p>{midi.Number}</p>
                 {:else}
                     <p>No message available</p>
                 {/if}
@@ -313,10 +308,8 @@
 
                 .messages {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 1rem;
                     overflow: auto;
 
                     & > p {
@@ -325,7 +318,6 @@
                         color: #fff;
                         font-size: 2rem;
                         border-radius: 0.5rem;
-                        margin: 0.5rem;
                     }
                 }
             }
