@@ -1,17 +1,15 @@
 <script lang="ts">
     import type { Jam } from '../../../models/jam';
     import { JamStore, JamTextStore } from '../../../store/jam';
-    import { onMount, SvelteComponent } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import Icon from '../../../lib/components/Icon.svelte';
     import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
 
-    let jam: Jam;
     let message: string;
-    let messages: string[];
     let messagesDiv: HTMLDivElement = null;
 
     function sendWSMsg(msg: WSMsg<string>) {
-        jam.ws.send(JSON.stringify(msg));
+        $JamStore.ws.send(JSON.stringify(msg));
     }
 
     function sendMsg() {
@@ -27,23 +25,14 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
     }
-
-    onMount(() => {
-        JamStore.subscribe((v) => {
-            jam = v;
-        });
-        JamTextStore.subscribe((v) => {
-            messages = v;
-        });
-    });
 </script>
 
 <div class="chat">
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if messages}
-            {#each messages as msg}
+        {#if $JamTextStore.length > 0}
+            {#each $JamTextStore as msg}
                 <p>{msg}</p>
             {/each}
         {:else}

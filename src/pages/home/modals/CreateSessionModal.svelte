@@ -1,9 +1,10 @@
 <script lang="ts">
-    import type { CreateJamData } from '../../../models/jam';
+    import type { CreateJamData, GetJamData } from '../../../models/jam';
     import Modal from '../../../lib/components/Modal.svelte';
     import type { AxiosError } from 'axios';
     import { api } from '../../../api/api';
     import { Failure, Success } from '../../../lib/notify/notify';
+    import { navigate } from 'svelte-navigator';
 
     export let closeFunc: Function;
 
@@ -17,9 +18,10 @@
             bpm
         }
 
-        api.post('/jam', JSON.stringify(payload))
-            .then(() => {
+        api.post<GetJamData>('/jam', JSON.stringify(payload))
+            .then(({data}) => {
                 Success("new Jam room created. redirecting...")
+                navigate(`/jam/${data.id}`, {replace: true})
             })
             .catch((error: AxiosError) => {
                 Failure(error.message)
