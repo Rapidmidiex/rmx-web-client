@@ -1,7 +1,12 @@
 <script lang="ts">
     import { api, WS_BASE_URL } from '../../api/api';
-    import { onDestroy, onMount } from 'svelte';
-    import { NoteState, type GetJamData, type Jam, type MIDIMsg } from '../../models/jam';
+    import { onMount } from 'svelte';
+    import {
+        NoteState,
+        type GetJamData,
+        type Jam,
+        type MIDIMsg,
+    } from '../../models/jam';
     import { JamMIDIStore, JamStore, JamTextStore } from '../../store/jam';
     import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
     import Icon from '../../lib/components/Icon.svelte';
@@ -182,20 +187,21 @@
     }
 
     function initJam() {
-        console.log(jamID)
-        api.get<GetJamData>(`/jam/${jamID}`)
-            .then(({data}) => {
+        console.log(jamID);
+        return api
+            .get<GetJamData>(`/jam/${jamID}`)
+            .then(({ data }) => {
                 JamStore.set({
                     ...data,
                     players: [],
                     ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
-                })
-                Success("Jam data loaded")
+                });
+                Success('Jam data loaded');
             })
             .catch((err: AxiosError) => {
-                Failure(err.message)
-                navigate("/", {replace: true})
-            })
+                Failure(err.message);
+                navigate('/', { replace: true });
+            });
     }
 
     function sendWSMsg(msg: WSMsg<any>) {
@@ -205,21 +211,25 @@
     function handleWSMsg(msg: WSMsg<MIDIMsg | string>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
-                JamTextStore.update(items => ([...items, msg.payload as string]));
+                JamTextStore.update((items) => [
+                    ...items,
+                    msg.payload as string,
+                ]);
                 break;
             case WSMsgTyp.MIDI:
                 midiDiv.scrollTop = midiDiv.scrollHeight;
-                JamMIDIStore.update(items => ([...items, msg.payload as MIDIMsg]));
+                JamMIDIStore.update((items) => [
+                    ...items,
+                    msg.payload as MIDIMsg,
+                ]);
                 break;
             default:
                 Warning('Unknown message type');
         }
     }
 
-    onMount(() => {
-        initJam()
-
-
+    onMount(async () => {
+        await initJam();
 
         $JamStore.ws.onopen = (event: Event) => {
             Success('Connection established.');
