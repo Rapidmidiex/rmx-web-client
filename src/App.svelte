@@ -9,8 +9,11 @@
         <Route path="/">
             <Home />
         </Route>
-        <Route path="/jam">
-            <Jam />
+        <!--should this pass params to the Jam component or read directly from JamStore?-->
+        <Route
+            path="/jam/:id"
+            let:params>
+            <Jam jamID={params.id} />
         </Route>
     </Router>
 </main>

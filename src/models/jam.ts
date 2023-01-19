@@ -1,8 +1,9 @@
 export interface Jam {
     id: string;
     name: string;
+    capacity: number;
     bpm: number;
-    users: string[];
+    players: string[];
     ws: WebSocket;
 }
 
@@ -15,17 +16,18 @@ export interface CreateJamData {
 export interface GetJamData {
     id: string;
     name: string;
+    capacity: number;
     bpm: number;
 }
 
 export enum NoteState {
     NOTE_OFF,
-    NOTE_ON
+    NOTE_ON,
 }
 
 export interface MIDIMsg {
-    State:    NoteState;
+    State: NoteState;
     // Channel:  number; // not required
-    Number:   number;
+    Number: number;
     // Velocity: number; // not required
 }

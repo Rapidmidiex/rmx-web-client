@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { WS_BASE_URL } from '../../api/api';
+    import { api, WS_BASE_URL } from '../../api/api';
     import { onMount } from 'svelte';
-    import { NoteState, type Jam, type MIDIMsg } from '../../models/jam';
-    import { JamMIDIStore, JamStore, JamTextStore } from '../../store/jam';
+    import { NoteState, type GetJamData, type MIDIMsg } from '../../models/jam';
+    import { JamStore, JamTextStore } from '../../store/jam';
     import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
     import Icon from '../../lib/components/Icon.svelte';
     import { navigate } from 'svelte-navigator';
     import { WSMsgTyp, type WSMsg } from '../../models/websocket';
     import Chat from './components/Chat.svelte';
+    import type { AxiosError } from 'axios';
 
-    let jam: Jam;
-    let midiMsgs: MIDIMsg[];
-    let textMsgs: string[];
+    export let jamID: string;
+    let midi: MIDIMsg;
     let micOn: boolean = false;
     let micInit: boolean = false;
     let midiDiv: HTMLDivElement;
@@ -25,9 +25,8 @@
     let sensitivity = 0.05;
     const octaveLength = 12;
     let pitch = 0;
-    let deviation = 0;
     let noteHistory: number[] = [];
-    const historyLength = 10;
+    const historyLength = 2;
     let noteStrings = [
         'C',
         'C#',
@@ -122,19 +121,6 @@
         return Math.round(noteNum) + 69;
     }
 
-    function frequencyFromNoteNumber(note: number) {
-        return 440 * Math.pow(2, (note - 69) / octaveLength);
-    }
-
-    function centsOffFromPitch(frequency: number, note: number) {
-        return Math.floor(
-            (octaveLength *
-                100 *
-                Math.log(frequency / frequencyFromNoteNumber(note))) /
-                Math.log(2)
-        );
-    }
-
     let bufLen = 2048;
     let buf = new Float32Array(bufLen);
 
@@ -163,7 +149,6 @@
 
                 sendWSMsg(msg);
             }
-            deviation = centsOffFromPitch(pitch, noteNum);
         }
         requestAnimationFrame(updatePitch);
     }
@@ -197,67 +182,58 @@
         }
     }
 
-    function connectWS() {
-        if (jam) {
-            JamStore.set({
-                ...jam,
-                ws: new WebSocket(`${WS_BASE_URL}/jam/${jam.id}`),
+    function initJam() {
+        return api
+            .get<GetJamData>(`/jam/${jamID}`)
+            .then(({ data }) => {
+                JamStore.set({
+                    ...data,
+                    players: [],
+                    ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
+                });
+                Success('Jam data loaded');
+            })
+            .catch((err: AxiosError) => {
+                Failure(err.message);
+                navigate('/', { replace: true });
             });
-            return;
-        }
-
-        Failure('Jam not found');
-        if (jam && jam.ws) {
-            jam.ws.close();
-        }
-
-        navigate('/', { replace: true });
     }
 
     function sendWSMsg(msg: WSMsg<any>) {
-        jam.ws.send(JSON.stringify(msg));
+        $JamStore.ws.send(JSON.stringify(msg));
     }
 
     function handleWSMsg(msg: WSMsg<MIDIMsg | string>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
-                JamTextStore.set([...textMsgs, msg.payload as string]);
+                JamTextStore.update((items) => [
+                    ...items,
+                    msg.payload as string,
+                ]);
                 break;
             case WSMsgTyp.MIDI:
-                midiDiv.scrollTop = midiDiv.scrollHeight;
-                JamMIDIStore.set([...midiMsgs, msg.payload as MIDIMsg]);
+                midi = msg.payload as MIDIMsg;
                 break;
             default:
                 Warning('Unknown message type');
         }
     }
 
-    onMount(() => {
-        JamStore.subscribe((v) => {
-            jam = v;
-        });
-        JamMIDIStore.subscribe((v) => {
-            midiMsgs = v;
-        });
-        JamTextStore.subscribe((v) => {
-            textMsgs = v;
-        });
+    onMount(async () => {
+        await initJam();
 
-        // Initializes websocket and jam variable
-        connectWS();
-
-        jam.ws.onopen = (event: Event) => {
+        $JamStore.ws.onopen = (event: Event) => {
             Success('Connection established.');
         };
-        jam.ws.onmessage = (event: MessageEvent) => {
+        $JamStore.ws.onmessage = (event: MessageEvent) => {
             let msg: WSMsg<any> = JSON.parse(event.data);
             handleWSMsg(msg);
         };
-        jam.ws.onerror = (event: ErrorEvent) => {
+        $JamStore.ws.onerror = (event: ErrorEvent) => {
             Failure(event.error);
-            jam.ws.close();
+            $JamStore.ws.close();
         };
-        jam.ws.onclose = (event: CloseEvent) => {
+        $JamStore.ws.onclose = (event: CloseEvent) => {
             Info('Connection was closed.');
         };
     });
@@ -269,10 +245,8 @@
             <div
                 bind:this={midiDiv}
                 class="messages">
-                {#if midiMsgs}
-                    {#each midiMsgs as msg}
-                        <p>{msg.Number}</p>
-                    {/each}
+                {#if midi}
+                    <p>{midi.Number}</p>
                 {:else}
                     <p>No message available</p>
                 {/if}
@@ -334,10 +308,8 @@
 
                 .messages {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 1rem;
                     overflow: auto;
 
                     & > p {
@@ -346,7 +318,6 @@
                         color: #fff;
                         font-size: 2rem;
                         border-radius: 0.5rem;
-                        margin: 0.5rem;
                     }
                 }
             }

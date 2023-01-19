@@ -5,36 +5,40 @@
     import type { GetJamData } from '../../../models/jam';
     import type { AxiosError } from 'axios';
     import { navigate } from 'svelte-navigator';
-    import { JamStore } from '../../../store/jam';
     import { Failure } from '../../../lib/notify/notify';
+    import fuzzysort from 'fuzzysort';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
+    let searchResult: Fuzzysort.KeyResults<GetJamData>;
+    let jamsProgress: string = 'Loading...';
+    let search: string;
 
     function joinJam(id: string) {
-        const jam = jams.find(jam => jam.id === id)
-        JamStore.set({
-            id: jam.id,
-            name: jam.name,
-            bpm: jam.bpm,
-            users: [],
-            ws: null,
-        })
-
-        navigate("/jam", {replace: true})
+        navigate(`/jam/${id}`, { replace: true });
     }
 
     function loadJams() {
-        api.get<{rooms: GetJamData[]}>('/jam').then(({ data }) => {
-            jams = data.rooms;
-        })
-        .catch((error: AxiosError) => {
-            Failure(error.message)
-        })
+        return api
+            .get<{ rooms: GetJamData[] }>('/jam')
+            .then(({ data }) => {
+                jams = data.rooms;
+            })
+            .catch((error: AxiosError) => {
+                Failure(error.message);
+                jamsProgress = "Couldn't load Jams list";
+            });
     }
 
-    onMount(() => {
-        loadJams();
+    function searchJams() {
+        searchResult = fuzzysort.go<GetJamData>(search, jams, {
+            all: false,
+            key: 'name',
+        });
+    }
+
+    onMount(async () => {
+        await loadJams();
     });
 </script>
 
@@ -44,26 +48,50 @@
             <input
                 class="inpt"
                 type="text"
+                bind:value={search}
+                on:input={searchJams}
                 name="search"
                 id="search"
                 placeholder="Search" />
         </div>
         <ul class="jams-list">
             {#if jams}
-                {#each jams as jam}
-                    <li class="jam">
-                        <div class="info">
-                            <div class="name">
-                                {jam.name ? jam.name : jam.id}
-                            </div>
-                        </div>
-                        <button class="btn" on:click={() => joinJam(jam.id)}>Join</button>
-                    </li>
-                {/each}
+                {#if jams.length > 0}
+                    {#if searchResult && searchResult.length > 0}
+                        {#each searchResult as jam}
+                            <li class="jam">
+                                <div class="info">
+                                    <div class="name">
+                                        {jam.obj.name}
+                                    </div>
+                                </div>
+                                <button
+                                    class="btn"
+                                    on:click={() => joinJam(jam.obj.id)}
+                                    >Join</button>
+                            </li>
+                        {/each}
+                    {:else}
+                        {#each jams as jam}
+                            <li class="jam">
+                                <div class="info">
+                                    <div class="name">
+                                        {jam.name ? jam.name : jam.id}
+                                    </div>
+                                </div>
+                                <button
+                                    class="btn"
+                                    on:click={() => joinJam(jam.id)}
+                                    >Join</button>
+                            </li>
+                        {/each}
+                    {/if}
+                {:else}
+                    <h2>No Jam room created yet</h2>
+                {/if}
             {:else}
-                <h2>Couldn't load Jams list</h2>
+                <h2>{jamsProgress}</h2>
             {/if}
-            
         </ul>
     </div>
 </Modal>
