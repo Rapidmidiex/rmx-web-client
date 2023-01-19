@@ -19,7 +19,8 @@
     }
 
     function loadJams() {
-        api.get<{ rooms: GetJamData[] }>('/jam')
+        return api
+            .get<{ rooms: GetJamData[] }>('/jam')
             .then(({ data }) => {
                 jams = data.rooms;
             })
@@ -36,8 +37,8 @@
         });
     }
 
-    onMount(() => {
-        loadJams();
+    onMount(async () => {
+        await loadJams();
     });
 </script>
 
