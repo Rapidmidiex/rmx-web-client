@@ -6,30 +6,34 @@
     import type { AxiosError } from 'axios';
     import { navigate } from 'svelte-navigator';
     import { Failure } from '../../../lib/notify/notify';
-    import fuzzysort from "fuzzysort"
+    import fuzzysort from 'fuzzysort';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
     let searchResult: Fuzzysort.KeyResults<GetJamData>;
-    let jamsProgress: string = "Loading...";
+    let jamsProgress: string = 'Loading...';
     let search: string;
 
     function joinJam(id: string) {
-        navigate(`/jam/${id}`, {replace: true})
+        navigate(`/jam/${id}`, { replace: true });
     }
 
     function loadJams() {
-        api.get<{rooms: GetJamData[]}>('/jam').then(({ data }) => {
-            jams = data.rooms;
-        })
-        .catch((error: AxiosError) => {
-            Failure(error.message)
-            jamsProgress = "Couldn't load Jams list"
-        })
+        api.get<{ rooms: GetJamData[] }>('/jam')
+            .then(({ data }) => {
+                jams = data.rooms;
+            })
+            .catch((error: AxiosError) => {
+                Failure(error.message);
+                jamsProgress = "Couldn't load Jams list";
+            });
     }
 
     function searchJams() {
-        searchResult = fuzzysort.go<GetJamData>(search, jams, {all: false, key: "name"})
+        searchResult = fuzzysort.go<GetJamData>(search, jams, {
+            all: false,
+            key: 'name',
+        });
     }
 
     onMount(() => {
@@ -60,7 +64,10 @@
                                         {jam.obj.name}
                                     </div>
                                 </div>
-                                <button class="btn" on:click={() => joinJam(jam.obj.id)}>Join</button>
+                                <button
+                                    class="btn"
+                                    on:click={() => joinJam(jam.obj.id)}
+                                    >Join</button>
                             </li>
                         {/each}
                     {:else}
@@ -71,7 +78,10 @@
                                         {jam.name ? jam.name : jam.id}
                                     </div>
                                 </div>
-                                <button class="btn" on:click={() => joinJam(jam.id)}>Join</button>
+                                <button
+                                    class="btn"
+                                    on:click={() => joinJam(jam.id)}
+                                    >Join</button>
                             </li>
                         {/each}
                     {/if}
@@ -81,7 +91,6 @@
             {:else}
                 <h2>{jamsProgress}</h2>
             {/if}
-            
         </ul>
     </div>
 </Modal>

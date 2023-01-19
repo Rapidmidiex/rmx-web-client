@@ -10,7 +10,9 @@
             <Home />
         </Route>
         <!--should this pass params to the Jam component or read directly from JamStore?-->
-        <Route path="/jam/:id" let:params>
+        <Route
+            path="/jam/:id"
+            let:params>
             <Jam jamID={params.id} />
         </Route>
     </Router>

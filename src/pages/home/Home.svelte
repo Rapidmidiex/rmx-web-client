@@ -24,9 +24,12 @@
             <p>A new way for musicians to perform</p>
             <br />
             <div class="session-con">
-                <button class="btn" on:click={toggleCreateSessionModal}
-                    >Start a new Jam</button>
-                <button class="btn" on:click={toggleJoinModal}>Join</button>
+                <button
+                    class="btn"
+                    on:click={toggleCreateSessionModal}>Start a new Jam</button>
+                <button
+                    class="btn"
+                    on:click={toggleJoinModal}>Join</button>
             </div>
         </section>
         {#if createSessionModalOpen}

@@ -15,16 +15,16 @@
         const payload: CreateJamData = {
             name,
             capacity,
-            bpm
-        }
+            bpm,
+        };
 
         api.post<GetJamData>('/jam', JSON.stringify(payload))
-            .then(({data}) => {
-                Success("new Jam room created. redirecting...")
-                navigate(`/jam/${data.id}`, {replace: true})
+            .then(({ data }) => {
+                Success('new Jam room created. redirecting...');
+                navigate(`/jam/${data.id}`, { replace: true });
             })
             .catch((error: AxiosError) => {
-                Failure(error.message)
+                Failure(error.message);
             })
             .finally(() => {
                 closeFunc();
@@ -33,7 +33,9 @@
 </script>
 
 <Modal {closeFunc}>
-    <form class="new_session-form" on:submit|preventDefault={CreateSession}>
+    <form
+        class="new_session-form"
+        on:submit|preventDefault={CreateSession}>
         <h3>Start a new Jam</h3>
         <input
             bind:value={name}
@@ -56,7 +58,9 @@
             name="bpm"
             id="bpm"
             placeholder="BPM (default: 120)" />
-        <button class="btn" type="submit">Start</button>
+        <button
+            class="btn"
+            type="submit">Start</button>
     </form>
 </Modal>
 
