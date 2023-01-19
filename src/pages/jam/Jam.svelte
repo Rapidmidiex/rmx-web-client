@@ -1,12 +1,7 @@
 <script lang="ts">
     import { api, WS_BASE_URL } from '../../api/api';
-    import { onDestroy, onMount } from 'svelte';
-    import {
-        NoteState,
-        type GetJamData,
-        type Jam,
-        type MIDIMsg,
-    } from '../../models/jam';
+    import { onMount } from 'svelte';
+    import { NoteState, type GetJamData, type MIDIMsg } from '../../models/jam';
     import { JamMIDIStore, JamStore, JamTextStore } from '../../store/jam';
     import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
     import Icon from '../../lib/components/Icon.svelte';

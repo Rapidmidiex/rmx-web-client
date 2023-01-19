@@ -1,7 +1,5 @@
 <script lang="ts">
-    import type { Jam } from '../../../models/jam';
     import { JamStore, JamTextStore } from '../../../store/jam';
-    import { onDestroy, onMount } from 'svelte';
     import Icon from '../../../lib/components/Icon.svelte';
     import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
 
