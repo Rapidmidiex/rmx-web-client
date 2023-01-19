@@ -6,7 +6,7 @@
 <nav>
     <div class="logo-con">
         <div class="logo">
-            <Link to="/">RMX</Link>
+            <Link to="/" />
         </div>
     </div>
     <div class="nav-items">
@@ -65,6 +65,10 @@
                     border-radius: 0.5rem;
                     text-decoration: none;
                     transition: 0.3s ease;
+                    background-image: url('../../../assets/RMX-logo-256.jpg');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
                 }
 
                 & > :global(a:hover) {
