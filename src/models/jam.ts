@@ -34,4 +34,5 @@ export interface MIDIMsg {
 
 export interface ConnectMsg {
     userId: string;
+    username: string;
 }
