@@ -2,6 +2,7 @@
     import { JamStore, JamTextStore } from '../../../store/jam';
     import Icon from '../../../lib/components/Icon.svelte';
     import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
+    import { UserStore } from '../../../store/user';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -14,6 +15,7 @@
         let msg: WSMsg<string> = {
             type: WSMsgTyp.TEXT,
             payload: message,
+            userId: $UserStore.userId,
         };
 
         sendWSMsg(msg);
