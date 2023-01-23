@@ -36,3 +36,7 @@ export interface ConnectMsg {
     userId: string;
     username: string;
 }
+
+export interface TextMsg {
+    body: string;
+}

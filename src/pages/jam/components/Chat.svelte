@@ -3,18 +3,19 @@
     import Icon from '../../../lib/components/Icon.svelte';
     import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
     import { UserStore } from '../../../store/user';
+    import type { TextMsg } from 'src/models/jam';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
 
-    function sendWSMsg(msg: WSMsg<string>) {
+    function sendWSMsg(msg: WSMsg<TextMsg>) {
         $JamStore.ws.send(JSON.stringify(msg));
     }
 
     function sendMsg() {
-        let msg: WSMsg<string> = {
+        let msg: WSMsg<TextMsg> = {
             type: WSMsgTyp.TEXT,
-            payload: message,
+            payload: { body: message },
             userId: $UserStore.userId,
         };
 

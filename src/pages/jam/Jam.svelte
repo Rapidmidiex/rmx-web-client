@@ -6,6 +6,7 @@
         type ConnectMsg,
         type GetJamData,
         type MIDIMsg,
+        type TextMsg,
     } from '../../models/jam';
     import { JamStore, JamTextStore } from '../../store/jam';
     import { UserStore } from '../../store/user';
@@ -206,19 +207,20 @@
             });
     }
 
-    function sendWSMsg(msg: WSMsg<any>) {
+    function sendWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         $JamStore.ws.send(JSON.stringify(msg));
     }
 
-    function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | string>) {
+    function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
+                const { body } = msg.payload as TextMsg;
                 // TODO: Use display name
                 let displayName = msg.userId?.slice(0, 4) || 'Anon';
                 if (msg.userId === $UserStore.userId) {
                     displayName = 'You';
                 }
-                const displayMsg = `${displayName}: ${msg.payload}`;
+                const displayMsg = `${displayName}: ${body}`;
                 JamTextStore.update((items) => [...items, displayMsg]);
                 break;
             case WSMsgTyp.MIDI:
