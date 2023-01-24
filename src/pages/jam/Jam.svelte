@@ -214,23 +214,21 @@
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
-                const { body } = msg.payload as TextMsg;
-                // TODO: Use display name
-                let displayName = msg.userId?.slice(0, 4) || 'Anon';
+                let { body, displayName } = msg.payload as TextMsg;
                 if (msg.userId === $UserStore.userId) {
                     displayName = 'You';
                 }
-                const displayMsg = `${displayName}: ${body}`;
+                const displayMsg = `${displayName ?? 'Anon'}: ${body}`;
                 JamTextStore.update((items) => [...items, displayMsg]);
                 break;
             case WSMsgTyp.MIDI:
                 midi = msg.payload as MIDIMsg;
                 break;
             case WSMsgTyp.CONNECT:
-                const { userId, username } = msg.payload as ConnectMsg;
+                const { userId, userName } = msg.payload as ConnectMsg;
                 UserStore.set({
                     userId,
-                    username,
+                    userName,
                 });
                 break;
             default:

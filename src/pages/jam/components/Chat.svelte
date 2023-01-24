@@ -15,7 +15,10 @@
     function sendMsg() {
         let msg: WSMsg<TextMsg> = {
             type: WSMsgTyp.TEXT,
-            payload: { body: message },
+            payload: {
+                body: message,
+                displayName: $UserStore.userName,
+            },
             userId: $UserStore.userId,
         };
 
