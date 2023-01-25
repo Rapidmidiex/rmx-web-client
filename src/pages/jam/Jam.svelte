@@ -214,12 +214,14 @@
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
-                let { body, displayName } = msg.payload as TextMsg;
+                let displayMsg = msg.payload as TextMsg;
                 if (msg.userId === $UserStore.userId) {
-                    displayName = 'You';
+                    displayMsg.displayName = 'You';
                 }
-                const displayMsg = `${displayName ?? 'Anon'}: ${body}`;
-                JamTextStore.update((items) => [...items, displayMsg]);
+                JamTextStore.update((items) => [
+                    ...items,
+                    { ...msg, payload: displayMsg },
+                ]);
                 break;
             case WSMsgTyp.MIDI:
                 midi = msg.payload as MIDIMsg;
