@@ -1,8 +1,15 @@
 <script lang="ts">
     import { api, WS_BASE_URL } from '../../api/api';
     import { onMount } from 'svelte';
-    import { NoteState, type GetJamData, type MIDIMsg } from '../../models/jam';
+    import {
+        NoteState,
+        type ConnectMsg,
+        type GetJamData,
+        type MIDIMsg,
+        type TextMsg,
+    } from '../../models/jam';
     import { JamStore, JamTextStore } from '../../store/jam';
+    import { UserStore } from '../../store/user';
     import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
     import Icon from '../../lib/components/Icon.svelte';
     import { navigate } from 'svelte-navigator';
@@ -138,13 +145,14 @@
                 // FIXME: still sends repeated notes.
                 // send new note to websocket
                 let midi: MIDIMsg = {
-                    State: NoteState.NOTE_ON,
-                    Number: noteNum,
+                    state: NoteState.NOTE_ON,
+                    number: noteNum,
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
                     type: WSMsgTyp.MIDI,
                     payload: midi,
+                    userId: $UserStore.userId,
                 };
 
                 sendWSMsg(msg);
@@ -199,22 +207,34 @@
             });
     }
 
-    function sendWSMsg(msg: WSMsg<any>) {
+    function sendWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         $JamStore.ws.send(JSON.stringify(msg));
     }
 
-    function handleWSMsg(msg: WSMsg<MIDIMsg | string>) {
+    function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         switch (msg.type) {
             case WSMsgTyp.TEXT:
+                let displayMsg = msg.payload as TextMsg;
+                if (msg.userId === $UserStore.userId) {
+                    displayMsg.displayName = 'You';
+                }
                 JamTextStore.update((items) => [
                     ...items,
-                    msg.payload as string,
+                    { ...msg, payload: displayMsg },
                 ]);
                 break;
             case WSMsgTyp.MIDI:
                 midi = msg.payload as MIDIMsg;
                 break;
+            case WSMsgTyp.CONNECT:
+                const { userId, userName } = msg.payload as ConnectMsg;
+                UserStore.set({
+                    userId,
+                    userName,
+                });
+                break;
             default:
+                console.warn('Unknown message type', msg);
                 Warning('Unknown message type');
         }
     }
@@ -246,7 +266,7 @@
                 bind:this={midiDiv}
                 class="messages">
                 {#if midi}
-                    <p>{midi.Number}</p>
+                    <p>{midi.number}</p>
                 {:else}
                     <p>No message available</p>
                 {/if}

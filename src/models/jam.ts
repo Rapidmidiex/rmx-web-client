@@ -26,8 +26,18 @@ export enum NoteState {
 }
 
 export interface MIDIMsg {
-    State: NoteState;
-    // Channel:  number; // not required
-    Number: number;
-    // Velocity: number; // not required
+    state: NoteState;
+    // channel:  number; // not required
+    number: number;
+    // velocity: number; // not required
+}
+
+export interface ConnectMsg {
+    userId: string;
+    userName: string;
+}
+
+export interface TextMsg {
+    displayName: string;
+    body: string;
 }

@@ -2,21 +2,32 @@
     import { JamStore, JamTextStore } from '../../../store/jam';
     import Icon from '../../../lib/components/Icon.svelte';
     import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
+    import { UserStore } from '../../../store/user';
+    import type { TextMsg } from 'src/models/jam';
+    import ChatBubble from './ChatBubble.svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
 
-    function sendWSMsg(msg: WSMsg<string>) {
+    function sendWSMsg(msg: WSMsg<TextMsg>) {
         $JamStore.ws.send(JSON.stringify(msg));
     }
 
     function sendMsg() {
-        let msg: WSMsg<string> = {
+        let msg: WSMsg<TextMsg> = {
             type: WSMsgTyp.TEXT,
-            payload: message,
+            payload: {
+                body: message,
+                displayName: $UserStore.userName,
+            },
+            userId: $UserStore.userId,
         };
 
         sendWSMsg(msg);
+
+        // reset input
+        message = '';
+
         // should scroll immediately on user input
         // and listen for new messages then scroll to bottom
         setTimeout(() => {
@@ -31,10 +42,10 @@
         class="messages">
         {#if $JamTextStore.length > 0}
             {#each $JamTextStore as msg}
-                <p>{msg}</p>
+                <ChatBubble message={msg} />
             {/each}
         {:else}
-            <p>No message available</p>
+            <div class="empty">No message available</div>
         {/if}
     </div>
     <form
@@ -68,14 +79,10 @@
             align-items: flex-start;
             overflow: auto;
 
-            & > p {
-                background-color: #000;
-                padding: 1rem;
-                color: #fff;
-                font-size: 1rem;
-                border-radius: 0.5rem;
-                margin: 0.5rem;
-                word-break: break-all;
+            .empty {
+                width: 100%;
+                text-align: center;
+                padding: 0.5rem;
             }
         }
 
