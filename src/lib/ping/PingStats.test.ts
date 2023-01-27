@@ -1,31 +1,57 @@
-import { Ping, type PingStats } from './PingStats';
+import { RoundtripTimer, PingStats } from './PingStats';
 import { describe, expect, it } from 'vitest';
 
-describe('PingStats', () => {
-    it('should set timestamps', async () => {
-        const ping = new Ping();
+describe('RoundtripTimer', () => {
+    it('should time messages', async () => {
+        const rtt = new RoundtripTimer();
         const msgId = 'abc';
 
-        ping.startTimer(msgId);
+        rtt.startTimer(msgId);
         await wait(20);
-        const elapsed = ping.stopTimer(msgId);
+        const elapsed = rtt.stopTimer(msgId);
 
         expect(elapsed).greaterThan(0);
     });
 
+    it('startTimer() should throw if a timer has already started for a message', () => {
+        const rtt = new RoundtripTimer();
+        const msgId = 'abc';
+
+        rtt.startTimer(msgId);
+        expect(() => {
+            rtt.startTimer(msgId);
+        }).toThrowError(`timer already exists with ID: ${msgId}`);
+    });
+
+    it('stopTimer() should throw if the timer was not started for a given message', () => {
+        const rtt = new RoundtripTimer();
+
+        expect(() => {
+            rtt.stopTimer('msgId');
+        }).toThrowError(`timestamp not found!`);
+    });
+
+    it('should reset if a timer has been stopped for a message', async () => {
+        const rtt = new RoundtripTimer();
+        const msgId = 'abc';
+
+        rtt.startTimer(msgId);
+        await wait(40);
+        rtt.stopTimer(msgId);
+
+        // If an error is thrown, test will fail
+        rtt.startTimer(msgId);
+    });
+});
+
+describe('PingStats', () => {
     it('should calculate new stats based on existing stats', () => {
         const durations = [19, 1000, 129, 34, 36, 49, 234];
 
-        const initial: PingStats = {
-            avg: 0,
-            min: Infinity,
-            max: -Infinity,
-            totalMsgs: 0,
-            latest: 0,
-        };
+        const initial = new PingStats();
 
         const actual = durations.reduce(
-            (stats, d) => Ping.calcStats(stats, d),
+            (stats, d) => PingStats.calcStats(stats, d),
             initial
         );
 

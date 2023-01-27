@@ -1,17 +1,5 @@
-export class Ping {
+export class RoundtripTimer {
     private timestamps: Record<string, Date>;
-
-    static calcStats(prev: PingStats, latest: number): PingStats {
-        // https://stackoverflow.com/questions/22999487/update-the-average-of-a-continuous-sequence-of-numbers-in-constant-time
-        const avg = (prev.totalMsgs * prev.avg + latest) / (prev.totalMsgs + 1);
-        return {
-            totalMsgs: prev.totalMsgs + 1,
-            min: Math.min(prev.min, latest),
-            max: Math.max(prev.max, latest),
-            avg,
-            latest,
-        };
-    }
 
     constructor() {
         this.timestamps = {};
@@ -29,15 +17,37 @@ export class Ping {
         if (!startTime) {
             throw new Error('timestamp not found!');
         }
+
+        delete this.timestamps[messageId];
         return new Date().valueOf() - startTime.valueOf();
     }
 }
 
-export type PingStats = {
+export class PingStats {
     totalMsgs: number;
-    // Integer milliseconds
+    // milliseconds
     avg: number;
     latest: number;
     min: number;
     max: number;
-};
+
+    static calcStats(prev: PingStats, latest: number): PingStats {
+        // https://stackoverflow.com/questions/22999487/update-the-average-of-a-continuous-sequence-of-numbers-in-constant-time
+        const avg = (prev.totalMsgs * prev.avg + latest) / (prev.totalMsgs + 1);
+        return {
+            totalMsgs: prev.totalMsgs + 1,
+            min: Math.min(prev.min, latest),
+            max: Math.max(prev.max, latest),
+            avg,
+            latest,
+        };
+    }
+
+    constructor() {
+        this.avg = 0;
+        this.min = Infinity;
+        this.max = -Infinity;
+        this.totalMsgs = 0;
+        this.latest = 0;
+    }
+}
