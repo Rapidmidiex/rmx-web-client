@@ -51,17 +51,17 @@ describe('PingStats', () => {
         const initial = new PingStats();
 
         const actual = durations.reduce(
-            (stats, d) => PingStats.calcStats(stats, d),
+            (stats, d) => stats.calcStats(d),
             initial
         );
 
-        const expected: PingStats = {
+        const expected = new PingStats({
             avg: 214.42857142857142,
             min: 19,
             max: 1000,
             totalMsgs: 7,
             latest: 234,
-        };
+        });
 
         expect(actual).toEqual(expected);
     });
