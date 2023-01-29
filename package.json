@@ -28,6 +28,7 @@
         "feather-icons": "^4.29.0",
         "fuzzysort": "^2.0.4",
         "notiflix": "^3.2.6",
-        "svelte-navigator": "^3.2.2"
+        "svelte-navigator": "^3.2.2",
+        "uuid": "^9.0.0"
     }
 }
