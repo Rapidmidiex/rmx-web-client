@@ -14,8 +14,12 @@ function createStats() {
             timer.startTimer(msgId);
         },
         msgIn(msgId: string) {
-            const roundtripTime = timer.stopTimer(msgId);
-            update((stats) => stats.calcStats(roundtripTime));
+            try {
+                const roundtripTime = timer.stopTimer(msgId);
+                update((stats) => stats.calcStats(roundtripTime));
+            } catch (error) {
+                // Ignore messages missing from timer dictionary.
+            }
         },
     };
 }
