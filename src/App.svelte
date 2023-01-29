@@ -113,7 +113,7 @@
         padding: 1rem;
         outline: none;
         border: none;
-        background-color: #dadada;
+        background-color: #eaeaea;
         border-top-left-radius: 0.5rem;
         border-top-right-radius: 0.5rem;
         border-bottom: 3px solid #808080;

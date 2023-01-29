@@ -56,6 +56,6 @@
     }
 
     .wrapper:hover {
-        background-color: #dadada;
+        background-color: #eaeaea;
     }
 </style>

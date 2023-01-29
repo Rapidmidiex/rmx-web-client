@@ -16,6 +16,7 @@
     import { WSMsgTyp, type WSMsg } from '../../models/websocket';
     import Chat from './components/Chat.svelte';
     import type { AxiosError } from 'axios';
+    import Piano from './components/Piano.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -271,6 +272,7 @@
                     <p>No message available</p>
                 {/if}
             </div>
+            <Piano />
         </div>
         <div class="jam-extras">
             <Chat />
@@ -302,10 +304,8 @@
         .jam-content {
             height: 100%;
             display: flex;
-            overflow: auto;
 
             & > div {
-                width: 100%;
                 height: 100%;
             }
 
@@ -313,20 +313,18 @@
                 width: 30rem;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
                 padding: 1rem;
             }
 
             .jam-player {
+                width: 100%;
                 display: flex;
                 flex-direction: column;
-
-                & > div {
-                    width: 100%;
-                    height: 100%;
-                }
+                overflow: auto;
 
                 .messages {
+                    width: 100%;
+                    height: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
