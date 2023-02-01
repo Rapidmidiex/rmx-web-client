@@ -302,6 +302,7 @@
                 width: 100%;
                 display: flex;
                 flex-direction: column;
+                padding: 1rem;
                 overflow: auto;
 
                 .messages {

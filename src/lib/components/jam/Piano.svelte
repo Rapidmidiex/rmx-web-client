@@ -1,26 +1,24 @@
 <script lang="ts">
-    import PianoKey from './PianoKey.svelte';
     import { genPianoKeys } from 'src/lib/utils/piano';
+    import PianoOctave from './PianoOctave.svelte';
 
-    const keyboard = genPianoKeys(61);
+    const keyboard = genPianoKeys(49);
 </script>
 
 <div class="piano">
     {#each keyboard as octave}
-        {#each octave as key}
-            <PianoKey {key} />
-        {/each}
+        <PianoOctave keys={octave} />
     {/each}
 </div>
 
 <style lang="scss">
     .piano {
         width: 100%;
-        height: 25rem;
+        height: 18rem;
         padding: 1rem;
         display: flex;
-        align-items: center;
         overflow: auto;
         user-select: none;
+        background-color: #000;
     }
 </style>

@@ -46,6 +46,7 @@ export interface PianoKeyNote {
     midi: number;
     name: string[];
     black: boolean;
+    key: string;
 }
 
 export interface PianoState {

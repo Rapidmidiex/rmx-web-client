@@ -1,7 +1,7 @@
 <script lang="ts">
+    import CreateSessionModal from 'src/lib/components/home/modals/CreateSessionModal.svelte';
+    import JoinSessionModal from 'src/lib/components/home/modals/JoinSessionModal.svelte';
     import Nav from 'src/lib/components/home/Nav.svelte';
-    import CreateSessionModal from './modals/CreateSessionModal.svelte';
-    import JoinSessionModal from './modals/JoinSessionModal.svelte';
 
     let createSessionModalOpen = false;
     let joinModalOpen = false;

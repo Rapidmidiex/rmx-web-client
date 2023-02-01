@@ -3,6 +3,27 @@
     import { JamPianoStore } from 'src/store/jam';
 
     export let key: PianoKeyNote;
+    export let nthBlack: number;
+
+    let keySpacing: number;
+
+    switch (nthBlack) {
+        case 1:
+            keySpacing = 0;
+            break;
+        case 3:
+            keySpacing = 1;
+            break;
+        case 6:
+            keySpacing = 3;
+            break;
+        case 8:
+            keySpacing = 4;
+            break;
+        case 10:
+            keySpacing = 5;
+            break;
+    }
 
     function handleKeydown() {
         JamPianoStore.set({ keydown: true, currNote: key });
@@ -29,6 +50,7 @@
     on:mouseover={handleKeyOver}
     on:mouseup={handleKeyup}
     on:focus
+    style={`left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;`}
     class="key"
     class:pressed={$JamPianoStore.currNote === key}>
     <p>{key.name[0]}</p>
@@ -36,27 +58,28 @@
 
 <style lang="scss">
     .key {
-        width: 2rem;
-        height: 100%;
+        position: absolute;
+        width: 1.5rem;
+        height: 50%;
         padding: 0.5rem;
-        margin: 0.1rem;
         border-bottom-left-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        background-color: #fff;
+        background-color: #000;
         transition: 0.3s ease;
         cursor: pointer;
+        box-shadow: 0 0 0.5rem #000;
 
         p {
-            color: #000;
-            font-size: 1rem;
+            color: #fff;
+            font-size: 0.8rem;
         }
     }
 
     .key:hover {
-        background-color: #dadada;
+        background-color: #333;
     }
 
     .pressed {
