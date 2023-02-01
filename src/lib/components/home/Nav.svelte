@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Link } from 'svelte-navigator';
-    import Icon from '../../../lib/components/Icon.svelte';
+    import Icon from '../global/Icon.svelte';
 </script>
 
 <nav>

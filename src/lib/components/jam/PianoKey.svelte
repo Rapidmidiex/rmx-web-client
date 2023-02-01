@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { PianoKeyNote } from 'src/models/jam';
-    import { JamPianoStore } from '../../../store/jam';
+    import type { PianoKeyNote } from 'src/lib/types/jam';
+    import { JamPianoStore } from 'src/store/jam';
 
     export let key: PianoKeyNote;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { genPianoKeys } from '../../../lib/utils/piano';
     import PianoKey from './PianoKey.svelte';
+    import { genPianoKeys } from 'src/lib/utils/piano';
 
     const keyboard = genPianoKeys(61);
 </script>

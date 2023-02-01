@@ -1,6 +1,6 @@
-import type { WSMsg } from '../models/websocket';
+import type { Jam, PianoState, TextMsg } from 'src/lib/types/jam';
+import type { WSMsg } from 'src/lib/types/websocket';
 import { writable } from 'svelte/store';
-import type { PianoState, Jam, TextMsg } from '../models/jam';
 
 const pianoStateDefault: PianoState = {
     keydown: false,

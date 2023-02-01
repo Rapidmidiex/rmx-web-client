@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { JamStore, JamTextStore } from '../../../store/jam';
-    import Icon from '../../../lib/components/Icon.svelte';
-    import { WSMsgTyp, type WSMsg } from '../../../models/websocket';
-    import { UserStore } from '../../../store/user';
-    import type { TextMsg } from 'src/models/jam';
     import ChatBubble from './ChatBubble.svelte';
+    import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
+    import type { TextMsg } from 'src/lib/types/jam';
+    import { JamStore, JamTextStore } from 'src/store/jam';
+    import { UserStore } from 'src/store/user';
+    import Icon from '../global/Icon.svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;

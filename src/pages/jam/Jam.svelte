@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { api, WS_BASE_URL } from '../../api/api';
     import { onMount } from 'svelte';
     import {
         NoteState,
@@ -7,22 +6,22 @@
         type GetJamData,
         type MIDIMsg,
         type TextMsg,
-    } from '../../models/jam';
-    import { JamStore, JamTextStore } from '../../store/jam';
-    import { UserStore } from '../../store/user';
-    import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
-    import Icon from '../../lib/components/Icon.svelte';
+    } from 'src/lib/types/jam';
     import { navigate } from 'svelte-navigator';
-    import { WSMsgTyp, type WSMsg } from '../../models/websocket';
-    import Chat from './components/Chat.svelte';
-    import type { AxiosError } from 'axios';
-    import Piano from './components/Piano.svelte';
+    import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
+    import { UserStore } from 'src/store/user';
+    import { JamStore, JamTextStore } from 'src/store/jam';
+    import { Failure, Info, Success, Warning } from 'src/lib/notify/notify';
+    import { api, WS_BASE_URL } from 'src/api/api';
+
+    import Piano from 'src/lib/components/jam/Piano.svelte';
+    import Chat from 'src/lib/components/jam/Chat.svelte';
+    import Icon from 'src/lib/components/global/Icon.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
     let micOn: boolean = false;
     let micInit: boolean = false;
-    let midiDiv: HTMLDivElement;
 
     /*-------------------Audio related code---------------------*/
 
@@ -35,21 +34,8 @@
     let pitch = 0;
     let noteHistory: number[] = [];
     const historyLength = 2;
-    let noteStrings = [
-        'C',
-        'C#',
-        'D',
-        'D#',
-        'E',
-        'F',
-        'F#',
-        'G',
-        'G#',
-        'A',
-        'A#',
-        'B',
-    ];
-    function autoCorrelate(buf, sampleRate) {
+
+    function autoCorrelate(buf: Float32Array, sampleRate: number) {
         let SIZE = buf.length;
         let rms = 0;
         for (let i = 0; i < SIZE; i++) {
@@ -191,21 +177,19 @@
         }
     }
 
-    function initJam() {
-        return api
-            .get<GetJamData>(`/jam/${jamID}`)
-            .then(({ data }) => {
-                JamStore.set({
-                    ...data,
-                    players: [],
-                    ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
-                });
-                Success('Jam data loaded');
-            })
-            .catch((err: AxiosError) => {
-                Failure(err.message);
-                navigate('/', { replace: true });
+    async function initJam() {
+        try {
+            const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
+            JamStore.set({
+                ...data,
+                players: [],
+                ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
             });
+            Success('Jam data loaded');
+        } catch (err) {
+            Failure(err.message);
+            navigate('/', { replace: true });
+        }
     }
 
     function sendWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
@@ -243,7 +227,7 @@
     onMount(async () => {
         await initJam();
 
-        $JamStore.ws.onopen = (event: Event) => {
+        $JamStore.ws.onopen = () => {
             Success('Connection established.');
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
@@ -254,7 +238,7 @@
             Failure(event.error);
             $JamStore.ws.close();
         };
-        $JamStore.ws.onclose = (event: CloseEvent) => {
+        $JamStore.ws.onclose = () => {
             Info('Connection was closed.');
         };
     });
@@ -263,9 +247,7 @@
 <div class="jam page">
     <div class="jam-content">
         <div class="jam-player">
-            <div
-                bind:this={midiDiv}
-                class="messages">
+            <div class="messages">
                 {#if midi}
                     <p>{midi.number}</p>
                 {:else}

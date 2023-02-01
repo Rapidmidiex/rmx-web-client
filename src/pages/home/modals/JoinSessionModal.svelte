@@ -1,12 +1,12 @@
 <script lang="ts">
     import { api } from '../../../api/api';
     import { onMount } from 'svelte';
-    import Modal from '../../../lib/components/Modal.svelte';
-    import type { GetJamData } from '../../../models/jam';
     import type { AxiosError } from 'axios';
     import { navigate } from 'svelte-navigator';
     import { Failure } from '../../../lib/notify/notify';
     import fuzzysort from 'fuzzysort';
+    import type { GetJamData } from 'src/lib/types/jam';
+    import Modal from 'src/lib/components/global/Modal.svelte';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
