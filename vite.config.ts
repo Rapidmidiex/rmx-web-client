@@ -1,4 +1,5 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig, loadEnv } from 'vite';
 
 // https://vitejs.dev/config/
@@ -9,7 +10,7 @@ export default defineConfig(({ command, mode }) => {
 
     // vite config
     return {
-        plugins: [svelte()],
+        plugins: [svelte(), tsconfigPaths()],
         define: {
             __APP_ENV__: env.APP_ENV,
         },

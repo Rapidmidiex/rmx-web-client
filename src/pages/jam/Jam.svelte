@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { api, WS_BASE_URL } from 'src/api/api';
+    import { Failure, Info, Success, Warning } from 'src/lib/notify/notify';
     import {
         NoteState,
         type ConnectMsg,
@@ -7,16 +8,15 @@
         type MIDIMsg,
         type TextMsg,
     } from 'src/lib/types/jam';
-    import { navigate } from 'svelte-navigator';
     import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
-    import { UserStore } from 'src/store/user';
     import { JamStore, JamTextStore } from 'src/store/jam';
-    import { Failure, Info, Success, Warning } from 'src/lib/notify/notify';
-    import { api, WS_BASE_URL } from 'src/api/api';
+    import { UserStore } from 'src/store/user';
+    import { onMount } from 'svelte';
+    import { navigate } from 'svelte-navigator';
 
-    import Piano from 'src/lib/components/jam/Piano.svelte';
-    import Chat from 'src/lib/components/jam/Chat.svelte';
     import Icon from 'src/lib/components/global/Icon.svelte';
+    import Chat from 'src/lib/components/jam/Chat.svelte';
+    import Piano from 'src/lib/components/jam/Piano.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;

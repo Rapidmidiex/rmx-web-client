@@ -28,6 +28,6 @@
         "import/no-duplicates": "error"
     },
     "settings": {
-        "svelte3/typescript": true,
+        "svelte3/typescript": true
     }
 }
