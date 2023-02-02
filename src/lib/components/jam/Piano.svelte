@@ -10,7 +10,6 @@
 
     $: {
         keyboard = genPianoKeys(keyboardSize);
-        console.log(keyboardSize);
     }
 </script>
 
