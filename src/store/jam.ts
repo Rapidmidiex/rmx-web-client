@@ -1,11 +1,11 @@
-import type { Jam, PianoState, TextMsg } from 'src/lib/types/jam';
-import type { WSMsg } from 'src/lib/types/websocket';
+import type { Jam, PianoState, TextMsg } from '@lib/types/jam';
+import type { WSMsg } from '@lib/types/websocket';
 import { writable } from 'svelte/store';
 
 const pianoStateDefault: PianoState = {
     keydown: false,
-    currNote: null
-}
+    currNote: null,
+};
 
 export const JamStore = writable<Jam>();
 export const JamTextStore = writable<WSMsg<TextMsg>[]>([]);

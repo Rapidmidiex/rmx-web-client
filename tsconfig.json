@@ -16,7 +16,11 @@
         "checkJs": true,
         "isolatedModules": true,
         "paths": {
-            "src/*": ["src/*"]
+            "@api/*": ["src/api/*"],
+            "@assets/*": ["src/assets/*"],
+            "@lib/*": ["src/lib/*"],
+            "@pages/*": ["src/pages/*"],
+            "@store/*": ["src/store/*"]
         }
     },
     "include": [

@@ -2,23 +2,23 @@
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
     import { v4 as uuidv4 } from 'uuid';
-    import { api, WS_BASE_URL } from 'src/api/api';
-    import { Failure, Info, Success, Warning } from 'src/lib/notify/notify';
+    import { api, WS_BASE_URL } from '@api/api';
+    import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import {
         NoteState,
         type ConnectMsg,
         type GetJamData,
         type MIDIMsg,
         type TextMsg,
-    } from 'src/lib/types/jam';
-    import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
-    import { JamStore, JamTextStore } from 'src/store/jam';
-    import { UserStore } from 'src/store/user';
+    } from '@lib/types/jam';
+    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import { JamStore, JamTextStore } from '@store/jam';
+    import { UserStore } from '@store/user';
 
-    import Icon from 'src/lib/components/global/Icon.svelte';
-    import Chat from 'src/lib/components/jam/Chat.svelte';
-    import Piano from 'src/lib/components/jam/Piano.svelte';
-    import { pingStats } from 'src/store/ping';
+    import Icon from '@lib/components/global/Icon.svelte';
+    import Chat from '@lib/components/jam/Chat.svelte';
+    import Piano from '@lib/components/jam/Piano.svelte';
+    import { pingStats } from '@store/ping';
 
     export let jamID: string;
     let midi: MIDIMsg;
