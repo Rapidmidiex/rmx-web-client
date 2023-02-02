@@ -7,11 +7,9 @@
 
 <div class="octave">
     {#each keys as key}
-        {#if !key.note.black}
-            <PianoKey {key} />
-        {:else}
-            <PianoBlackKey {key} />
-        {/if}
+        <PianoKey
+            {key}
+            black={key.note.black} />
     {/each}
 </div>
 

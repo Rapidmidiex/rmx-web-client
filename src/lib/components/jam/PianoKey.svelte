@@ -1,14 +1,36 @@
 <script lang="ts">
+    import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
     import type { PianoKeyNote } from '@lib/types/jam';
     import { JamPianoStore } from '@store/jam';
 
     export let key: PianoKeyNote;
+    export let black: boolean;
 
-    function handleKeydown() {
+    let keySpacing: number; // spacing for black keys only
+
+    switch (key.note) {
+        case CS:
+            keySpacing = 0;
+            break;
+        case DS:
+            keySpacing = 1;
+            break;
+        case FS:
+            keySpacing = 3;
+            break;
+        case GS:
+            keySpacing = 4;
+            break;
+        case AS:
+            keySpacing = 5;
+            break;
+    }
+
+    function handleKeyDown() {
         JamPianoStore.set({ keydown: true, currNote: key });
     }
 
-    function handleKeyOver() {
+    function handleKeyEnter() {
         if (!$JamPianoStore.keydown) {
             return;
         }
@@ -21,17 +43,21 @@
         });
     }
 
-    function handleKeyup() {
+    function handleKeyUp() {
         JamPianoStore.set({ keydown: false, currNote: null });
     }
 </script>
 
+<svelte:window on:mouseup={handleKeyUp} />
+
 <div
-    on:mousedown={handleKeydown}
-    on:mouseover={handleKeyOver}
-    on:mouseup={handleKeyup}
+    on:mousedown={handleKeyDown}
+    on:mouseenter={handleKeyEnter}
+    on:mouseup={handleKeyUp}
     on:focus
+    style={black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}
     class="key"
+    class:black
     class:pressed={$JamPianoStore.currNote === key}>
     <p>{key.note.name[0]}</p>
 </div>
@@ -60,6 +86,23 @@
 
     .key:hover {
         background-color: #dadada;
+    }
+
+    .black {
+        position: absolute;
+        width: 1.5rem;
+        height: 60%;
+        margin: none;
+        background-color: #000;
+
+        p {
+            color: #fff;
+            font-size: 0.8rem;
+        }
+    }
+
+    .black:hover {
+        background-color: #333;
     }
 
     .pressed {
