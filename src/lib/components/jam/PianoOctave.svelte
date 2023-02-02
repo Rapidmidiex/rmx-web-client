@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { PianoKeyNote } from 'src/lib/types/jam';
+    import type { PianoKeyNote } from '@lib/types/jam';
     import PianoBlackKey from './PianoBlackKey.svelte';
     import PianoKey from './PianoKey.svelte';
     export let keys: PianoKeyNote[];

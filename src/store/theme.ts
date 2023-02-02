@@ -1,4 +1,4 @@
-import type { Theme } from 'src/lib/types/theme';
+import type { Theme } from '@lib/types/theme';
 import { writable } from 'svelte/store';
 
 const light: Theme = {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { genPianoKeys } from 'src/lib/utils/piano';
+    import { genPianoKeys } from '@lib/utils/piano';
     import PianoOctave from './PianoOctave.svelte';
 
     const keyboard = genPianoKeys(49);

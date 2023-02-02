@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { AxiosError } from 'axios';
     import fuzzysort from 'fuzzysort';
-    import { api } from 'src/api/api';
-    import Modal from 'src/lib/components/global/Modal.svelte';
-    import { Failure } from 'src/lib/notify/notify';
-    import type { GetJamData } from 'src/lib/types/jam';
+    import { api } from '@api/api';
+    import Modal from '@lib/components/global/Modal.svelte';
+    import { Failure } from '@lib/notify/notify';
+    import type { GetJamData } from '@lib/types/jam';
     import { onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
 

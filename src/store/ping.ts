@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { PingStats, RoundtripTimer } from '../lib/ping/PingStats';
+import { PingStats, RoundtripTimer } from '@lib/ping/PingStats';
 
 function createStats() {
     const timer = new RoundtripTimer();

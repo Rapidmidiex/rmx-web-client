@@ -1,12 +1,12 @@
 <script lang="ts">
     import { v4 as uuidv4 } from 'uuid';
     import ChatBubble from './ChatBubble.svelte';
-    import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
-    import type { TextMsg } from 'src/lib/types/jam';
-    import { JamStore, JamTextStore } from 'src/store/jam';
-    import { UserStore } from 'src/store/user';
+    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import type { TextMsg } from '@lib/types/jam';
+    import { JamStore, JamTextStore } from '@store/jam';
+    import { UserStore } from '@store/user';
+    import { pingStats } from '@store/ping';
     import Icon from '../global/Icon.svelte';
-    import { pingStats } from 'src/store/ping';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;

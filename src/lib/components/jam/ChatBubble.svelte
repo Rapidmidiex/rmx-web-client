@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { TextMsg } from 'src/lib/types/jam';
-    import type { WSMsg } from 'src/lib/types/websocket';
-    import { UserStore } from 'src/store/user';
+    import type { TextMsg } from '@lib/types/jam';
+    import type { WSMsg } from '@lib/types/websocket';
+    import { UserStore } from '@store/user';
 
     export let message: WSMsg<TextMsg>;
 </script>
