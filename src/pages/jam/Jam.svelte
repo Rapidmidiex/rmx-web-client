@@ -1,6 +1,7 @@
 <script lang="ts">
+    import { v4 as uuidv4 } from 'uuid';
     import { api, WS_BASE_URL } from '../../api/api';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import {
         NoteState,
         type ConnectMsg,
@@ -16,6 +17,7 @@
     import { WSMsgTyp, type WSMsg } from '../../models/websocket';
     import Chat from './components/Chat.svelte';
     import type { AxiosError } from 'axios';
+    import { pingStats } from '../../store/ping';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -34,6 +36,11 @@
     let pitch = 0;
     let noteHistory: number[] = [];
     const historyLength = 2;
+
+    const unsubscribe = pingStats.subscribe((value) => {
+        console.log(value);
+    });
+
     let noteStrings = [
         'C',
         'C#',
@@ -150,6 +157,7 @@
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
+                    id: uuidv4(),
                     type: WSMsgTyp.MIDI,
                     payload: midi,
                     userId: $UserStore.userId,
@@ -212,6 +220,8 @@
     }
 
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
+        pingStats.msgIn(msg.id);
+
         switch (msg.type) {
             case WSMsgTyp.TEXT:
                 let displayMsg = msg.payload as TextMsg;
@@ -256,6 +266,10 @@
         $JamStore.ws.onclose = (event: CloseEvent) => {
             Info('Connection was closed.');
         };
+    });
+
+    onDestroy(() => {
+        unsubscribe();
     });
 </script>
 
