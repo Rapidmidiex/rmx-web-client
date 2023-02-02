@@ -6,13 +6,11 @@
 </script>
 
 <div class="octave">
-    {#each keys as key, idx}
-        {#if !key.black}
+    {#each keys as key}
+        {#if !key.note.black}
             <PianoKey {key} />
         {:else}
-            <PianoBlackKey
-                {key}
-                nthBlack={idx} />
+            <PianoBlackKey {key} />
         {/if}
     {/each}
 </div>

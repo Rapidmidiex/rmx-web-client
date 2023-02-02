@@ -198,6 +198,11 @@
         }
     }
 
+    let showPiano: boolean = false;
+    function togglePiano() {
+        showPiano = !showPiano;
+    }
+
     async function initJam() {
         try {
             const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
@@ -281,7 +286,9 @@
                     <p>No message available</p>
                 {/if}
             </div>
-            <Piano />
+            {#if showPiano}
+                <Piano />
+            {/if}
         </div>
         <div class="jam-extras">
             <Chat />
@@ -295,6 +302,10 @@
                     type="button"
                     on:click={toggleMic}
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></button>
+                <button
+                    class="btn"
+                    type="button"
+                    on:click={togglePiano}><Icon name="music" /></button>
             </div>
         </div>
     </div>
@@ -375,6 +386,7 @@
                         border-radius: 100%;
                         font-size: 1rem;
                         padding: 1rem;
+                        margin: 0.5rem;
                     }
                 }
             }

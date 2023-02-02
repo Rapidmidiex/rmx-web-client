@@ -1,26 +1,26 @@
 <script lang="ts">
+    import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
     import type { PianoKeyNote } from '@lib/types/jam';
     import { JamPianoStore } from '@store/jam';
 
     export let key: PianoKeyNote;
-    export let nthBlack: number;
 
-    let keySpacing: number;
+    let keySpacing: number; // spacing from right
 
-    switch (nthBlack) {
-        case 1:
+    switch (key.note) {
+        case CS:
             keySpacing = 0;
             break;
-        case 3:
+        case DS:
             keySpacing = 1;
             break;
-        case 6:
+        case FS:
             keySpacing = 3;
             break;
-        case 8:
+        case GS:
             keySpacing = 4;
             break;
-        case 10:
+        case AS:
             keySpacing = 5;
             break;
     }
@@ -30,14 +30,16 @@
     }
 
     function handleKeyOver() {
-        if ($JamPianoStore.keydown) {
-            JamPianoStore.update((v) => {
-                return {
-                    ...v,
-                    currNote: key,
-                };
-            });
+        if (!$JamPianoStore.keydown) {
+            return;
         }
+
+        JamPianoStore.update((v) => {
+            return {
+                ...v,
+                currNote: key,
+            };
+        });
     }
 
     function handleKeyup() {
@@ -53,14 +55,14 @@
     style={`left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;`}
     class="key"
     class:pressed={$JamPianoStore.currNote === key}>
-    <p>{key.name[0]}</p>
+    <p>{key.note.name[0]}</p>
 </div>
 
 <style lang="scss">
     .key {
         position: absolute;
         width: 1.5rem;
-        height: 50%;
+        height: 60%;
         padding: 0.5rem;
         border-bottom-left-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
@@ -70,7 +72,7 @@
         background-color: #000;
         transition: 0.3s ease;
         cursor: pointer;
-        box-shadow: 0 0 0.5rem #000;
+        box-shadow: 0 0.3rem 0.3rem #555;
 
         p {
             color: #fff;

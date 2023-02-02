@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
-    import Home from './pages/home/Home.svelte';
-    import Jam from './pages/jam/Jam.svelte';
+    import Home from '@pages/home/Home.svelte';
+    import Jam from '@pages/jam/Jam.svelte';
 </script>
 
 <svelte:head>

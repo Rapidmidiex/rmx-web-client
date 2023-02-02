@@ -1,24 +1,59 @@
 <script lang="ts">
+    import type { PianoKeyNote } from '@lib/types/jam';
     import { genPianoKeys } from '@lib/utils/piano';
+    import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
-    const keyboard = genPianoKeys(49);
+    const sizes = [49, 61];
+    let keyboardSize: 49 | 61 = 49;
+    let keyboard: PianoKeyNote[][];
+
+    $: {
+        keyboard = genPianoKeys(keyboardSize);
+        console.log(keyboardSize);
+    }
 </script>
 
 <div class="piano">
-    {#each keyboard as octave}
-        <PianoOctave keys={octave} />
-    {/each}
+    <div class="controls">
+        <Select
+            label="Size:"
+            options={sizes}
+            display={(o) => o}
+            bind:value={keyboardSize} />
+    </div>
+    <div class="wrapper">
+        {#each keyboard as octave}
+            <PianoOctave keys={octave} />
+        {/each}
+    </div>
 </div>
 
 <style lang="scss">
     .piano {
         width: 100%;
-        height: 18rem;
-        padding: 1rem;
         display: flex;
-        overflow: auto;
-        user-select: none;
-        background-color: #000;
+        flex-direction: column;
+        align-items: center;
+
+        & > div {
+            width: 100%;
+        }
+
+        .controls {
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .wrapper {
+            height: 15rem;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            overflow: auto;
+            user-select: none;
+        }
     }
 </style>

@@ -42,12 +42,14 @@ export interface TextMsg {
     body: string;
 }
 
-export interface PianoKeyNote {
-    midi: number;
+export interface Note {
     name: string[];
     black: boolean;
-    // TODO: Keybindings
-    // keyBinding: string;
+}
+
+export interface PianoKeyNote {
+    midi: number;
+    note: Note;
 }
 
 export interface PianoState {

@@ -9,14 +9,16 @@
     }
 
     function handleKeyOver() {
-        if ($JamPianoStore.keydown) {
-            JamPianoStore.update((v) => {
-                return {
-                    ...v,
-                    currNote: key,
-                };
-            });
+        if (!$JamPianoStore.keydown) {
+            return;
         }
+
+        JamPianoStore.update((v) => {
+            return {
+                ...v,
+                currNote: key,
+            };
+        });
     }
 
     function handleKeyup() {
@@ -31,7 +33,7 @@
     on:focus
     class="key"
     class:pressed={$JamPianoStore.currNote === key}>
-    <p>{key.name[0]}</p>
+    <p>{key.note.name[0]}</p>
 </div>
 
 <style lang="scss">
@@ -46,6 +48,7 @@
         align-items: flex-end;
         justify-content: center;
         background-color: #fff;
+        box-shadow: 0 0.3rem 0.3rem #555;
         transition: 0.3s ease;
         cursor: pointer;
 
