@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { onDestroy, onMount } from 'svelte';
+    import { navigate } from 'svelte-navigator';
+    import { v4 as uuidv4 } from 'uuid';
     import { api, WS_BASE_URL } from 'src/api/api';
     import { Failure, Info, Success, Warning } from 'src/lib/notify/notify';
     import {
@@ -11,12 +14,11 @@
     import { WSMsgTyp, type WSMsg } from 'src/lib/types/websocket';
     import { JamStore, JamTextStore } from 'src/store/jam';
     import { UserStore } from 'src/store/user';
-    import { onMount } from 'svelte';
-    import { navigate } from 'svelte-navigator';
 
     import Icon from 'src/lib/components/global/Icon.svelte';
     import Chat from 'src/lib/components/jam/Chat.svelte';
     import Piano from 'src/lib/components/jam/Piano.svelte';
+    import { pingStats } from 'src/store/ping';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -35,6 +37,24 @@
     let noteHistory: number[] = [];
     const historyLength = 2;
 
+    const unsubscribe = pingStats.subscribe((value) => {
+        console.log(value);
+    });
+
+    let noteStrings = [
+        'C',
+        'C#',
+        'D',
+        'D#',
+        'E',
+        'F',
+        'F#',
+        'G',
+        'G#',
+        'A',
+        'A#',
+        'B',
+    ];
     function autoCorrelate(buf: Float32Array, sampleRate: number) {
         let SIZE = buf.length;
         let rms = 0;
@@ -137,6 +157,7 @@
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
+                    id: uuidv4(),
                     type: WSMsgTyp.MIDI,
                     payload: midi,
                     userId: $UserStore.userId,
@@ -197,6 +218,8 @@
     }
 
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
+        pingStats.msgIn(msg.id);
+
         switch (msg.type) {
             case WSMsgTyp.TEXT:
                 let displayMsg = msg.payload as TextMsg;
@@ -241,6 +264,10 @@
         $JamStore.ws.onclose = () => {
             Info('Connection was closed.');
         };
+    });
+
+    onDestroy(() => {
+        unsubscribe();
     });
 </script>
 

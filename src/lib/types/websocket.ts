@@ -5,6 +5,7 @@ export enum WSMsgTyp {
 }
 
 export interface WSMsg<T> {
+    id: string;
     type: WSMsgTyp;
     userId: string;
     payload: T;
