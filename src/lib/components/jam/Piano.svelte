@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { PianoKeyNote } from '@lib/types/jam';
     import { genPianoKeys } from '@lib/utils/piano';
+    import { JamPianoStore } from '@store/jam';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -8,10 +9,16 @@
     let keyboardSize: 49 | 61 = 49;
     let keyboard: PianoKeyNote[][];
 
+    function handleKeyUp() {
+        JamPianoStore.set({ keydown: false, currNote: null });
+    }
+
     $: {
         keyboard = genPianoKeys(keyboardSize);
     }
 </script>
+
+<svelte:window on:mouseup={handleKeyUp} />
 
 <div class="piano">
     <div class="controls">
