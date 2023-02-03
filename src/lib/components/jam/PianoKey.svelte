@@ -57,18 +57,11 @@
             };
         });
     }
-
-    function handleKeyUp() {
-        JamPianoStore.set({ keydown: false, currNote: null });
-    }
 </script>
-
-<svelte:window on:mouseup={handleKeyUp} />
 
 <div
     on:mousedown={handleKeyDown}
     on:mouseenter={handleKeyEnter}
-    on:mouseup={handleKeyUp}
     on:focus
     style={black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}
     class="key"
