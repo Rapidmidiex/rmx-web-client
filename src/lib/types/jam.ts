@@ -29,7 +29,7 @@ export interface MIDIMsg {
     state: NoteState;
     // channel:  number; // not required
     number: number;
-    // velocity: number; // not required
+    velocity: number;
 }
 
 export interface ConnectMsg {
