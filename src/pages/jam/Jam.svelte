@@ -155,6 +155,7 @@
                 let midi: MIDIMsg = {
                     state: NoteState.NOTE_ON,
                     number: noteNum,
+                    velocity: 127,
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
@@ -239,6 +240,7 @@
                 break;
             case WSMsgTyp.MIDI:
                 handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
+                midi = msg.payload as MIDIMsg;
                 break;
             case WSMsgTyp.CONNECT:
                 const { userId, userName } = msg.payload as ConnectMsg;
