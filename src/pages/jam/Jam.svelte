@@ -19,7 +19,7 @@
     import Chat from '@lib/components/jam/Chat.svelte';
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
-    import { noteHandler } from '@lib/components/jam/midi';
+    import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -238,7 +238,7 @@
                 ]);
                 break;
             case WSMsgTyp.MIDI:
-                midi = msg.payload as MIDIMsg;
+                handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
                 break;
             case WSMsgTyp.CONNECT:
                 const { userId, userName } = msg.payload as ConnectMsg;

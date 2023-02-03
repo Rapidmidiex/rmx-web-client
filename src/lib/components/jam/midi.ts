@@ -1,6 +1,6 @@
 import { Envelope } from '@lib/envelope/envelope';
 import type { MIDIMsg } from '@lib/types/jam';
-import { WSMsgTyp } from '@lib/types/websocket';
+import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
 
 /**
  *
@@ -14,4 +14,10 @@ export function noteHandler(wsClient: WebSocket, userId: string) {
         const wsMsg = new Envelope(userId, WSMsgTyp.MIDI, msg);
         wsClient.send(wsMsg.json());
     };
+}
+
+export function handleIncomingMIDI(msg: WSMsg<MIDIMsg>) {
+    console.log(
+        `TODO: Play me over speakers:\n${JSON.stringify(msg, null, 2)}`
+    );
 }
