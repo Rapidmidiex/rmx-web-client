@@ -29,7 +29,7 @@ export interface MIDIMsg {
     state: NoteState;
     // channel:  number; // not required
     number: number;
-    // velocity: number; // not required
+    velocity: number;
 }
 
 export interface ConnectMsg {
@@ -40,4 +40,19 @@ export interface ConnectMsg {
 export interface TextMsg {
     displayName: string;
     body: string;
+}
+
+export interface Note {
+    name: string[];
+    black: boolean;
+}
+
+export interface PianoKeyNote {
+    midi: number;
+    note: Note;
+}
+
+export interface PianoState {
+    keydown: boolean;
+    currNote: PianoKeyNote;
 }

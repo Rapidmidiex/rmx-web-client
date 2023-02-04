@@ -1,29 +1,30 @@
 <script lang="ts">
-    import { v4 as uuidv4 } from 'uuid';
-    import { api, WS_BASE_URL } from '../../api/api';
     import { onDestroy, onMount } from 'svelte';
+    import { navigate } from 'svelte-navigator';
+    import { v4 as uuidv4 } from 'uuid';
+    import { api, WS_BASE_URL } from '@api/api';
+    import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import {
         NoteState,
         type ConnectMsg,
         type GetJamData,
         type MIDIMsg,
         type TextMsg,
-    } from '../../models/jam';
-    import { JamStore, JamTextStore } from '../../store/jam';
-    import { UserStore } from '../../store/user';
-    import { Failure, Info, Success, Warning } from '../../lib/notify/notify';
-    import Icon from '../../lib/components/Icon.svelte';
-    import { navigate } from 'svelte-navigator';
-    import { WSMsgTyp, type WSMsg } from '../../models/websocket';
-    import Chat from './components/Chat.svelte';
-    import type { AxiosError } from 'axios';
-    import { pingStats } from '../../store/ping';
+    } from '@lib/types/jam';
+    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import { JamStore, JamTextStore } from '@store/jam';
+    import { UserStore } from '@store/user';
+
+    import Icon from '@lib/components/global/Icon.svelte';
+    import Chat from '@lib/components/jam/Chat.svelte';
+    import Piano from '@lib/components/jam/Piano.svelte';
+    import { pingStats } from '@store/ping';
+    import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
 
     export let jamID: string;
     let midi: MIDIMsg;
     let micOn: boolean = false;
     let micInit: boolean = false;
-    let midiDiv: HTMLDivElement;
 
     /*-------------------Audio related code---------------------*/
 
@@ -55,7 +56,7 @@
         'A#',
         'B',
     ];
-    function autoCorrelate(buf, sampleRate) {
+    function autoCorrelate(buf: Float32Array, sampleRate: number) {
         let SIZE = buf.length;
         let rms = 0;
         for (let i = 0; i < SIZE; i++) {
@@ -154,6 +155,7 @@
                 let midi: MIDIMsg = {
                     state: NoteState.NOTE_ON,
                     number: noteNum,
+                    velocity: 127,
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
@@ -198,21 +200,24 @@
         }
     }
 
-    function initJam() {
-        return api
-            .get<GetJamData>(`/jam/${jamID}`)
-            .then(({ data }) => {
-                JamStore.set({
-                    ...data,
-                    players: [],
-                    ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
-                });
-                Success('Jam data loaded');
-            })
-            .catch((err: AxiosError) => {
-                Failure(err.message);
-                navigate('/', { replace: true });
+    let showPiano: boolean = false;
+    function togglePiano() {
+        showPiano = !showPiano;
+    }
+
+    async function initJam() {
+        try {
+            const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
+            JamStore.set({
+                ...data,
+                players: [],
+                ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
             });
+            Success('Jam data loaded');
+        } catch (err) {
+            Failure(err.message);
+            navigate('/', { replace: true });
+        }
     }
 
     function sendWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
@@ -234,6 +239,7 @@
                 ]);
                 break;
             case WSMsgTyp.MIDI:
+                handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
                 midi = msg.payload as MIDIMsg;
                 break;
             case WSMsgTyp.CONNECT:
@@ -252,7 +258,7 @@
     onMount(async () => {
         await initJam();
 
-        $JamStore.ws.onopen = (event: Event) => {
+        $JamStore.ws.onopen = () => {
             Success('Connection established.');
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
@@ -263,7 +269,7 @@
             Failure(event.error);
             $JamStore.ws.close();
         };
-        $JamStore.ws.onclose = (event: CloseEvent) => {
+        $JamStore.ws.onclose = () => {
             Info('Connection was closed.');
         };
     });
@@ -276,15 +282,20 @@
 <div class="jam page">
     <div class="jam-content">
         <div class="jam-player">
-            <div
-                bind:this={midiDiv}
-                class="messages">
+            <div class="messages">
                 {#if midi}
                     <p>{midi.number}</p>
                 {:else}
                     <p>No message available</p>
                 {/if}
             </div>
+            {#if showPiano}
+                <Piano
+                    on:INSTRUMENT_NOTE={noteHandler(
+                        $JamStore.ws,
+                        $UserStore.userId
+                    )} />
+            {/if}
         </div>
         <div class="jam-extras">
             <Chat />
@@ -298,6 +309,10 @@
                     type="button"
                     on:click={toggleMic}
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></button>
+                <button
+                    class="btn"
+                    type="button"
+                    on:click={togglePiano}><Icon name="music" /></button>
             </div>
         </div>
     </div>
@@ -316,10 +331,8 @@
         .jam-content {
             height: 100%;
             display: flex;
-            overflow: auto;
 
             & > div {
-                width: 100%;
                 height: 100%;
             }
 
@@ -327,20 +340,19 @@
                 width: 30rem;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
                 padding: 1rem;
             }
 
             .jam-player {
+                width: 100%;
                 display: flex;
                 flex-direction: column;
-
-                & > div {
-                    width: 100%;
-                    height: 100%;
-                }
+                padding: 1rem;
+                overflow: auto;
 
                 .messages {
+                    width: 100%;
+                    height: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -381,6 +393,7 @@
                         border-radius: 100%;
                         font-size: 1rem;
                         padding: 1rem;
+                        margin: 0.5rem;
                     }
                 }
             }

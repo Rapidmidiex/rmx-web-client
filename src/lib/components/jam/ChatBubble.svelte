@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { TextMsg } from 'src/models/jam';
-    import type { WSMsg } from 'src/models/websocket';
-    import { UserStore } from '../../../store/user';
+    import type { TextMsg } from '@lib/types/jam';
+    import type { WSMsg } from '@lib/types/websocket';
+    import { UserStore } from '@store/user';
 
     export let message: WSMsg<TextMsg>;
 </script>
@@ -56,6 +56,6 @@
     }
 
     .wrapper:hover {
-        background-color: #dadada;
+        background-color: #eaeaea;
     }
 </style>
