@@ -31,7 +31,9 @@
     <div class="wrapper">
         <div class="con">
             {#each keyboard as octave}
-                <PianoOctave keys={octave} />
+                <PianoOctave
+                    keys={octave}
+                    on:INSTRUMENT_NOTE />
             {/each}
         </div>
     </div>

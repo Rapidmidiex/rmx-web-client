@@ -8,7 +8,8 @@
     {#each keys as key}
         <PianoKey
             {key}
-            black={key.note.black} />
+            black={key.note.black}
+            on:INSTRUMENT_NOTE />
     {/each}
 </div>
 

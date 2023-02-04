@@ -1,13 +1,20 @@
 <script lang="ts">
+    import type { RmxEvent } from '@lib/consts/events';
     import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
-    import type { PianoKeyNote } from '@lib/types/jam';
+    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
     import { JamPianoStore } from '@store/jam';
+    import { createEventDispatcher } from 'svelte/internal';
 
     export let key: PianoKeyNote;
     export let black: boolean;
 
-    let keySpacing: number; // spacing for black keys only
+    const svelteDispatch = createEventDispatcher();
+    // Wrapping for type safety
+    const dispatch = (name: RmxEvent, detail: MIDIMsg) => {
+        svelteDispatch(name, detail);
+    };
 
+    let keySpacing: number; // spacing for black keys only
     switch (key.note) {
         case CS:
             keySpacing = 0;
@@ -27,6 +34,14 @@
     }
 
     function handleKeyDown() {
+        const msg: MIDIMsg = {
+            state: NoteState.NOTE_ON,
+            number: key.midi,
+            velocity: 127,
+        };
+
+        dispatch('INSTRUMENT_NOTE', msg);
+
         JamPianoStore.set({ keydown: true, currNote: key });
     }
 

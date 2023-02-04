@@ -33,6 +33,8 @@
         "axios": "^1.2.2",
         "feather-icons": "^4.29.0",
         "fuzzysort": "^2.0.4",
+        "jzz": "^1.5.9",
+        "jzz-synth-tiny": "^1.3.3",
         "notiflix": "^3.2.6",
         "svelte-navigator": "^3.2.2",
         "uuid": "^9.0.0"

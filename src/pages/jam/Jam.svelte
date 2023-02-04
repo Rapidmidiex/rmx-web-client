@@ -19,6 +19,7 @@
     import Chat from '@lib/components/jam/Chat.svelte';
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
+    import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -154,6 +155,7 @@
                 let midi: MIDIMsg = {
                     state: NoteState.NOTE_ON,
                     number: noteNum,
+                    velocity: 127,
                 };
 
                 let msg: WSMsg<MIDIMsg> = {
@@ -237,6 +239,7 @@
                 ]);
                 break;
             case WSMsgTyp.MIDI:
+                handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
                 midi = msg.payload as MIDIMsg;
                 break;
             case WSMsgTyp.CONNECT:
@@ -287,7 +290,11 @@
                 {/if}
             </div>
             {#if showPiano}
-                <Piano />
+                <Piano
+                    on:INSTRUMENT_NOTE={noteHandler(
+                        $JamStore.ws,
+                        $UserStore.userId
+                    )} />
             {/if}
         </div>
         <div class="jam-extras">
