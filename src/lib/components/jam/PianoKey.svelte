@@ -14,6 +14,14 @@
         svelteDispatch(name, detail);
     };
 
+    $: $JamPianoStore,
+        $JamPianoStore.currNote &&
+            dispatch('INSTRUMENT_NOTE', {
+                state: NoteState.NOTE_ON,
+                number: $JamPianoStore.currNote?.midi,
+                velocity: 127,
+            });
+
     let keySpacing: number; // spacing for black keys only
     switch (key.note) {
         case CS:
@@ -34,14 +42,6 @@
     }
 
     function handleKeyDown() {
-        const msg: MIDIMsg = {
-            state: NoteState.NOTE_ON,
-            number: key.midi,
-            velocity: 127,
-        };
-
-        dispatch('INSTRUMENT_NOTE', msg);
-
         JamPianoStore.set({ keydown: true, currNote: key });
     }
 
