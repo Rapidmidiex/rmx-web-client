@@ -1,10 +1,7 @@
 import { Envelope } from '@lib/envelope/envelope';
 import type { MIDIMsg } from '@lib/types/jam';
 import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
-import * as JZZ from 'jzz';
-import jzzSynthTiny from 'jzz-synth-tiny';
 
-jzzSynthTiny(JZZ);
 // @ts-ignore
 // TODO: synth @types
 const synth = JZZ.synth.Tiny();
