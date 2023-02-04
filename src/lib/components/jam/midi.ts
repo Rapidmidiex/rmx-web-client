@@ -1,6 +1,13 @@
 import { Envelope } from '@lib/envelope/envelope';
 import type { MIDIMsg } from '@lib/types/jam';
 import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+import * as JZZ from 'jzz';
+import jzzSynthTiny from 'jzz-synth-tiny';
+
+jzzSynthTiny(JZZ);
+// @ts-ignore
+// TODO: synth @types
+const synth = JZZ.synth.Tiny();
 
 /**
  *
@@ -17,7 +24,7 @@ export function noteHandler(wsClient: WebSocket, userId: string) {
 }
 
 export function handleIncomingMIDI(msg: WSMsg<MIDIMsg>) {
-    console.log(
-        `TODO: Play me over speakers:\n${JSON.stringify(msg, null, 2)}`
-    );
+    // TODO play different users on different channels
+    // TODO: use instrument from MIDI message
+    synth.noteOn(0, msg.payload.number, 127);
 }
