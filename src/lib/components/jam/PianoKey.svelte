@@ -18,7 +18,7 @@
         $JamPianoStore.currNote &&
             dispatch('INSTRUMENT_NOTE', {
                 state: NoteState.NOTE_ON,
-                number: $JamPianoStore.currNote?.midi,
+                number: $JamPianoStore.currNote.midi,
                 velocity: 127,
             });
 
