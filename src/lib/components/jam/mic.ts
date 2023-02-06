@@ -81,14 +81,15 @@ function calcRMS(buf: Float32Array): number {
 /**
  * Converts audio frequency (hz) to MIDI note number.
  * @example
- * noteFromPitch(440) === 60
+ * noteFromPitch(261.6) === 60 // Middle C
  * @param frequency hertz
  * @param octaveLength Number of notes in an octave. Defaults to 12.
  * @returns MIDI note number
  */
 export function noteFromPitch(frequency: number, octaveLength: number = 12) {
-    var noteNum = octaveLength * (Math.log(frequency / 440) / Math.log(2));
-    return Math.round(noteNum) + 69;
+    const A4 = { freq: 440, midi: 69 };
+    var noteNum = octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
+    return Math.round(noteNum) + A4.midi;
 }
 
 /**
