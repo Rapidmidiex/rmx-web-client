@@ -98,9 +98,9 @@ export function noteFromPitch(frequency: number, octaveLength: number = 12) {
  * @returns An integer representing decibel level.
  */
 export function meter(analyser: AnalyserNode) {
-    const array = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(array);
-    const arraySum = array.reduce((a, value) => a + value, 0);
-    const average = arraySum / array.length;
-    console.log(Math.round(average));
+    const freqLevels = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(freqLevels);
+    const sum = freqLevels.reduce((sum, value) => sum + value, 0);
+    const average = sum / freqLevels.length;
+    return Math.round(average);
 }
