@@ -2,7 +2,7 @@
     export let label: String;
     export let options: any[] = [];
     export let display: Function = (o) => 0;
-    export let value: any = options[0];
+    export let value: any;
 </script>
 
 <label>
@@ -10,7 +10,7 @@
     <select
         on:change
         bind:value>
-        {#each options as opt, i}
+        {#each options as opt}
             <option value={opt}>{display(opt)}</option>
         {/each}
     </select>

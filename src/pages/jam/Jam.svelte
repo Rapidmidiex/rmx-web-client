@@ -44,7 +44,14 @@
     let noteHistory: number[] = [];
     const historyLength = 2;
 
-    function handleDeviceSelect(device: MediaDeviceInfo) {
+    let audioDevice: MediaDeviceInfo;
+    $: handleDeviceSelect(audioDevice);
+
+    function handleDeviceSelect(device?: MediaDeviceInfo) {
+        if (!device) {
+            console.warn('No device selected');
+            return;
+        }
         getUserMedia(device.deviceId);
     }
 
@@ -252,7 +259,7 @@
     </div>
     <div class="jam-controls-con">
         {#if micOn}
-            <DeviceSelect onSelect={handleDeviceSelect} />
+            <DeviceSelect bind:selected={audioDevice} />
         {/if}
         <div class="jam-controls">
             <div class="input">

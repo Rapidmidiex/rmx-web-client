@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { JamStore, setAudioDevice, setAvailableDevices } from '@store/jam';
+    import { JamStore, setAvailableDevices } from '@store/jam';
     import Select from '../global/Select.svelte';
 
-    export let onSelect: (device: MediaDeviceInfo) => void;
+    export let selected: MediaDeviceInfo;
 
     async function listDevices() {
         if (!navigator.mediaDevices?.enumerateDevices) {
@@ -18,13 +18,6 @@
         setAvailableDevices(audioDevices);
     }
 
-    function handleChange() {
-        setAudioDevice(selected);
-        onSelect?.(selected);
-    }
-
-    let selected = $JamStore.audioInputDevice;
-
     onMount(async () => {
         await listDevices();
     });
@@ -34,5 +27,4 @@
     label={'Device'}
     options={$JamStore.availableDevices}
     display={(d) => d.label || d.deviceId}
-    bind:value={selected}
-    on:change={handleChange} />
+    bind:value={selected} />
