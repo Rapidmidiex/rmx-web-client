@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { MIDIMsg, TextMsg } from '@lib/types/jam';
+import type { ConnectMsg, MIDIMsg, TextMsg } from '@lib/types/jam';
 import type { WSMsg, WSMsgTyp } from '@lib/types/websocket';
 
-export class Envelope<T extends MIDIMsg | TextMsg> {
+export class Envelope<T extends ConnectMsg | MIDIMsg | TextMsg> {
     /**
      * Parses a WSMsg from a JSON WebSocket message.
      * @example

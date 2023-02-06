@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
-    import { v4 as uuidv4 } from 'uuid';
     import { api, WS_BASE_URL } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import {
@@ -20,6 +19,13 @@
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
     import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
+    import {
+        autoCorrelate,
+        meter,
+        noteFromPitch,
+    } from '@lib/components/jam/mic';
+    import { Envelope } from '@lib/envelope/envelope';
+    import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -31,86 +37,25 @@
     let audioContext: AudioContext = null;
     let analyser: AnalyserNode = null;
     let mediaStream: MediaStream = null;
-    let mediaStreamSource: MediaStreamAudioSourceNode = null;
+    let micInput: MediaStreamAudioSourceNode = null;
     let sensitivity = 0.05;
     const octaveLength = 12;
     let pitch = 0;
     let noteHistory: number[] = [];
     const historyLength = 2;
 
-    const unsubscribe = pingStats.subscribe((value) => {
-        console.log(value);
-    });
-
-    let noteStrings = [
-        'C',
-        'C#',
-        'D',
-        'D#',
-        'E',
-        'F',
-        'F#',
-        'G',
-        'G#',
-        'A',
-        'A#',
-        'B',
-    ];
-    function autoCorrelate(buf: Float32Array, sampleRate: number) {
-        let SIZE = buf.length;
-        let rms = 0;
-        for (let i = 0; i < SIZE; i++) {
-            let val = buf[i];
-            rms += val * val;
-        }
-        rms = Math.sqrt(rms / SIZE);
-        if (rms < sensitivity) return -1;
-        let r1 = 0,
-            r2 = SIZE - 1,
-            thres = 0.2;
-        for (let i = 0; i < SIZE / 2; i++)
-            if (Math.abs(buf[i]) < thres) {
-                r1 = i;
-                break;
-            }
-        for (let i = 1; i < SIZE / 2; i++)
-            if (Math.abs(buf[SIZE - i]) < thres) {
-                r2 = SIZE - i;
-                break;
-            }
-        buf = buf.slice(r1, r2);
-        SIZE = buf.length;
-        let c = new Array(SIZE).fill(0);
-        for (let i = 0; i < SIZE; i++)
-            for (let j = 0; j < SIZE - i; j++)
-                c[i] = c[i] + buf[j] * buf[j + i];
-        let d = 0;
-        while (c[d] > c[d + 1]) d++;
-        let maxval = -1,
-            maxpos = -1;
-        for (let i = d; i < SIZE; i++) {
-            if (c[i] > maxval) {
-                maxval = c[i];
-                maxpos = i;
-            }
-        }
-        let T0 = maxpos;
-        let x1 = c[T0 - 1],
-            x2 = c[T0],
-            x3 = c[T0 + 1];
-        let a = (x1 + x3 - 2 * x2) / 2,
-            b = (x3 - x1) / 2;
-        if (a) T0 = T0 - b / (2 * a);
-        return sampleRate / T0;
+    function handleDeviceSelect(device: MediaDeviceInfo) {
+        getUserMedia(device.deviceId);
     }
 
-    async function getUserMedia() {
+    async function getUserMedia(deviceId?: string) {
         navigator.mediaDevices
             .getUserMedia({
                 audio: {
                     echoCancellation: false,
                     autoGainControl: false,
                     noiseSuppression: false,
+                    deviceId,
                 },
                 video: false,
             })
@@ -123,28 +68,28 @@
                 micInit = false;
             });
     }
-    function gotStream() {
-        mediaStreamSource = audioContext.createMediaStreamSource(mediaStream);
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2048;
-        mediaStreamSource.connect(analyser);
-        updatePitch();
-    }
 
-    function noteFromPitch(frequency: number) {
-        var noteNum = octaveLength * (Math.log(frequency / 440) / Math.log(2));
-        return Math.round(noteNum) + 69;
+    function gotStream() {
+        micInput = audioContext.createMediaStreamSource(mediaStream);
+        analyser = audioContext.createAnalyser();
+        analyser.smoothingTimeConstant = 0.8;
+        analyser.fftSize = 2048;
+
+        micInput.connect(analyser);
+        updatePitch();
     }
 
     let bufLen = 2048;
     let buf = new Float32Array(bufLen);
 
     function updatePitch() {
+        meter(analyser);
+
         analyser.getFloatTimeDomainData(buf);
-        let ac = autoCorrelate(buf, audioContext.sampleRate);
+        let ac = autoCorrelate(buf, audioContext.sampleRate, sensitivity);
         if (ac != -1) {
             pitch = ac;
-            let noteNum = noteFromPitch(pitch);
+            let noteNum = noteFromPitch(pitch, octaveLength);
             if (noteNum !== noteHistory[noteHistory.length - 1]) {
                 if (noteHistory.length === historyLength) {
                     noteHistory.shift();
@@ -152,18 +97,17 @@
                 noteHistory = [...noteHistory, noteNum];
                 // FIXME: still sends repeated notes.
                 // send new note to websocket
-                let midi: MIDIMsg = {
+                const midi: MIDIMsg = {
                     state: NoteState.NOTE_ON,
                     number: noteNum,
                     velocity: 127,
                 };
 
-                let msg: WSMsg<MIDIMsg> = {
-                    id: uuidv4(),
-                    type: WSMsgTyp.MIDI,
-                    payload: midi,
-                    userId: $UserStore.userId,
-                };
+                const msg = new Envelope<MIDIMsg>(
+                    $UserStore.userId,
+                    WSMsgTyp.MIDI,
+                    midi
+                );
 
                 sendWSMsg(msg);
             }
@@ -184,7 +128,11 @@
             });
     }
 
-    /*-------------------Audio related code---------------------*/
+    /*^^^^^^^^^^^^^^^^^^- Audio related code -^^^^^^^^^^^^^^^^^*/
+
+    const unsubscribe = pingStats.subscribe((value) => {
+        console.log(value);
+    });
 
     function toggleMic() {
         if (!micInit) {
@@ -208,11 +156,12 @@
     async function initJam() {
         try {
             const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
-            JamStore.set({
+            JamStore.update((store) => ({
+                ...store,
                 ...data,
                 players: [],
                 ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
-            });
+            }));
             Success('Jam data loaded');
         } catch (err) {
             Failure(err.message);
@@ -220,8 +169,8 @@
         }
     }
 
-    function sendWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
-        $JamStore.ws.send(JSON.stringify(msg));
+    function sendWSMsg(msg: Envelope<ConnectMsg | MIDIMsg | TextMsg>) {
+        $JamStore.ws.send(msg.json());
     }
 
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
@@ -302,6 +251,9 @@
         </div>
     </div>
     <div class="jam-controls-con">
+        {#if micOn}
+            <DeviceSelect onSelect={handleDeviceSelect} />
+        {/if}
         <div class="jam-controls">
             <div class="input">
                 <button
@@ -371,6 +323,7 @@
 
         .jam-controls-con {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
 
