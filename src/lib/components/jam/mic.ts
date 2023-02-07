@@ -2,7 +2,6 @@
  *
  * @param buf Array of audio sample values, represented as floats ranging from -1 to 1.
  * @param sampleRate Number of samples per second. Ex: (44100, 48000).
- * @param threshold Minimum loudness level needed to attempt auto note correlation. Sounds with RMS levels below the threshold are discarded.
  * @returns a float representing the estimated frequency (hz) of average loudest sound contained in the buffer.
  */
 export function autoCorrelate(buf: Float32Array, sampleRate: number) {
