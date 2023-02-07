@@ -7,6 +7,29 @@ const pianoStateDefault: PianoState = {
     currNote: null,
 };
 
-export const JamStore = writable<Jam>();
+export const JamStore = writable<Jam>({
+    id: '',
+    name: '',
+    capacity: 5,
+    bpm: 90,
+    players: [],
+    ws: null,
+    audioInputDevice: null,
+    availableDevices: [],
+});
+
 export const JamTextStore = writable<WSMsg<TextMsg>[]>([]);
 export const JamPianoStore = writable<PianoState>(pianoStateDefault);
+
+export function setAudioDevice(device: MediaDeviceInfo) {
+    JamStore.update((store) => ({
+        ...store,
+        audioInputDevice: device,
+    }));
+}
+export function setAvailableDevices(devices: MediaDeviceInfo[]) {
+    JamStore.update((store) => ({
+        ...store,
+        availableDevices: devices,
+    }));
+}

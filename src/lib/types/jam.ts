@@ -5,6 +5,8 @@ export interface Jam {
     bpm: number;
     players: string[];
     ws: WebSocket;
+    audioInputDevice: MediaDeviceInfo | null;
+    availableDevices: MediaDeviceInfo[];
 }
 
 export interface CreateJamData {
