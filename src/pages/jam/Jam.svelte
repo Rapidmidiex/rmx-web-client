@@ -21,8 +21,8 @@
     import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
     import {
         autoCorrelate,
-        meter,
         noteFromPitch,
+        freqAnalyze,
     } from '@lib/components/jam/mic';
     import { Envelope } from '@lib/envelope/envelope';
     import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
@@ -38,7 +38,8 @@
     let analyser: AnalyserNode = null;
     let mediaStream: MediaStream = null;
     let micInput: MediaStreamAudioSourceNode = null;
-    let sensitivity = 0.05;
+    // Integer (0-255) representing the minimum level of the audio input to return true.
+    let sensitivity = 140;
     const octaveLength = 12;
     let pitch = 0;
     let noteHistory: number[] = [];
@@ -78,9 +79,7 @@
 
     function gotStream() {
         micInput = audioContext.createMediaStreamSource(mediaStream);
-        analyser = audioContext.createAnalyser();
-        analyser.smoothingTimeConstant = 0.8;
-        analyser.fftSize = 2048;
+        analyser = new AnalyserNode(audioContext);
 
         micInput.connect(analyser);
         updatePitch();
@@ -90,11 +89,15 @@
     let buf = new Float32Array(bufLen);
 
     function updatePitch() {
-        meter(analyser);
-
+        // TODO: Maybe replace autoCorrelate with something like this:
+        const { thresholdMet } = freqAnalyze(analyser, sensitivity, true);
+        if (!thresholdMet) {
+            requestAnimationFrame(updatePitch);
+            return;
+        }
         analyser.getFloatTimeDomainData(buf);
-        let ac = autoCorrelate(buf, audioContext.sampleRate, sensitivity);
-        if (ac != -1) {
+        let ac = autoCorrelate(buf, audioContext.sampleRate);
+        if (ac != -1 && thresholdMet) {
             pitch = ac;
             let noteNum = noteFromPitch(pitch, octaveLength);
             if (noteNum !== noteHistory[noteHistory.length - 1]) {
@@ -124,7 +127,7 @@
 
     function initMic() {
         audioContext = new (window.AudioContext ||
-            globalThis.webkitAudioContext)();
+            globalThis.webkitAudioContext)({ latencyHint: 'interactive' });
         getUserMedia()
             .then(() => {
                 micInit = true;

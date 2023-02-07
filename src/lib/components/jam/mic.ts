@@ -2,19 +2,10 @@
  *
  * @param buf Array of audio sample values, represented as floats ranging from -1 to 1.
  * @param sampleRate Number of samples per second. Ex: (44100, 48000).
- * @param threshold Minimum loudness level needed to attempt auto note correlation. Sounds with RMS levels below the threshold are discarded.
  * @returns a float representing the estimated frequency (hz) of average loudest sound contained in the buffer.
  */
-export function autoCorrelate(
-    buf: Float32Array,
-    sampleRate: number,
-    threshold: number
-) {
+export function autoCorrelate(buf: Float32Array, sampleRate: number) {
     let SIZE = buf.length;
-    const rms = calcRMS(buf);
-
-    // Stop if RMS below threshold
-    if (rms < threshold) return -1;
 
     // Trim buffer to the section containing levels above the thres.
     let leftBoundary = 0;
@@ -103,4 +94,50 @@ export function meter(analyser: AnalyserNode) {
     const sum = freqLevels.reduce((sum, value) => sum + value, 0);
     const average = sum / freqLevels.length;
     return Math.round(average);
+}
+
+/**
+ * Produces a summary of frequency-based statistics used to determine when and what MIDI note to play.
+ * @param analyser
+ * @param threshold Integer (0-255) representing the minimum level of the audio input to return true.
+ */
+export function freqAnalyze(
+    analyser: AnalyserNode,
+    threshold: number,
+    debug: boolean = false
+) {
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+
+    analyser.getByteFrequencyData(buf);
+    let max = 0;
+    let maxIndex = -1;
+    let min = Infinity;
+    const sum = buf.reduce((sum, value, i) => {
+        if (value > max) {
+            max = value;
+            maxIndex = i;
+        }
+        min = Math.min(min, value);
+        return sum + value;
+    }, 0);
+    const average = sum / buf.length;
+    const maxFreq = analyser.context.sampleRate / 2;
+    let loudestFreq = 0;
+    if (maxIndex > -1) {
+        // Frequencies are linearly spaced in buffer from 0 - maxFreq (22khz for 44.1khz sample rate)
+        // The loudest frequency is at maxIndex
+        loudestFreq = (maxIndex / buf.length) * maxFreq;
+    }
+    const stats = {
+        avg: Math.round(average),
+        max,
+        min,
+        length: buf.length,
+        loudestFreq,
+        thresholdMet: max >= threshold,
+    };
+    if (debug) {
+        console.log(stats);
+    }
+    return stats;
 }
