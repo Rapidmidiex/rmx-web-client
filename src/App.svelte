@@ -124,20 +124,4 @@
         background-color: #cfcfcf;
         border-bottom: 3px solid #000;
     }
-
-    :global(.btn) {
-        border: 1px solid #000;
-        outline: none;
-        background-color: #000;
-        color: #fff;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-    :global(.btn:hover) {
-        background-color: transparent;
-        color: #000;
-    }
 </style>

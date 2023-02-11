@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Button from '@lib/components/global/Button.svelte';
     import Icon from '@lib/components/global/Icon.svelte';
     import Modal from '@lib/components/global/Modal.svelte';
 
@@ -8,12 +9,16 @@
 <Modal {closeFunc}
     ><div class="settings">
         <div class="categories">
-            <button type="button"
+            <Button
+                class="btn"
+                type="button"
                 ><Icon name="speaker" />
-                <p>Playback</p></button>
-            <button type="button"
+                <p>Playback</p></Button>
+            <Button
+                class="btn"
+                type="button"
                 ><Icon name="layout" />
-                <p>Playback</p></button>
+                <p>Playback</p></Button>
         </div>
         <div class="content" />
     </div>
@@ -30,7 +35,7 @@
             height: 100%;
             display: flex;
 
-            button {
+            :global(.btn) {
                 width: 100%;
             }
         }

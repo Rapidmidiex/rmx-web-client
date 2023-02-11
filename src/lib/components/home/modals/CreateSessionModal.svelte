@@ -5,6 +5,7 @@
     import { Failure, Success } from '@lib/notify/notify';
     import type { CreateJamData, GetJamData } from '@lib/types/jam';
     import { navigate } from 'svelte-navigator';
+    import Button from '@lib/components/global/Button.svelte';
 
     export let closeFunc: Function;
 
@@ -58,9 +59,9 @@
             name="bpm"
             id="bpm"
             placeholder="BPM (default: 120)" />
-        <button
+        <Button
             class="btn"
-            type="submit">Start</button>
+            type="submit">Start</Button>
     </form>
 </Modal>
 
@@ -81,9 +82,8 @@
             margin: 0.5rem 0;
         }
 
-        & > button {
+        :global(.btn) {
             margin: 1rem 0 0rem 0;
-            padding: 1rem;
             width: 100%;
         }
     }

@@ -6,6 +6,7 @@
     import type { GetJamData } from '@lib/types/jam';
     import { onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
+    import Button from '@lib/components/global/Button.svelte';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
@@ -62,10 +63,10 @@
                                         {jam.obj.name}
                                     </div>
                                 </div>
-                                <button
+                                <Button
                                     class="btn"
                                     on:click={() => joinJam(jam.obj.id)}
-                                    >Join</button>
+                                    >Join</Button>
                             </li>
                         {/each}
                     {:else}
@@ -76,10 +77,10 @@
                                         {jam.name ? jam.name : jam.id}
                                     </div>
                                 </div>
-                                <button
+                                <Button
                                     class="btn"
                                     on:click={() => joinJam(jam.id)}
-                                    >Join</button>
+                                    >Join</Button>
                             </li>
                         {/each}
                     {/if}
@@ -142,9 +143,8 @@
                     word-break: break-all;
                 }
 
-                & > button {
+                :global(.btn) {
                     width: 100%;
-                    padding: 1rem;
                 }
             }
         }

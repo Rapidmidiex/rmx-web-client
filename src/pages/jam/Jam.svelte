@@ -23,6 +23,7 @@
     import { ChatStore } from '@store/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
+    import Button from '@lib/components/global/Button.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -261,19 +262,19 @@
         {/if}
         <div class="jam-controls">
             <div class="input">
-                <button
+                <Button
                     class="btn"
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></button>
-                <button
+                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
+                <Button
                     class="btn"
                     type="button"
-                    on:click={togglePiano}><Icon name="music" /></button>
-                <button
+                    on:click={togglePiano}><Icon name="music" /></Button>
+                <Button
                     class="btn"
                     type="button"
-                    on:click={toggleSettings}><Icon name="settings" /></button>
+                    on:click={toggleSettings}><Icon name="settings" /></Button>
             </div>
         </div>
     </div>
@@ -354,10 +355,8 @@
                 }
 
                 .input {
-                    & > button {
+                    :global(.btn) {
                         border-radius: 100%;
-                        font-size: 1rem;
-                        padding: 1rem;
                         margin: 0.5rem;
                     }
                 }

@@ -8,6 +8,7 @@
     import { pingStats } from '@store/ping';
     import Icon from '../global/Icon.svelte';
     import { ChatStore } from '@store/chat';
+    import Button from '../global/Button.svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -60,9 +61,10 @@
             type="text"
             placeholder="Write your message here..."
             bind:value={message} />
-        <button
+        <Button
             class="btn"
-            type="submit"><Icon name="send" /></button>
+            size="small"
+            type="submit"><Icon name="send" /></Button>
     </form>
 </div>
 
@@ -106,10 +108,6 @@
                 outline: none;
                 border: none;
                 background-color: transparent;
-            }
-
-            & > button {
-                padding: 0.5rem;
             }
         }
     }

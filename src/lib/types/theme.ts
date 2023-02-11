@@ -1,21 +1,19 @@
+import type { Writable } from 'svelte/store';
+
+export type ThemeName = `${string}_THEME`;
+
 export interface Theme {
-	name: string;
-	colors: {
-		main: {
-			fg: string;
-			bg: string;
-			text: string;
-		};
-		text: {
-			button: string;
-			icon: string;
-			input: string;
-		};
-		bg: {
-			button: string;
-			icon: string;
-			input: string;
-		}
-	};
-	shadow: string;
+    name: ThemeName;
+    colors: {
+        '--main-bg': string;
+        '--main-fg': string;
+        '--main-text': string;
+        '--button-text': string;
+        '--icon-text': string;
+        '--input-text': string;
+        '--button-bg': string;
+        '--icon-bg': string;
+        '--input-bg': string;
+        '--shadow': string;
+    };
 }
