@@ -1,26 +1,41 @@
+import { THEME_CTX } from '@lib/consts/contexts';
+import { LIGHT_THEME } from '@lib/consts/theme';
 import type { Theme } from '@lib/types/theme';
+import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 
-const light: Theme = {
-    fg: '#000',
-    bg: '#fff',
-    text: '#000',
-    icon: '#000',
-};
+export let themes = [
+	{
+		name: LIGHT_THEME,
+		colors: {
+			main: {
+				fg: '#000',
+				bg: '#fff',
+				text: "#000"
+			},
+			text: {
+				input: "#000",
+				button: "#fff",
+				icon: "#fff"
+			},
+			bg: {
+				input: "#dadada",
+				button: "#000",
+				icon: "#000",
+			}
+		},
+		shadow: "0 0 0.5rem #000"
+	}]
 
-const dark: Theme = {
-    fg: '#fff',
-    bg: '#000',
-    text: '#fff',
-    icon: '#fff',
-};
+const getTheme = (name: string): Theme => themes.find(t => t.name === name)
 
-export const theme = writable<Theme>(light);
+const Theme = writable<Theme>(getTheme(LIGHT_THEME));
 
-export function toggleLightTheme() {
-    theme.set(light);
-}
+setContext(THEME_CTX, {
+	theme: Theme,
+	set: (name: string) => {
+		Theme.set(getTheme(name))
+	}
+})
 
-export function toggleDarkTheme() {
-    theme.set(dark);
-}
+

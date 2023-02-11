@@ -1,7 +1,11 @@
 <script lang="ts">
-    import type { PianoKeyNote } from '@lib/types/jam';
-    import { genPianoKeys } from '@lib/utils/piano';
-    import { JamPianoStore } from '@store/jam';
+    import { Envelope } from '@lib/envelope/envelope';
+    import { genPianoKeys } from '@lib/services/jam/piano';
+    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
+    import { WSMsgTyp } from '@lib/types/websocket';
+    import { JamStore } from '@store/jam';
+    import { PianoStore } from '@store/piano';
+    import { UserStore } from '@store/user';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -10,12 +14,27 @@
     let keyboard: PianoKeyNote[][];
 
     function handleKeyUp() {
-        JamPianoStore.set({ keydown: false, currNote: null });
+        $PianoStore = { keydown: false, currNote: null };
     }
 
-    $: {
-        keyboard = genPianoKeys(keyboardSize);
+    function playNote(midi: MIDIMsg) {
+        const wsMsg = new Envelope($UserStore.userId, WSMsgTyp.MIDI, midi);
+        $JamStore.ws.send(wsMsg.json());
     }
+
+    PianoStore.subscribe((v) => {
+        if (v.keydown && v.currNote) {
+            playNote({
+                state: NoteState.NOTE_ON,
+                number: v.currNote.midi,
+                velocity: 120,
+            });
+
+            console.log('played');
+        }
+    });
+
+    $: keyboard = genPianoKeys(keyboardSize);
 </script>
 
 <svelte:window on:mouseup={handleKeyUp} />
@@ -31,9 +50,7 @@
     <div class="wrapper">
         <div class="con">
             {#each keyboard as octave}
-                <PianoOctave
-                    keys={octave}
-                    on:INSTRUMENT_NOTE />
+                <PianoOctave keys={octave} />
             {/each}
         </div>
     </div>

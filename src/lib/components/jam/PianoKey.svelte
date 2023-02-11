@@ -1,18 +1,12 @@
 <script lang="ts">
     import type { RmxEvent } from '@lib/consts/events';
     import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
-    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
-    import { JamPianoStore } from '@store/jam';
+    import type { PianoKeyNote } from '@lib/types/jam';
+    import { PianoStore } from '@store/piano';
     import { createEventDispatcher } from 'svelte/internal';
 
     export let key: PianoKeyNote;
     export let black: boolean;
-
-    const svelteDispatch = createEventDispatcher();
-    // Wrapping for type safety
-    const dispatch = (name: RmxEvent, detail: MIDIMsg) => {
-        svelteDispatch(name, detail);
-    };
 
     let keySpacing: number; // spacing for black keys only
     switch (key.note) {
@@ -34,25 +28,15 @@
     }
 
     function handleKeyDown() {
-        JamPianoStore.set({ keydown: true, currNote: key });
-        dispatch('INSTRUMENT_NOTE', {
-            state: NoteState.NOTE_ON,
-            number: key.midi,
-            velocity: 120,
-        });
+        $PianoStore = { keydown: true, currNote: key };
     }
 
     function handleKeyEnter() {
-        if (!$JamPianoStore.keydown) {
+        if (!$PianoStore.keydown) {
             return;
         }
 
-        JamPianoStore.update((v) => {
-            return {
-                ...v,
-                currNote: key,
-            };
-        });
+        $PianoStore.currNote = key;
     }
 </script>
 
@@ -63,7 +47,7 @@
     style={black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}
     class="key"
     class:black
-    class:pressed={$JamPianoStore.currNote === key}>
+    class:pressed={$PianoStore.currNote === key}>
     <p>{key.note.name[0]}</p>
 </div>
 

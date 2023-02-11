@@ -22,19 +22,19 @@ class Instrument {
     }
 }
 
-/**
- *
- * @param wsClient WebSocket Client
- * @param userId User ID
- * @returns an instrument note event handler that sends MIDI messages over the WebSocket connection
- */
-export function noteHandler(wsClient: WebSocket, userId: string) {
-    return (e: CustomEvent<MIDIMsg>) => {
-        const { detail: msg } = e;
-        const wsMsg = new Envelope(userId, WSMsgTyp.MIDI, msg);
-        wsClient.send(wsMsg.json());
-    };
-}
+// /**
+//  *
+//  * @param wsClient WebSocket Client
+//  * @param userId User ID
+//  * @returns an instrument note event handler that sends MIDI messages over the WebSocket connection
+//  */
+// export function noteHandler(wsClient: WebSocket, userId: string) {
+//     return (e: CustomEvent<MIDIMsg>) => {
+//         const { detail: msg } = e;
+//         const wsMsg = new Envelope(userId, WSMsgTyp.MIDI, msg);
+//         wsClient.send(wsMsg.json());
+//     };
+// }
 
 const instrument = new Instrument();
 

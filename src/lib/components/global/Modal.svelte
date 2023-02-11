@@ -10,7 +10,7 @@
 
 <div
     transition:fade
-    class="modal {className}"
+    class={`modal ${className}`}
     on:click|self={closeFunc}
     on:keydown|self={closeFunc}>
     <div

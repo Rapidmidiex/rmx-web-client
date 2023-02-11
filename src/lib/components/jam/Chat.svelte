@@ -3,10 +3,11 @@
     import ChatBubble from './ChatBubble.svelte';
     import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
     import type { TextMsg } from '@lib/types/jam';
-    import { JamStore, JamTextStore } from '@store/jam';
+    import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import { pingStats } from '@store/ping';
     import Icon from '../global/Icon.svelte';
+    import { ChatStore } from '@store/chat';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -44,8 +45,8 @@
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if $JamTextStore.length > 0}
-            {#each $JamTextStore as msg}
+        {#if $ChatStore.length > 0}
+            {#each $ChatStore as msg}
                 <ChatBubble message={msg} />
             {/each}
         {:else}

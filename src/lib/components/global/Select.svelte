@@ -1,7 +1,7 @@
 <script lang="ts">
     export let label: String;
     export let options: any[] = [];
-    export let display: Function = (o) => 0;
+    export let display: Function = (o: any) => o;
     export let value: any;
 </script>
 

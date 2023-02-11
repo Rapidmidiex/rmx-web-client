@@ -11,21 +11,18 @@
         type TextMsg,
     } from '@lib/types/jam';
     import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
-    import { JamStore, JamTextStore } from '@store/jam';
+    import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
-
     import Icon from '@lib/components/global/Icon.svelte';
     import Chat from '@lib/components/jam/Chat.svelte';
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
-    import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
-    import {
-        autoCorrelate,
-        noteFromPitch,
-        freqAnalyze,
-    } from '@lib/components/jam/mic';
     import { Envelope } from '@lib/envelope/envelope';
     import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
+    import Settings from '@lib/components/jam/modals/Settings.svelte';
+    import { ChatStore } from '@store/chat';
+    import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
+    import { handleIncomingMIDI } from '@lib/services/jam/midi';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -41,7 +38,6 @@
     // Integer (0-255) representing the minimum level of the audio input to return true.
     let sensitivity = 140;
     const octaveLength = 12;
-    let pitch = 0;
     let noteHistory: number[] = [];
     const historyLength = 2;
 
@@ -85,42 +81,40 @@
         updatePitch();
     }
 
-    let bufLen = 2048;
-    let buf = new Float32Array(bufLen);
-
     function updatePitch() {
         // TODO: Maybe replace autoCorrelate with something like this:
-        const { thresholdMet } = freqAnalyze(analyser, sensitivity, true);
+        const { thresholdMet, loudestFreq } = freqAnalyze(
+            analyser,
+            sensitivity,
+            false
+        );
         if (!thresholdMet) {
             requestAnimationFrame(updatePitch);
             return;
         }
-        analyser.getFloatTimeDomainData(buf);
-        let ac = autoCorrelate(buf, audioContext.sampleRate);
-        if (ac != -1 && thresholdMet) {
-            pitch = ac;
-            let noteNum = noteFromPitch(pitch, octaveLength);
-            if (noteNum !== noteHistory[noteHistory.length - 1]) {
-                if (noteHistory.length === historyLength) {
-                    noteHistory.shift();
-                }
-                noteHistory = [...noteHistory, noteNum];
-                // FIXME: still sends repeated notes.
-                // send new note to websocket
-                const midi: MIDIMsg = {
-                    state: NoteState.NOTE_ON,
-                    number: noteNum,
-                    velocity: 127,
-                };
-
-                const msg = new Envelope<MIDIMsg>(
-                    $UserStore.userId,
-                    WSMsgTyp.MIDI,
-                    midi
-                );
-
-                sendWSMsg(msg);
+        let noteNum = noteFromPitch(loudestFreq, octaveLength);
+        if (noteNum !== noteHistory[noteHistory.length - 1]) {
+            if (noteHistory.length === historyLength) {
+                noteHistory.shift();
             }
+            noteHistory = [...noteHistory, noteNum];
+            // FIXME: still sends repeated notes.
+            // send new note to websocket
+            const midi: MIDIMsg = {
+                state: NoteState.NOTE_ON,
+                number: noteNum,
+                velocity: 127,
+            };
+
+            const msg = new Envelope<MIDIMsg>(
+                $UserStore.userId,
+                WSMsgTyp.MIDI,
+                midi
+            );
+
+            console.log(loudestFreq);
+
+            sendWSMsg(msg);
         }
         requestAnimationFrame(updatePitch);
     }
@@ -192,7 +186,7 @@
                 if (msg.userId === $UserStore.userId) {
                     displayMsg.displayName = 'You';
                 }
-                JamTextStore.update((items) => [
+                ChatStore.update((items) => [
                     ...items,
                     { ...msg, payload: displayMsg },
                 ]);
@@ -233,6 +227,11 @@
         };
     });
 
+    let isSettingsOpen: boolean = false;
+    function toggleSettings() {
+        isSettingsOpen = !isSettingsOpen;
+    }
+
     onDestroy(() => {
         unsubscribe();
     });
@@ -249,11 +248,7 @@
                 {/if}
             </div>
             {#if showPiano}
-                <Piano
-                    on:INSTRUMENT_NOTE={noteHandler(
-                        $JamStore.ws,
-                        $UserStore.userId
-                    )} />
+                <Piano />
             {/if}
         </div>
         <div class="jam-extras">
@@ -275,9 +270,16 @@
                     class="btn"
                     type="button"
                     on:click={togglePiano}><Icon name="music" /></button>
+                <button
+                    class="btn"
+                    type="button"
+                    on:click={toggleSettings}><Icon name="settings" /></button>
             </div>
         </div>
     </div>
+    {#if isSettingsOpen}
+        <Settings closeFunc={toggleSettings} />
+    {/if}
 </div>
 
 <style lang="scss">

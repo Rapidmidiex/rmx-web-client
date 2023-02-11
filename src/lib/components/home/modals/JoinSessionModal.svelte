@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { AxiosError } from 'axios';
     import fuzzysort from 'fuzzysort';
     import { api } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
@@ -18,16 +17,14 @@
         navigate(`/jam/${id}`, { replace: true });
     }
 
-    function loadJams() {
-        return api
-            .get<{ rooms: GetJamData[] }>('/jam')
-            .then(({ data }) => {
-                jams = data.rooms;
-            })
-            .catch((error: AxiosError) => {
-                Failure(error.message);
-                jamsProgress = "Couldn't load Jams list";
-            });
+    async function loadJams() {
+        try {
+            const { data } = await api.get<{ rooms: GetJamData[] }>('/jam');
+            jams = data.rooms;
+        } catch (error) {
+            Failure(error.message);
+            jamsProgress = "Couldn't load Jams list";
+        }
     }
 
     function searchJams() {

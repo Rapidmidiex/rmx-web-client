@@ -1,0 +1,38 @@
+<script lang="ts">
+    import Icon from '@lib/components/global/Icon.svelte';
+    import Modal from '@lib/components/global/Modal.svelte';
+
+    export let closeFunc: Function;
+</script>
+
+<Modal {closeFunc}
+    ><div class="settings">
+        <div class="categories">
+            <button type="button"
+                ><Icon name="speaker" />
+                <p>Playback</p></button>
+            <button type="button"
+                ><Icon name="layout" />
+                <p>Playback</p></button>
+        </div>
+        <div class="content" />
+    </div>
+</Modal>
+
+<style lang="scss">
+    .settings {
+        width: 25rem;
+        padding: 1rem;
+        display: flex;
+
+        .categories {
+            width: 8rem;
+            height: 100%;
+            display: flex;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+</style>

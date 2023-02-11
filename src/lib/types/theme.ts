@@ -1,6 +1,21 @@
 export interface Theme {
-    fg: string;
-    bg: string;
-    text: string;
-    icon: string;
+	name: string;
+	colors: {
+		main: {
+			fg: string;
+			bg: string;
+			text: string;
+		};
+		text: {
+			button: string;
+			icon: string;
+			input: string;
+		};
+		bg: {
+			button: string;
+			icon: string;
+			input: string;
+		}
+	};
+	shadow: string;
 }
