@@ -11,6 +11,7 @@ export let themes: Theme[] = [
             '--main-fg': '#000',
             '--main-fg-inverse': '#fff',
             '--main-bg': '#fff',
+            '--main-bg-secondary': '#ddd',
             '--main-bg-inverse': '#000',
             '--main-text': '#000',
             '--main-text-inverse': '#fff',
@@ -27,7 +28,9 @@ export let themes: Theme[] = [
             '--button-bg': 'transparent',
             '--button-bg-hover': '#000',
             '--button-bg-inverse': '#fff',
-            '--shadow': '0 0 1rem rgba(0, 0, 0, 0.5)',
+            '--bubble-bg': '#000',
+            '--shadow': '0 0 1rem rgba(0, 0, 0, 0.3)',
+            '--shadow-light': '0 0 0.5rem rgba(0, 0, 0, 0.3)',
             '--border': '1px solid #000',
             '--border-color': '#000',
             '--border-radius': '0.3rem',
@@ -41,6 +44,7 @@ export let themes: Theme[] = [
             '--main-fg': '#fff',
             '--main-fg-inverse': '#222',
             '--main-bg': '#222',
+            '--main-bg-secondary': '#333',
             '--main-bg-inverse': '#fff',
             '--main-text': '#fff',
             '--main-text-inverse': '#000',
@@ -49,34 +53,38 @@ export let themes: Theme[] = [
             '--button-text-inverse': '#fff',
             '--input-text': '#fff',
             '--input-bg': '#333',
-            '--input-bg-hover': '#222',
-            '--input-bg-focus': '#222',
+            '--input-bg-hover': '#444',
+            '--input-bg-focus': '#444',
             '--input-bg-inverse': '#ccc',
-            '--input-border': '3px solid #ddd',
+            '--input-border': '3px solid #aaa',
             '--input-border-focus': '3px solid #fff',
             '--button-bg': 'transparent',
             '--button-bg-hover': '#fff',
             '--button-bg-inverse': '#000',
-            '--shadow': '0 0 0.5rem #fff',
+            '--bubble-bg': '#ccc',
+            '--shadow': '0 0 0.5rem rgba(0, 0, 0, 0.5)',
+            '--shadow-light': '0 0 0.5rem rgba(0, 0, 0, 0.5)',
             '--border': '1px solid #fff',
             '--border-color': '#fff',
-            '--border-radius': '0.5rem',
+            '--border-radius': '0.3rem',
         },
     },
 ];
 
+const getOSTheme = (): ThemeName => {
+    const prefersDarkMq = window.matchMedia('(prefers-color-scheme: dark)');
+    return prefersDarkMq.matches ? 'DARK_THEME' : 'LIGHT_THEME';
+};
+
 const getTheme = (name: ThemeName): Theme =>
     themes.find((t) => t.name === name);
 
-export const themeStore = writable<Theme>(getTheme(LIGHT_THEME));
+export const themeStore = writable<Theme>(getTheme(getOSTheme()));
 
 export const switchTheme = (name: ThemeName) => {
     themeStore.set(getTheme(name));
 };
 
 export const applyTheme = (theme: Theme) => {
-    return Object.entries({ ...theme }).reduce(
-        (s, [n, v]) => `${s}${n}:${v};`,
-        ''
-    );
+    return Object.entries(theme).reduce((s, [n, v]) => `${s}${n}:${v};`, '');
 };

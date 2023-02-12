@@ -66,7 +66,7 @@
         align-items: flex-end;
         justify-content: center;
         background-color: #fff;
-        box-shadow: 0 0.3rem 0.3rem #555;
+        box-shadow: var(--shadow);
         transition: 0.3s ease;
         cursor: pointer;
 
@@ -77,7 +77,7 @@
     }
 
     .key:hover {
-        background-color: #dadada;
+        background-color: #aaa;
     }
 
     .black {

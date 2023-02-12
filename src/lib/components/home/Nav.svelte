@@ -1,7 +1,14 @@
 <script lang="ts">
-    import { applyTheme, themeStore } from '@store/theme';
+    import { applyTheme, switchTheme, themeStore } from '@store/theme';
     import { Link } from 'svelte-navigator';
+    import Button from '../global/Button.svelte';
     import Icon from '../global/Icon.svelte';
+
+    function toggleTheme() {
+        $themeStore.name === 'DARK_THEME'
+            ? switchTheme('LIGHT_THEME')
+            : switchTheme('DARK_THEME');
+    }
 
     let vars;
     $: vars = $themeStore.vars;
@@ -28,7 +35,13 @@
             <Icon name="github" />
             <p>GitHub</p></a>
     </div>
-    <div class="nav-options" />
+    <div class="nav-options">
+        <Button on:click={toggleTheme}
+            ><Icon
+                name={$themeStore.name === 'DARK_THEME'
+                    ? 'moon'
+                    : 'sun'} /></Button>
+    </div>
     <!-- <div class="nav-account">
         <Link to="/account" />
     </div> -->
@@ -104,6 +117,12 @@
                 background-color: var(--secondary-color);
                 color: var(--main-text-inverse);
             }
+        }
+
+        & > .nav-options {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
         }
     }
 </style>

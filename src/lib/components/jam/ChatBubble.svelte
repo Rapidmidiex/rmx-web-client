@@ -40,7 +40,7 @@
             min-width: 5rem;
             padding: 0.5rem;
             border-radius: var(--border-radius);
-            background-color: var(--main-bg-inverse);
+            background-color: var(--bubble-bg);
             color: var(--main-text-inverse);
 
             & > div {
@@ -51,6 +51,10 @@
             .details {
                 height: 1.5rem;
                 font-size: 0.8rem;
+
+                .username {
+                    font-weight: bold;
+                }
             }
 
             .body {

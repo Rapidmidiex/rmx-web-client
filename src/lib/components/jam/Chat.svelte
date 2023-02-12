@@ -80,6 +80,7 @@
         display: flex;
         flex-direction: column;
         padding: 1rem;
+        background-color: var(--main-bg);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
 
@@ -114,6 +115,7 @@
                 outline: none;
                 border: none;
                 background-color: transparent;
+                color: var(--input-text);
             }
         }
     }

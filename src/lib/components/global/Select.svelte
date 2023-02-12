@@ -31,6 +31,7 @@
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
         border-bottom: var(--input-border);
+        color: var(--input-text);
         transition: 0.3s ease;
     }
     select:hover {
