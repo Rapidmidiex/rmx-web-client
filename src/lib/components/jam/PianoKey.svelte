@@ -1,9 +1,8 @@
 <script lang="ts">
-    import type { RmxEvent } from '@lib/consts/events';
     import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
     import type { PianoKeyNote } from '@lib/types/jam';
     import { PianoStore } from '@store/piano';
-    import { createEventDispatcher } from 'svelte/internal';
+    import { applyTheme, themeStore } from '@store/theme';
 
     export let key: PianoKeyNote;
     export let black: boolean;
@@ -38,13 +37,17 @@
 
         $PianoStore.currNote = key;
     }
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <div
     on:mousedown={handleKeyDown}
     on:mouseenter={handleKeyEnter}
     on:focus
-    style={black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}
+    style={applyTheme(vars) +
+        `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}`}
     class="key"
     class:black
     class:pressed={$PianoStore.currNote === key}>
@@ -57,8 +60,8 @@
         height: 100%;
         padding: 0.5rem;
         margin: 0.1rem;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
         display: flex;
         align-items: flex-end;
         justify-content: center;

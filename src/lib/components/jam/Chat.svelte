@@ -9,6 +9,8 @@
     import Icon from '../global/Icon.svelte';
     import { ChatStore } from '@store/chat';
     import Button from '../global/Button.svelte';
+    import TextInput from '../global/TextInput.svelte';
+    import { applyTheme, themeStore } from '@store/theme';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -40,9 +42,14 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
     }
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
-<div class="chat">
+<div
+    style={applyTheme(vars)}
+    class="chat">
     <div
         bind:this={messagesDiv}
         class="messages">
@@ -57,12 +64,10 @@
     <form
         class="input"
         on:submit|preventDefault={sendMsg}>
-        <input
-            type="text"
+        <TextInput
             placeholder="Write your message here..."
             bind:value={message} />
         <Button
-            class="btn"
             size="small"
             type="submit"><Icon name="send" /></Button>
     </form>
@@ -75,8 +80,8 @@
         display: flex;
         flex-direction: column;
         padding: 1rem;
-        border-radius: 0.5rem;
-        box-shadow: 0px 0px 10px rgba($color: #000000, $alpha: 0.3);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
 
         .messages {
             width: 100%;
@@ -99,11 +104,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #eaeaea;
-            border-radius: 0.5rem;
+            background-color: var(--input-bg);
+            border-radius: var(--border-radius);
             padding: 0 0.5rem;
+            transition: 0.3s ease;
 
-            & > input {
+            :global(input) {
                 width: 100%;
                 outline: none;
                 border: none;

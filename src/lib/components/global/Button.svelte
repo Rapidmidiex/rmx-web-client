@@ -7,13 +7,13 @@
     let className: string = '';
     export { className as class };
 
-    let colors;
-    $: colors = $themeStore.colors;
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <button
     class={`${size} ${className}`}
-    style={applyTheme(colors) + style}
+    style={applyTheme(vars) + style}
     {type}
     on:click
     on:dblclick
@@ -27,19 +27,20 @@
 
 <style lang="scss">
     button {
-        border: 1px solid var(--button-bg);
+        border: var(--border);
         outline: none;
         background-color: var(--button-bg);
         color: var(--button-text);
-        border-radius: 0.5rem;
+        border-radius: var(--border-radius);
         font-size: 1rem;
         cursor: pointer;
         transition: 0.3s ease;
     }
 
     button:hover {
-        background-color: transparent;
-        color: var(--button-bg);
+        background-color: var(--button-bg-hover);
+        box-shadow: var(--shadow);
+        color: var(--button-text-hover);
     }
 
     button.small {

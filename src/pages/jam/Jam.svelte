@@ -24,6 +24,7 @@
     import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
     import Button from '@lib/components/global/Button.svelte';
+    import Page from '@lib/components/global/Page.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -238,7 +239,7 @@
     });
 </script>
 
-<div class="jam page">
+<Page class="jam">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">
@@ -263,16 +264,13 @@
         <div class="jam-controls">
             <div class="input">
                 <Button
-                    class="btn"
                     type="button"
                     on:click={toggleMic}
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
                 <Button
-                    class="btn"
                     type="button"
                     on:click={togglePiano}><Icon name="music" /></Button>
                 <Button
-                    class="btn"
                     type="button"
                     on:click={toggleSettings}><Icon name="settings" /></Button>
             </div>
@@ -281,13 +279,12 @@
     {#if isSettingsOpen}
         <Settings closeFunc={toggleSettings} />
     {/if}
-</div>
+</Page>
 
 <style lang="scss">
-    .jam {
+    :global(.jam) {
         display: flex;
         flex-direction: column;
-        background-color: #fff;
 
         & > div {
             width: 100%;
@@ -355,7 +352,7 @@
                 }
 
                 .input {
-                    :global(.btn) {
+                    :global(button) {
                         border-radius: 100%;
                         margin: 0.5rem;
                     }

@@ -1,5 +1,6 @@
 <script lang="ts">
     import Button from '@lib/components/global/Button.svelte';
+    import Page from '@lib/components/global/Page.svelte';
     import CreateSessionModal from '@lib/components/home/modals/CreateSessionModal.svelte';
     import JoinSessionModal from '@lib/components/home/modals/JoinSessionModal.svelte';
     import Nav from '@lib/components/home/Nav.svelte';
@@ -16,7 +17,7 @@
     }
 </script>
 
-<div class="page home">
+<Page class="home">
     <Nav />
     <div class="content">
         <section class="welcome">
@@ -25,12 +26,9 @@
             <p>A new way for musicians to perform</p>
             <br />
             <div class="session-con">
-                <Button
-                    class="btn"
-                    on:click={toggleCreateSessionModal}>Start a new Jam</Button>
-                <Button
-                    class="btn"
-                    on:click={toggleJoinModal}>Join</Button>
+                <Button on:click={toggleCreateSessionModal}
+                    >Start a new Jam</Button>
+                <Button on:click={toggleJoinModal}>Join</Button>
             </div>
         </section>
         {#if createSessionModalOpen}
@@ -40,10 +38,10 @@
             <JoinSessionModal closeFunc={toggleJoinModal} />
         {/if}
     </div>
-</div>
+</Page>
 
 <style lang="scss">
-    .home {
+    :global(.home) {
         display: flex;
 
         & > .content {
@@ -71,7 +69,7 @@
                     display: flex;
                     flex-wrap: wrap;
 
-                    :global(.btn) {
+                    :global(button) {
                         margin: 0.25rem;
                     }
                 }

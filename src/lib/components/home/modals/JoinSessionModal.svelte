@@ -7,6 +7,8 @@
     import { onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
     import Button from '@lib/components/global/Button.svelte';
+    import TextInput from '@lib/components/global/TextInput.svelte';
+    import { applyTheme, themeStore } from '@store/theme';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
@@ -38,18 +40,19 @@
     onMount(async () => {
         await loadJams();
     });
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <Modal {closeFunc}>
-    <div class="join-modal">
+    <div
+        style={applyTheme(vars)}
+        class="join-modal">
         <div class="search-bar">
-            <input
-                class="inpt"
-                type="text"
+            <TextInput
                 bind:value={search}
                 on:input={searchJams}
-                name="search"
-                id="search"
                 placeholder="Search" />
         </div>
         <ul class="jams-list">
@@ -63,9 +66,7 @@
                                         {jam.obj.name}
                                     </div>
                                 </div>
-                                <Button
-                                    class="btn"
-                                    on:click={() => joinJam(jam.obj.id)}
+                                <Button on:click={() => joinJam(jam.obj.id)}
                                     >Join</Button>
                             </li>
                         {/each}
@@ -77,9 +78,7 @@
                                         {jam.name ? jam.name : jam.id}
                                     </div>
                                 </div>
-                                <Button
-                                    class="btn"
-                                    on:click={() => joinJam(jam.id)}
+                                <Button on:click={() => joinJam(jam.id)}
                                     >Join</Button>
                             </li>
                         {/each}
@@ -98,8 +97,8 @@
     .join-modal {
         width: 30rem;
         height: 80vh;
-        background-color: #fff;
-        border-radius: 0.5rem;
+        background-color: var(--main-bg);
+        border-radius: var(--border-radius);
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -110,7 +109,7 @@
             width: 100%;
             padding: 1rem 1rem 0;
 
-            & > input {
+            :global(input) {
                 width: 100%;
             }
         }
@@ -130,8 +129,8 @@
                 height: 10rem;
                 margin: 0.5rem 0;
                 padding: 0.5rem;
-                box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
-                border-radius: 0.5rem;
+                box-shadow: var(--shadow);
+                border-radius: var(--border-radius);
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -143,7 +142,7 @@
                     word-break: break-all;
                 }
 
-                :global(.btn) {
+                :global(button) {
                     width: 100%;
                 }
             }

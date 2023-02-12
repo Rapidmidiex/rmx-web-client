@@ -9,14 +9,10 @@
 <Modal {closeFunc}
     ><div class="settings">
         <div class="categories">
-            <Button
-                class="btn"
-                type="button"
+            <Button type="button"
                 ><Icon name="speaker" />
                 <p>Playback</p></Button>
-            <Button
-                class="btn"
-                type="button"
+            <Button type="button"
                 ><Icon name="layout" />
                 <p>Playback</p></Button>
         </div>
@@ -35,7 +31,7 @@
             height: 100%;
             display: flex;
 
-            :global(.btn) {
+            :global(button) {
                 width: 100%;
             }
         }

@@ -6,6 +6,8 @@
     import type { CreateJamData, GetJamData } from '@lib/types/jam';
     import { navigate } from 'svelte-navigator';
     import Button from '@lib/components/global/Button.svelte';
+    import TextInput from '@lib/components/global/TextInput.svelte';
+    import NumberInput from '@lib/components/global/NumberInput.svelte';
 
     export let closeFunc: Function;
 
@@ -38,30 +40,16 @@
         class="new_session-form"
         on:submit|preventDefault={CreateSession}>
         <h3>Start a new Jam</h3>
-        <input
+        <TextInput
             bind:value={name}
-            class="inpt"
-            type="text"
-            name="name"
-            id="name"
             placeholder="Room name (optional)" />
-        <input
+        <NumberInput
             bind:value={capacity}
-            class="inpt"
-            type="number"
-            name="capacity"
-            id="capacity"
             placeholder="Room capacity (default: 10)" />
-        <input
+        <NumberInput
             bind:value={bpm}
-            class="inpt"
-            type="number"
-            name="bpm"
-            id="bpm"
             placeholder="BPM (default: 120)" />
-        <Button
-            class="btn"
-            type="submit">Start</Button>
+        <Button type="submit">Start</Button>
     </form>
 </Modal>
 
@@ -77,12 +65,12 @@
             margin: 1rem 0;
         }
 
-        & > input {
+        :global(input) {
             width: 100%;
             margin: 0.5rem 0;
         }
 
-        :global(.btn) {
+        :global(button) {
             margin: 1rem 0 0rem 0;
             width: 100%;
         }

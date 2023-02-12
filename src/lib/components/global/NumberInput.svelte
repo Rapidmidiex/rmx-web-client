@@ -1,30 +1,25 @@
 <script lang="ts">
     import { applyTheme, themeStore } from '@store/theme';
 
-    export let label: String;
-    export let options: any[] = [];
-    export let display: Function = (o: any) => o;
-    export let value: any;
+    export let placeholder = '';
+    export let disabled: boolean = false;
+    export let value: number;
 
     let vars;
     $: vars = $themeStore.vars;
 </script>
 
-<label>
-    {label}
-    <select
-        style={applyTheme(vars)}
-        on:change
-        bind:value>
-        {#each options as opt}
-            <option value={opt}>{display(opt)}</option>
-        {/each}
-    </select>
-</label>
+<input
+    style={applyTheme(vars)}
+    type="number"
+    {placeholder}
+    {disabled}
+    on:input
+    bind:value />
 
 <style lang="scss">
-    select {
-        padding: 0.5rem 1rem;
+    input {
+        padding: 1rem;
         outline: none;
         border: none;
         background-color: var(--input-bg);
@@ -33,11 +28,8 @@
         border-bottom: var(--input-border);
         transition: 0.3s ease;
     }
-    select:hover {
-        background-color: var(--input-bg-hover);
-    }
 
-    select:focus {
+    input:focus {
         background-color: var(--input-bg-focus);
         border-bottom: var(--input-border-focus);
     }

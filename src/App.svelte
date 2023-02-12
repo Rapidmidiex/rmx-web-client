@@ -102,26 +102,4 @@
         outline: none;
         font-family: Raleway;
     }
-
-    :global(.page) {
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    :global(.inpt) {
-        padding: 1rem;
-        outline: none;
-        border: none;
-        background-color: #eaeaea;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-        border-bottom: 3px solid #808080;
-        transition: 0.3s ease;
-    }
-
-    :global(.inpt:focus) {
-        background-color: #cfcfcf;
-        border-bottom: 3px solid #000;
-    }
 </style>

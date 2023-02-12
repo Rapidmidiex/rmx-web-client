@@ -1,9 +1,13 @@
 <script lang="ts">
+    import { applyTheme, themeStore } from '@store/theme';
     import { Link } from 'svelte-navigator';
     import Icon from '../global/Icon.svelte';
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
-<nav>
+<nav style={applyTheme(vars)}>
     <div class="logo-con">
         <div class="logo">
             <Link to="/" />
@@ -37,7 +41,8 @@
         display: flex;
         align-items: center;
         flex-direction: column;
-        box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3); // needs theming
+        box-shadow: var(--shadow);
+        background-color: var(--main-bg);
 
         & > div {
             width: 100%;
@@ -60,9 +65,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background-color: #000000; // needs theming
-                    color: #fff; // needs theming
-                    border-radius: 0.5rem;
+                    border-radius: var(--border-radius);
                     text-decoration: none;
                     transition: 0.3s ease;
                     background-image: url('../../../assets/RMX-logo-256.jpg');
@@ -89,17 +92,17 @@
                 justify-content: space-evenly;
                 flex-direction: column;
                 text-decoration: none;
-                color: #000000; // needs theming
+                color: var(--main-text);
                 width: 4rem;
                 height: 4rem;
                 margin: 0.25rem 0.5rem;
-                border-radius: 0.5rem; // needs theming
-                transition: 0.3s ease; // needs theming
+                border-radius: var(--border-radius);
+                transition: 0.3s ease;
             }
 
             & > :global(a:hover) {
-                background-color: #000000; // needs theming
-                color: #fff; // needs theming
+                background-color: var(--secondary-color);
+                color: var(--main-text-inverse);
             }
         }
     }

@@ -1,15 +1,20 @@
 <script lang="ts">
     import type { TextMsg } from '@lib/types/jam';
     import type { WSMsg } from '@lib/types/websocket';
+    import { applyTheme, themeStore } from '@store/theme';
     import { UserStore } from '@store/user';
 
     export let message: WSMsg<TextMsg>;
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <div
-    style={`justify-content: ${
-        message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
-    };`}
+    style={applyTheme(vars) +
+        `justify-content: ${
+            message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
+        };`}
     class="wrapper">
     <div class="bubble">
         <div class="details">
@@ -27,16 +32,16 @@
         padding: 0.3rem;
         display: flex;
         align-items: center;
-        border-radius: 0.5rem;
+        border-radius: var(--border-radius);
 
         .bubble {
             display: flex;
             flex-direction: column;
             min-width: 5rem;
             padding: 0.5rem;
-            border-radius: 0.5rem;
-            background-color: #000;
-            color: #fff;
+            border-radius: var(--border-radius);
+            background-color: var(--main-bg-inverse);
+            color: var(--main-text-inverse);
 
             & > div {
                 width: 100%;
@@ -53,9 +58,5 @@
                 font-size: 1rem;
             }
         }
-    }
-
-    .wrapper:hover {
-        background-color: #eaeaea;
     }
 </style>
