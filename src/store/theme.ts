@@ -1,10 +1,9 @@
-import { DARK_THEME, LIGHT_THEME } from '@lib/consts/theme';
 import type { Theme, ThemeName } from '@lib/types/theme';
 import { writable } from 'svelte/store';
 
 export let themes: Theme[] = [
     {
-        name: LIGHT_THEME,
+        name: 'LIGHT_THEME',
         vars: {
             '--primary-color': '#00ff9a',
             '--secondary-color': '#000',
@@ -37,7 +36,7 @@ export let themes: Theme[] = [
         },
     },
     {
-        name: DARK_THEME,
+        name: 'DARK_THEME',
         vars: {
             '--primary-color': '#00ff9a',
             '--secondary-color': '#fff',
