@@ -1,5 +1,6 @@
+import { CHAT_STORE } from "@lib/consts/store";
+import storage from "@lib/services/store/store";
 import type { TextMsg } from "@lib/types/jam";
 import type { WSMsg } from "@lib/types/websocket";
-import { writable } from "svelte/store";
 
-export const ChatStore = writable<WSMsg<TextMsg>[]>([]);
+export const ChatStore = storage<WSMsg<TextMsg>[]>(CHAT_STORE, []);

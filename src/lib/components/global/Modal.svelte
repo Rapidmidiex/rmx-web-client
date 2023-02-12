@@ -1,6 +1,6 @@
 <script lang="ts">
     import { applyTheme, themeStore } from '@store/theme';
-    import { fade, scale } from 'svelte/transition';
+    import { fade, fly, scale } from 'svelte/transition';
 
     let className = '';
     export { className as class };
@@ -19,7 +19,7 @@
     on:click|self={closeFunc}
     on:keydown|self={closeFunc}>
     <div
-        transition:scale
+        transition:fly={{ y: 200, duration: 300 }}
         style="width: {width};height: {height};">
         <slot />
     </div>
