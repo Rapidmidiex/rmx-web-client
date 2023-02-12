@@ -129,7 +129,7 @@
                 height: 10rem;
                 margin: 0.5rem 0;
                 padding: 0.5rem;
-                background-color: var(--main-bg);
+                background-color: var(--main-bg-secondary);
                 box-shadow: var(--shadow-light);
                 border-radius: var(--border-radius);
                 display: flex;
