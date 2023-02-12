@@ -3,6 +3,7 @@
     import type { WSMsg } from '@lib/types/websocket';
     import { applyTheme, themeStore } from '@store/theme';
     import { UserStore } from '@store/user';
+    import { fly } from 'svelte/transition';
 
     export let message: WSMsg<TextMsg>;
 
@@ -11,6 +12,7 @@
 </script>
 
 <div
+    transition:fly={{ y: 200, duration: 300 }}
     style={applyTheme(vars) +
         `justify-content: ${
             message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'

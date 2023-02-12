@@ -11,6 +11,7 @@
     import Button from '../global/Button.svelte';
     import TextInput from '../global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
+    import { fly } from 'svelte/transition';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -49,7 +50,8 @@
 
 <div
     style={applyTheme(vars)}
-    class="chat">
+    class="chat"
+    transition:fly={{ x: 200, duration: 300 }}>
     <div
         bind:this={messagesDiv}
         class="messages">
@@ -75,7 +77,7 @@
 
 <style lang="scss">
     .chat {
-        width: 100%;
+        width: 20rem;
         height: 100%;
         display: flex;
         flex-direction: column;

@@ -229,9 +229,14 @@
         };
     });
 
-    let isSettingsOpen: boolean = false;
+    let showChat: boolean = false;
+    function toggleChat() {
+        showChat = !showChat;
+    }
+
+    let showSettings: boolean = false;
     function toggleSettings() {
-        isSettingsOpen = !isSettingsOpen;
+        showSettings = !showSettings;
     }
 
     onDestroy(() => {
@@ -254,7 +259,9 @@
             {/if}
         </div>
         <div class="jam-extras">
-            <Chat />
+            {#if showChat}
+                <Chat />
+            {/if}
         </div>
     </div>
     <div class="jam-controls-con">
@@ -273,10 +280,15 @@
                 <Button
                     type="button"
                     on:click={toggleSettings}><Icon name="settings" /></Button>
+                <Button
+                    type="button"
+                    on:click={toggleChat}>
+                    <Icon name="message-square" />
+                </Button>
             </div>
         </div>
     </div>
-    {#if isSettingsOpen}
+    {#if showSettings}
         <Settings closeFunc={toggleSettings} />
     {/if}
 </Page>
@@ -299,7 +311,6 @@
             }
 
             .jam-extras {
-                width: 30rem;
                 display: flex;
                 flex-direction: column;
                 padding: 1rem;

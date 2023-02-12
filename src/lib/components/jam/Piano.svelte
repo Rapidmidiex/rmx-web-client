@@ -6,6 +6,7 @@
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { UserStore } from '@store/user';
+    import { fly } from 'svelte/transition';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -39,7 +40,9 @@
 
 <svelte:window on:mouseup={handleKeyUp} />
 
-<div class="piano">
+<div
+    transition:fly={{ y: 200, duration: 300 }}
+    class="piano">
     <div class="controls">
         <Select
             label="Size:"

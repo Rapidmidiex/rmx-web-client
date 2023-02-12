@@ -1,6 +1,7 @@
 <script lang="ts">
     import { applyTheme, switchTheme, themeStore } from '@store/theme';
     import { Link } from 'svelte-navigator';
+    import { fly } from 'svelte/transition';
     import Button from '../global/Button.svelte';
     import Icon from '../global/Icon.svelte';
 
@@ -14,7 +15,9 @@
     $: vars = $themeStore.vars;
 </script>
 
-<nav style={applyTheme(vars)}>
+<nav
+    transition:fly={{ x: -200, duration: 300, delay: 300 }}
+    style={applyTheme(vars)}>
     <div class="logo-con">
         <div class="logo">
             <Link to="/" />
