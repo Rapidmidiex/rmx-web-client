@@ -3,7 +3,7 @@ import type { ConnectMsg, MIDIMsg, TextMsg } from '@lib/types/jam';
 
 // planning to move everything inside classes
 class WSConn {
-    conn: WebSocket;
+    private conn: WebSocket;
 
     constructor(conn: WebSocket) {
         this.conn = conn;

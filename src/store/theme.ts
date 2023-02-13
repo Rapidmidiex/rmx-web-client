@@ -1,7 +1,5 @@
-import { THEME_STORE } from '@lib/consts/store';
-import storage from '@lib/services/store/store';
+import { storage } from '@lib/services/store/store';
 import type { Theme, ThemeName } from '@lib/types/theme';
-import { writable } from 'svelte/store';
 
 export let themes: Theme[] = [
     {
@@ -66,7 +64,7 @@ const getOSTheme = (): ThemeName => {
 const getTheme = (name: ThemeName): Theme =>
     themes.find((t) => t.name === name);
 
-export const themeStore = storage<Theme>(THEME_STORE, getTheme(getOSTheme()));
+export const themeStore = storage<Theme>('THEME_STORE', getTheme(getOSTheme()));
 
 export const switchTheme = (name: ThemeName) => {
     themeStore.set(getTheme(name));

@@ -6,6 +6,7 @@
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { UserStore } from '@store/user';
+    import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
@@ -23,7 +24,7 @@
         $JamStore.ws.send(wsMsg.json());
     }
 
-    PianoStore.subscribe((v) => {
+    const unsubscribe = PianoStore.subscribe((v) => {
         if (v.keydown && v.currNote) {
             playNote({
                 state: NoteState.NOTE_ON,
@@ -36,6 +37,10 @@
     });
 
     $: keyboard = genPianoKeys(keyboardSize);
+
+    onDestroy(() => {
+        unsubscribe();
+    });
 </script>
 
 <svelte:window on:mouseup={handleKeyUp} />

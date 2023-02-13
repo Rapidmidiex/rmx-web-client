@@ -84,7 +84,7 @@
     }
 
     function updatePitch() {
-        // TODO: Maybe replace autoCorrelate with something like this:
+        // TODO: Not working as expected
         const { thresholdMet, loudestFreq } = freqAnalyze(
             analyser,
             sensitivity,
@@ -313,6 +313,7 @@
             .jam-extras {
                 display: flex;
                 flex-direction: column;
+                padding: 1rem;
             }
 
             .jam-player {

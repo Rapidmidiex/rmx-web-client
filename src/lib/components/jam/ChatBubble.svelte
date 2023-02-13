@@ -12,7 +12,7 @@
 </script>
 
 <div
-    transition:fly={{ y: 200, duration: 300 }}
+    in:fly={{ y: 200, duration: 300 }}
     style={applyTheme(vars) +
         `justify-content: ${
             message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
