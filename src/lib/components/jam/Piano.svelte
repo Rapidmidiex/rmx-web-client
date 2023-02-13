@@ -2,12 +2,14 @@
     import { Envelope } from '@lib/envelope/envelope';
     import { genPianoKeys } from '@lib/services/jam/piano';
     import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
-    import { WSMsgTyp } from '@lib/types/websocket';
+    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
+    import { pingStats } from '@store/ping';
     import { UserStore } from '@store/user';
     import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
+    import { v4 as uuidv4 } from 'uuid';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -19,20 +21,25 @@
         $PianoStore = { keydown: false, currNote: null };
     }
 
-    function playNote(midi: MIDIMsg) {
-        const wsMsg = new Envelope($UserStore.userId, WSMsgTyp.MIDI, midi);
-        $JamStore.ws.send(wsMsg.json());
+    function sendMsg(midi: MIDIMsg) {
+        let msg: WSMsg<MIDIMsg> = {
+            id: uuidv4(),
+            type: WSMsgTyp.MIDI,
+            payload: midi,
+            userId: $UserStore.userId,
+        };
+
+        pingStats.msgOut(msg.id);
+        $JamStore.ws.send(JSON.stringify(msg));
     }
 
     const unsubscribe = PianoStore.subscribe((v) => {
         if (v.keydown && v.currNote) {
-            playNote({
+            sendMsg({
                 state: NoteState.NOTE_ON,
                 number: v.currNote.midi,
                 velocity: 120,
             });
-
-            console.log('played');
         }
     });
 

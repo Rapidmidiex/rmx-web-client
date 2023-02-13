@@ -81,9 +81,8 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        background-color: var(--background);
+        background-color: var(--background-accent);
         border-radius: var(--border-radius);
-        box-shadow: var(--shadow);
         padding: 0.5rem;
 
         .messages {

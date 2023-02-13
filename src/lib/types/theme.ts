@@ -10,6 +10,7 @@ export interface Theme {
         '--secondary-light': string;
         '--secondary-dark': string;
         '--background': string;
+        '--background-accent': string;
         '--background-hover': string;
         '--background-focus': string;
         '--surface': string;

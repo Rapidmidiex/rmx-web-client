@@ -269,6 +269,11 @@
             <DeviceSelect bind:selected={audioDevice} />
         {/if}
         <div class="jam-controls">
+            <div class="ping">
+                <div class="ping-stats">
+                    <p><b>ping</b>: {$pingStats.avg.toFixed()} <i>ms</i></p>
+                </div>
+            </div>
             <div class="input">
                 <Button
                     type="button"
@@ -280,6 +285,8 @@
                 <Button
                     type="button"
                     on:click={toggleSettings}><Icon name="settings" /></Button>
+            </div>
+            <div class="chat">
                 <Button
                     type="button"
                     on:click={toggleChat}>
@@ -305,6 +312,7 @@
         .jam-content {
             height: 100%;
             display: flex;
+            overflow: hidden;
 
             & > div {
                 height: 100%;
@@ -321,7 +329,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 1rem;
-                overflow: auto;
+                overflow: hidden;
 
                 .messages {
                     width: 100%;
@@ -347,14 +355,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
 
             .jam-controls {
                 width: 100%;
                 height: 5rem;
                 display: flex;
                 align-items: center;
-                justify-content: space-around;
+                justify-content: space-between;
                 border-radius: 0.5rem;
+                padding: 0 1rem;
 
                 & > div {
                     height: 100%;
@@ -362,7 +372,38 @@
                     align-items: center;
                 }
 
+                .ping {
+                    justify-content: flex-start;
+                    .ping-stats {
+                        border-radius: var(--border-radius);
+                        background-color: var(--background-accent);
+                        padding: 1rem;
+
+                        p > i {
+                            color: var(--secondary);
+                        }
+
+                        p > b {
+                            color: var(--primary);
+                        }
+                    }
+                }
+
                 .input {
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    justify-content: center;
+
+                    :global(button) {
+                        border-radius: 100%;
+                        margin: 0.5rem;
+                    }
+                }
+
+                .chat {
+                    justify-content: flex-end;
+
                     :global(button) {
                         border-radius: 100%;
                         margin: 0.5rem;

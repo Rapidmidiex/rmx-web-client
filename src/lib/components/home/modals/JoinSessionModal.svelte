@@ -129,8 +129,7 @@
                 height: 10rem;
                 margin: 0.5rem 0;
                 padding: 0.5rem;
-                background-color: var(--background);
-                box-shadow: var(--shadow-light);
+                background-color: var(--background-accent);
                 border-radius: var(--border-radius);
                 display: flex;
                 align-items: center;
