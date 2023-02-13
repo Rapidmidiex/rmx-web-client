@@ -84,6 +84,7 @@
         background-color: var(--background);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
+        padding: 0.5rem;
 
         .messages {
             width: 100%;

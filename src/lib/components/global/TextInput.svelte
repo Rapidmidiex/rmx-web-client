@@ -32,6 +32,6 @@
 
     input:focus {
         background-color: var(--background-focus);
-        border-color: var(--primary-light);
+        border-color: var(--primary);
     }
 </style>
