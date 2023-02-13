@@ -58,7 +58,7 @@
         align-items: center;
         flex-direction: column;
         box-shadow: var(--shadow);
-        background-color: var(--main-bg);
+        background-color: var(--background);
 
         & > div {
             width: 100%;
@@ -108,7 +108,7 @@
                 justify-content: space-evenly;
                 flex-direction: column;
                 text-decoration: none;
-                color: var(--main-text);
+                color: var(--on-background);
                 width: 4rem;
                 height: 4rem;
                 margin: 0.25rem 0.5rem;
@@ -117,8 +117,9 @@
             }
 
             & > :global(a:hover) {
-                background-color: var(--secondary-color);
-                color: var(--main-text-inverse);
+                background-color: var(--primary);
+                box-shadow: var(--shadow);
+                color: var(--on-primary);
             }
         }
 

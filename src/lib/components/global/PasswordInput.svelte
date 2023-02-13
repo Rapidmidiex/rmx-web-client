@@ -22,16 +22,16 @@
         padding: 1rem;
         outline: none;
         border: none;
-        background-color: var(--input-bg);
+        background-color: var(--background);
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
-        border-bottom: var(--input-border);
-        color: var(--input-text);
+        border-bottom: 3px solid var(--on-background);
+        color: var(--on-background);
         transition: 0.3s ease;
     }
 
     input:focus {
-        background-color: var(--input-bg-focus);
-        border-bottom: var(--input-border-focus);
+        background-color: var(--background-focus);
+        border-color: var(--primary-light);
     }
 </style>

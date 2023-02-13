@@ -97,7 +97,7 @@
     .join-modal {
         width: 30rem;
         height: 80vh;
-        background-color: var(--main-bg);
+        background-color: var(--background);
         border-radius: var(--border-radius);
         display: flex;
         align-items: center;
@@ -129,7 +129,7 @@
                 height: 10rem;
                 margin: 0.5rem 0;
                 padding: 0.5rem;
-                background-color: var(--main-bg-secondary);
+                background-color: var(--background);
                 box-shadow: var(--shadow-light);
                 border-radius: var(--border-radius);
                 display: flex;

@@ -19,7 +19,7 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background-color: var(--main-bg-secondary);
-        color: var(--main-text);
+        background-color: var(--background);
+        color: var(--on-background);
     }
 </style>

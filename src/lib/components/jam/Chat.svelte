@@ -81,8 +81,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        padding: 1rem;
-        background-color: var(--main-bg);
+        background-color: var(--background);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow);
 
@@ -107,7 +106,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: var(--input-bg);
+            background-color: var(--background);
             border-radius: var(--border-radius);
             padding: 0 0.5rem;
             transition: 0.3s ease;
@@ -117,7 +116,7 @@
                 outline: none;
                 border: none;
                 background-color: transparent;
-                color: var(--input-text);
+                color: var(--on-background);
             }
         }
     }

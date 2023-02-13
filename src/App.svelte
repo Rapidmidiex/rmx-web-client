@@ -2,10 +2,6 @@
     import { Route, Router } from 'svelte-navigator';
     import Home from '@pages/home/Home.svelte';
     import Jam from '@pages/jam/Jam.svelte';
-    import { applyTheme, themeStore } from '@store/theme';
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <svelte:head>
@@ -79,7 +75,7 @@
         content="#ffffff" />
 </svelte:head>
 
-<main style={applyTheme(vars)}>
+<main>
     <Router>
         <Route path="/">
             <Home />

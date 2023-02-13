@@ -27,19 +27,16 @@
         padding: 0.5rem 1rem;
         outline: none;
         border: none;
-        background-color: var(--input-bg);
+        background-color: var(--background);
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
-        border-bottom: var(--input-border);
+        border-bottom: 3px solid var(--on-background);
         color: var(--input-text);
         transition: 0.3s ease;
     }
-    select:hover {
-        background-color: var(--input-bg-hover);
-    }
 
     select:focus {
-        background-color: var(--input-bg-focus);
-        border-bottom: var(--input-border-focus);
+        background-color: var(--background-focus);
+        border-color: var(--primary-light);
     }
 </style>

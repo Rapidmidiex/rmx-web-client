@@ -31,7 +31,7 @@
 <style lang="scss">
     .wrapper {
         width: 100%;
-        padding: 0.3rem;
+        padding: 0.5rem;
         display: flex;
         align-items: center;
         border-radius: var(--border-radius);
@@ -42,8 +42,9 @@
             min-width: 5rem;
             padding: 0.5rem;
             border-radius: var(--border-radius);
-            background-color: var(--bubble-bg);
-            color: var(--main-text-inverse);
+            background-color: var(--secondary);
+            color: var(--on-secondary);
+            box-shadow: var(--shadow-light);
 
             & > div {
                 width: 100%;

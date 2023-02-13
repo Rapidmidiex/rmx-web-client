@@ -313,7 +313,6 @@
             .jam-extras {
                 display: flex;
                 flex-direction: column;
-                padding: 1rem;
             }
 
             .jam-player {

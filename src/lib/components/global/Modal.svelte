@@ -1,6 +1,6 @@
 <script lang="ts">
     import { applyTheme, themeStore } from '@store/theme';
-    import { fade, fly, scale } from 'svelte/transition';
+    import { fade, fly } from 'svelte/transition';
 
     let className = '';
     export { className as class };
@@ -38,7 +38,7 @@
         justify-content: center;
 
         & > div {
-            background-color: var(--main-bg);
+            background-color: var(--background);
             border-radius: 0.5rem;
             box-shadow: var(--shadow);
         }

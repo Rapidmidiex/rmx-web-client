@@ -27,10 +27,10 @@
 
 <style lang="scss">
     button {
-        border: var(--border);
+        border: none;
         outline: none;
-        background-color: var(--button-bg);
-        color: var(--button-text);
+        background-color: var(--primary);
+        color: var(--on-primary);
         border-radius: var(--border-radius);
         font-size: 1rem;
         cursor: pointer;
@@ -38,9 +38,8 @@
     }
 
     button:hover {
-        background-color: var(--button-bg-hover);
+        background-color: var(--primary-dark);
         box-shadow: var(--shadow);
-        color: var(--button-text-hover);
     }
 
     button.small {
