@@ -379,10 +379,6 @@
                         background-color: var(--background-accent);
                         padding: 1rem;
 
-                        p > i {
-                            color: var(--secondary);
-                        }
-
                         p > b {
                             color: var(--primary);
                         }

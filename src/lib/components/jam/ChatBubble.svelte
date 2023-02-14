@@ -42,7 +42,7 @@
             min-width: 5rem;
             padding: 0.5rem;
             border-radius: var(--border-radius);
-            background-color: var(--secondary);
+            background-color: var(--primary-light);
             color: var(--on-secondary);
 
             & > div {

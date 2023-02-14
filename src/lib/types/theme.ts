@@ -1,14 +1,13 @@
 export type ThemeName = `${'LIGHT' | 'DARK'}_THEME`;
+export type ThemeVariant = 'LIGHT' | 'DARK';
 
 export interface Theme {
     name: ThemeName;
+    variant: ThemeVariant;
     vars: {
         '--primary': string;
         '--primary-light': string;
         '--primary-dark': string;
-        '--secondary': string;
-        '--secondary-light': string;
-        '--secondary-dark': string;
         '--background': string;
         '--background-accent': string;
         '--background-hover': string;

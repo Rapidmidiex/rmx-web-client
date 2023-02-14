@@ -4,13 +4,11 @@ import type { Theme, ThemeName } from '@lib/types/theme';
 export let themes: Theme[] = [
     {
         name: 'LIGHT_THEME',
+        variant: 'LIGHT',
         vars: {
-            '--primary': '#00993e',
-            '--primary-light': '#00cb6a',
-            '--primary-dark': '#006912',
-            '--secondary': '#58a7ba',
-            '--secondary-light': '#9be9fc',
-            '--secondary-dark': '#006a7b',
+            '--primary': '#a93aff',
+            '--primary-light': '#ce5eff',
+            '--primary-dark': '#8400ff',
             '--background': '#ffffff',
             '--background-accent': '#e5e5e5',
             '--background-hover': '#dddddd',
@@ -31,13 +29,11 @@ export let themes: Theme[] = [
     },
     {
         name: 'DARK_THEME',
+        variant: 'DARK',
         vars: {
-            '--primary': '#00993e',
-            '--primary-light': '#00cb6a',
-            '--primary-dark': '#006912',
-            '--secondary': '#35889a',
-            '--secondary-light': '#58a7ba',
-            '--secondary-dark': '#006a7b',
+            '--primary': '#a93aff',
+            '--primary-light': '#ce5eff',
+            '--primary-dark': '#8400ff',
             '--background': '#333333',
             '--background-accent': '#444444',
             '--background-hover': '#444444',

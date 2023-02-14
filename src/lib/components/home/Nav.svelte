@@ -84,7 +84,7 @@
                     border-radius: var(--border-radius);
                     text-decoration: none;
                     transition: 0.3s ease;
-                    background-image: url('../../../assets/RMX-logo-256.jpg');
+                    background-image: url('../../../assets/RMX-logo-500.png');
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: cover;
