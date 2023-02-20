@@ -1,12 +1,13 @@
 <script lang="ts">
     import { applyTheme, themeStore } from '@store/theme';
     import { fade, fly } from 'svelte/transition';
+    import Button from './Button.svelte';
+    import Icon from './Icon.svelte';
 
     let className = '';
     export { className as class };
     export let closeFunc;
-    export let width = 'auto';
-    export let height = 'auto';
+    export let name: string;
 
     let vars;
     $: vars = $themeStore.vars;
@@ -19,9 +20,17 @@
     on:click|self={closeFunc}
     on:keydown|self={closeFunc}>
     <div
-        transition:fly={{ y: 200, duration: 300 }}
-        style="width: {width};height: {height};">
-        <slot />
+        class="con"
+        transition:fly={{ y: 200, duration: 300 }}>
+        <div class="controls">
+            <p>{name.toUpperCase()}</p>
+            <Button
+                size="small"
+                on:click={closeFunc}><Icon name="x" /></Button>
+        </div>
+        <div class="content">
+            <slot />
+        </div>
     </div>
 </div>
 
@@ -37,10 +46,29 @@
         align-items: center;
         justify-content: center;
 
-        & > div {
+        .con {
+            display: flex;
+            flex-direction: column;
+            border-radius: var(--border-radius);
             background-color: var(--background);
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow);
+            padding: 1rem;
+
+            .controls {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 0 1rem 0;
+
+                & > p {
+                    color: var(--primary);
+                }
+            }
+
+            @media screen and (max-width: 35rem) {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
         }
     }
 </style>

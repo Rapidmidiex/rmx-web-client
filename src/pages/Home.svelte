@@ -1,9 +1,8 @@
 <script lang="ts">
     import Button from '@lib/components/global/Button.svelte';
-    import Page from '@lib/components/global/Page.svelte';
+    import NavPage from '@lib/components/global/NavPage.svelte';
     import CreateSessionModal from '@lib/components/home/modals/CreateSessionModal.svelte';
     import JoinSessionModal from '@lib/components/home/modals/JoinSessionModal.svelte';
-    import Nav from '@lib/components/home/Nav.svelte';
 
     let createSessionModalOpen = false;
     let joinModalOpen = false;
@@ -17,8 +16,7 @@
     }
 </script>
 
-<Page class="home">
-    <Nav />
+<NavPage class="home">
     <div class="content">
         <section class="welcome">
             <h2>Welcome to Rapidmidiex!</h2>
@@ -38,7 +36,7 @@
             <JoinSessionModal closeFunc={toggleJoinModal} />
         {/if}
     </div>
-</Page>
+</NavPage>
 
 <style lang="scss">
     :global(.home) {

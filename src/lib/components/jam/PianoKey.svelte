@@ -60,8 +60,8 @@
         height: 100%;
         padding: 0.5rem;
         margin: 0.1rem;
-        border-bottom-left-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
+        border-bottom-left-radius: 0.3rem;
+        border-bottom-right-radius: 0.3rem;
         display: flex;
         align-items: flex-end;
         justify-content: center;

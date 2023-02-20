@@ -6,7 +6,9 @@
     export let closeFunc: Function;
 </script>
 
-<Modal {closeFunc}
+<Modal
+    name="settings"
+    {closeFunc}
     ><div class="settings">
         <div class="categories">
             <Button type="button"

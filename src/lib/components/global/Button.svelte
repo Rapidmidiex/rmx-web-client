@@ -39,7 +39,6 @@
 
     button:hover {
         background-color: var(--primary-dark);
-        box-shadow: var(--shadow);
     }
 
     button.small {

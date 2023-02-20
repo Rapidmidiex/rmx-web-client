@@ -45,7 +45,9 @@
     $: vars = $themeStore.vars;
 </script>
 
-<Modal {closeFunc}>
+<Modal
+    name="join"
+    {closeFunc}>
     <div
         style={applyTheme(vars)}
         class="join-modal">
@@ -98,7 +100,6 @@
         width: 30rem;
         height: 80vh;
         background-color: var(--background);
-        border-radius: var(--border-radius);
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -107,7 +108,7 @@
 
         & > .search-bar {
             width: 100%;
-            padding: 1rem 1rem 0;
+            padding: 0 0 1rem 0;
 
             :global(input) {
                 width: 100%;
@@ -122,7 +123,6 @@
             justify-content: flex-start;
             flex-wrap: wrap;
             overflow-y: auto;
-            padding: 1rem;
 
             & > .jam {
                 width: 100%;

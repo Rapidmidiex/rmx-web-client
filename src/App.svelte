@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
-    import Home from '@pages/home/Home.svelte';
-    import Jam from '@pages/jam/Jam.svelte';
+    import Home from '@pages/Home.svelte';
+    import Jam from '@pages/Jam.svelte';
     import { themeStore } from '@store/theme';
 
     let vars;
@@ -64,5 +64,23 @@
         box-sizing: border-box;
         outline: none;
         font-family: Raleway;
+    }
+
+    :global(::-webkit-scrollbar) {
+        width: 0.5rem;
+    }
+
+    :global(::-webkit-scrollbar-track) {
+        background: var(--background);
+        border-radius: var(--border-radius);
+    }
+
+    :global(::-webkit-scrollbar-thumb) {
+        background: var(--primary);
+        border-radius: var(--border-radius);
+    }
+
+    :global(::-webkit-scrollbar-thumb:hover) {
+        background: var(--primary-dark);
     }
 </style>

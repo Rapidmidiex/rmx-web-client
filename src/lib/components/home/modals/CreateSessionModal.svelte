@@ -35,11 +35,12 @@
     }
 </script>
 
-<Modal {closeFunc}>
+<Modal
+    name="new jam"
+    {closeFunc}>
     <form
         class="new_session-form"
         on:submit|preventDefault={CreateSession}>
-        <h3>Start a new Jam</h3>
         <TextInput
             bind:value={name}
             placeholder="Room name (optional)" />
@@ -56,14 +57,9 @@
 <style lang="scss">
     form {
         width: 25rem;
-        padding: 1rem;
         display: flex;
         align-items: center;
         flex-direction: column;
-
-        & > h3 {
-            margin: 1rem 0;
-        }
 
         :global(input) {
             width: 100%;
@@ -73,6 +69,11 @@
         :global(button) {
             margin: 1rem 0 0rem 0;
             width: 100%;
+        }
+
+        @media screen and (max-width: 35rem) {
+            width: 100%;
+            height: 100%;
         }
     }
 </style>

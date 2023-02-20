@@ -28,9 +28,8 @@
         outline: none;
         border: none;
         background-color: var(--background);
-        border-top-left-radius: var(--border-radius);
-        border-top-right-radius: var(--border-radius);
-        border-bottom: 3px solid var(--on-background);
+        border-radius: var(--border-radius);
+        border: 3px solid var(--background-accent);
         color: var(--input-text);
         transition: 0.3s ease;
     }
