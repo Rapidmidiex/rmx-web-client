@@ -2,7 +2,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-    VITE_API_URL: string;
+    VITE_RMX_API_BASE: string;
 }
 
 interface ImportMeta {
