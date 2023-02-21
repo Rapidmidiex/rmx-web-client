@@ -44,8 +44,35 @@ export interface TextMsg {
 	body: string;
 }
 
+type NoteName =
+	| "A"
+	| "A#"
+	| "B"
+	| "C"
+	| "C#"
+	| "D"
+	| "D#"
+	| "E"
+	| "F"
+	| "F#"
+	| "G"
+	| "G#";
+type NoteSound =
+	| "La"
+	| "La#"
+	| "Ti"
+	| "Do"
+	| "Do#"
+	| "Re"
+	| "Re#"
+	| "Mi"
+	| "Fa"
+	| "Fa#"
+	| "So"
+	| "So#";
+
 export interface Note {
-	name: string[];
+	name: [NoteName, NoteSound];
 	black: boolean;
 }
 
@@ -58,3 +85,8 @@ export interface PianoState {
 	keydown?: boolean;
 	currNote?: PianoKeyNote;
 }
+
+export type KeyBinding = {
+	keyName: string;
+	isAccidental: boolean;
+};

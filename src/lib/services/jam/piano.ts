@@ -1,5 +1,5 @@
-import { A, AS, B, C, CS, D, DS, E, F, FS, G, GS } from "@lib/consts/piano"
-import type { PianoKeyNote } from "@lib/types/jam";
+import { A, AS, B, C, CS, D, DS, E, F, FS, G, GS } from "@lib/consts/piano";
+import type { KeyBinding, PianoKeyNote } from "@lib/types/jam";
 
 const octaveNotes: PianoKeyNote[] = [
 	{ midi: 21, note: A },
@@ -14,10 +14,28 @@ const octaveNotes: PianoKeyNote[] = [
 	{ midi: 30, note: FS },
 	{ midi: 31, note: G },
 	{ midi: 32, note: GS },
-]
+];
 
-const blackMap = "wetyuop"
-const whiteMap = "asdfghjkl;'"
+const keyMap: KeyBinding[] = [
+	{ keyName: "a", isAccidental: false },
+	{ keyName: "w", isAccidental: true },
+	{ keyName: "s", isAccidental: false },
+	{ keyName: "e", isAccidental: true },
+	{ keyName: "d", isAccidental: false },
+	{ keyName: "f", isAccidental: false },
+	{ keyName: "t", isAccidental: true },
+	{ keyName: "g", isAccidental: false },
+	{ keyName: "y", isAccidental: true },
+	{ keyName: "h", isAccidental: false },
+	{ keyName: "u", isAccidental: true },
+	{ keyName: "j", isAccidental: false },
+	{ keyName: "k", isAccidental: false },
+	{ keyName: "o", isAccidental: true },
+	{ keyName: "l", isAccidental: false },
+	{ keyName: "p", isAccidental: true },
+	{ keyName: ";", isAccidental: false },
+	{ keyName: "'", isAccidental: false },
+];
 
 export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
 	let notes: PianoKeyNote[] = [];
@@ -43,10 +61,25 @@ export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
 
 	firstNoteMIDI = 21 + startIdx;
 
-	for (let i = 0; i < size; i++) {
-		const { note } = octaveNotes[((i % octaveNotes.length) + startIdx) % octaveNotes.length]
-		const n: PianoKeyNote = { midi: i + firstNoteMIDI, note }
-		notes.push(n)
+	for (let i, j = 0; i < size; i++) {
+		const { note } =
+			octaveNotes[((i % octaveNotes.length) + startIdx) % octaveNotes.length];
+
+		const n: PianoKeyNote & { binding?: KeyBinding } = {
+			midi: i + firstNoteMIDI,
+			note,
+		};
+		if (note.name[0] === "C" && j == 0) {
+			j++;
+		}
+		if (j > 0 && j <= keyMap.length) {
+			n.binding = keyMap[j - 1];
+			j++;
+		}
+
+		console.log(n);
+
+		notes.push(n);
 	}
 
 	return chunkBy(notes, octaveNotes.length);
