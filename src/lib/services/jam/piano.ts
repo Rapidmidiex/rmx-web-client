@@ -16,7 +16,7 @@ const octaveNotes: PianoKeyNote[] = [
 	{ midi: 32, note: GS },
 ];
 
-const keyMap: KeyBinding[] = [
+export const keyBindings: KeyBinding[] = [
 	{ keyName: "a", isAccidental: false },
 	{ keyName: "w", isAccidental: true },
 	{ keyName: "s", isAccidental: false },
@@ -37,11 +37,17 @@ const keyMap: KeyBinding[] = [
 	{ keyName: "'", isAccidental: false },
 ];
 
-export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
+export function genPianoKeys(
+	size: 49 | 61,
+	bindings: KeyBinding[]
+): {
+	keyMap: Record<KeyBinding["keyName"], number>;
+	keyboard: PianoKeyNote[][];
+} {
 	let notes: PianoKeyNote[] = [];
 	let startIdx: number;
 	let firstNoteMIDI: number;
-
+	const keyMap = {};
 	switch (size) {
 		case 49:
 			startIdx = 3;
@@ -61,28 +67,32 @@ export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
 
 	firstNoteMIDI = 21 + startIdx;
 
-	for (let i, j = 0; i < size; i++) {
+	for (let i = 0, j = 0; i < size; i++) {
 		const { note } =
 			octaveNotes[((i % octaveNotes.length) + startIdx) % octaveNotes.length];
-
-		const n: PianoKeyNote & { binding?: KeyBinding } = {
-			midi: i + firstNoteMIDI,
+		const midi = i + firstNoteMIDI;
+		const n: PianoKeyNote = {
+			midi,
 			note,
 		};
+
 		if (note.name[0] === "C" && j == 0) {
 			j++;
 		}
-		if (j > 0 && j <= keyMap.length) {
-			n.binding = keyMap[j - 1];
+		if (j > 0 && j <= bindings.length) {
+			const binding = bindings[j - 1];
+			n.binding = binding;
+			keyMap[binding.keyName] = midi;
 			j++;
 		}
-
-		console.log(n);
 
 		notes.push(n);
 	}
 
-	return chunkBy(notes, octaveNotes.length);
+	return {
+		keyMap,
+		keyboard: chunkBy(notes, octaveNotes.length),
+	};
 }
 
 function chunkBy<T>(arr: T[], chunkSize: number): T[][] {

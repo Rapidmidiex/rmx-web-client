@@ -79,6 +79,7 @@ export interface Note {
 export interface PianoKeyNote {
 	midi: number;
 	note: Note;
+	binding?: KeyBinding;
 }
 
 export interface PianoState {
@@ -90,3 +91,5 @@ export type KeyBinding = {
 	keyName: string;
 	isAccidental: boolean;
 };
+
+export type KeyLabel = "note" | "midi" | "binding";
