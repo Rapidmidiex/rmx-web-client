@@ -25,11 +25,10 @@
 <style lang="scss">
     .settings {
         width: 25rem;
-        padding: 1rem;
         display: flex;
 
         .categories {
-            width: 8rem;
+            width: 100%;
             height: 100%;
             display: flex;
 
