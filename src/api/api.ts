@@ -1,13 +1,17 @@
 import axios from 'axios';
 
-const { VITE_RMX_API_BASE, VITE_RMX_WS_BASE } = import.meta.env;
+const baseUrl = import.meta.env.VITE_RMX_API_BASE;
 
-export const API_BASE_URL = VITE_RMX_API_BASE ?? 'http://localhost:8888/api/v1'
-export const WS_BASE_URL = VITE_RMX_WS_BASE ?? 'ws://localhost:8888/ws'
-
+// TODO -- ask why we are using axios over `fetch` API
 export const api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: baseUrl,
     headers: {
         'Content-Type': 'application/json',
     },
 });
+
+// This helper allows us to not pass the env file all over the place
+export const createWebsocket = (path: string) => {
+    const wsUrl = baseUrl.replace(/^http/, 'ws');
+    return new WebSocket(wsUrl + path);
+};
