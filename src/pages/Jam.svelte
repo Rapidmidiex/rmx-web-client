@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
-    import { api, WS_BASE_URL } from '@api/api';
+    import { api, createWebsocket } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import {
         NoteState,
@@ -161,12 +161,12 @@
 
     async function initJam() {
         try {
-            const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
+            const { data } = await api.get<GetJamData>(`/jams/${jamID}`);
             JamStore.update((store) => ({
                 ...store,
                 ...data,
                 players: [],
-                ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
+                ws: createWebsocket(`/jams/${jamID}/ws`),
             }));
             Success('Jam data loaded');
         } catch (err) {

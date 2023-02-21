@@ -17,12 +17,12 @@
     let search: string;
 
     function joinJam(id: string) {
-        navigate(`/jam/${id}`, { replace: true });
+        navigate(`/jams/${id}`, { replace: true });
     }
 
     async function loadJams() {
         try {
-            const { data } = await api.get<{ rooms: GetJamData[] }>('/jam');
+            const { data } = await api.get<{ rooms: GetJamData[] }>('/jams');
             jams = data.rooms;
         } catch (error) {
             Failure(error.message);
