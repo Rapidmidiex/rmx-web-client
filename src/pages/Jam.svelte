@@ -11,21 +11,20 @@
         type TextMsg,
     } from '@lib/types/jam';
     import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
-    import { JamStore, JamTextStore } from '@store/jam';
+    import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
-
     import Icon from '@lib/components/global/Icon.svelte';
     import Chat from '@lib/components/jam/Chat.svelte';
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
-    import { handleIncomingMIDI, noteHandler } from '@lib/components/jam/midi';
-    import {
-        autoCorrelate,
-        noteFromPitch,
-        freqAnalyze,
-    } from '@lib/components/jam/mic';
     import { Envelope } from '@lib/envelope/envelope';
     import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
+    import Settings from '@lib/components/jam/modals/Settings.svelte';
+    import { ChatStore } from '@store/chat';
+    import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
+    import { handleIncomingMIDI } from '@lib/services/jam/midi';
+    import Button from '@lib/components/global/Button.svelte';
+    import Page from '@lib/components/global/Page.svelte';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -41,7 +40,6 @@
     // Integer (0-255) representing the minimum level of the audio input to return true.
     let sensitivity = 140;
     const octaveLength = 12;
-    let pitch = 0;
     let noteHistory: number[] = [];
     const historyLength = 2;
 
@@ -85,42 +83,40 @@
         updatePitch();
     }
 
-    let bufLen = 2048;
-    let buf = new Float32Array(bufLen);
-
     function updatePitch() {
-        // TODO: Maybe replace autoCorrelate with something like this:
-        const { thresholdMet } = freqAnalyze(analyser, sensitivity, true);
+        // TODO: Not working as expected
+        const { thresholdMet, loudestFreq } = freqAnalyze(
+            analyser,
+            sensitivity,
+            false
+        );
         if (!thresholdMet) {
             requestAnimationFrame(updatePitch);
             return;
         }
-        analyser.getFloatTimeDomainData(buf);
-        let ac = autoCorrelate(buf, audioContext.sampleRate);
-        if (ac != -1 && thresholdMet) {
-            pitch = ac;
-            let noteNum = noteFromPitch(pitch, octaveLength);
-            if (noteNum !== noteHistory[noteHistory.length - 1]) {
-                if (noteHistory.length === historyLength) {
-                    noteHistory.shift();
-                }
-                noteHistory = [...noteHistory, noteNum];
-                // FIXME: still sends repeated notes.
-                // send new note to websocket
-                const midi: MIDIMsg = {
-                    state: NoteState.NOTE_ON,
-                    number: noteNum,
-                    velocity: 127,
-                };
-
-                const msg = new Envelope<MIDIMsg>(
-                    $UserStore.userId,
-                    WSMsgTyp.MIDI,
-                    midi
-                );
-
-                sendWSMsg(msg);
+        let noteNum = noteFromPitch(loudestFreq, octaveLength);
+        if (noteNum !== noteHistory[noteHistory.length - 1]) {
+            if (noteHistory.length === historyLength) {
+                noteHistory.shift();
             }
+            noteHistory = [...noteHistory, noteNum];
+            // FIXME: still sends repeated notes.
+            // send new note to websocket
+            const midi: MIDIMsg = {
+                state: NoteState.NOTE_ON,
+                number: noteNum,
+                velocity: 127,
+            };
+
+            const msg = new Envelope<MIDIMsg>(
+                $UserStore.userId,
+                WSMsgTyp.MIDI,
+                midi
+            );
+
+            console.log(loudestFreq);
+
+            sendWSMsg(msg);
         }
         requestAnimationFrame(updatePitch);
     }
@@ -192,7 +188,7 @@
                 if (msg.userId === $UserStore.userId) {
                     displayMsg.displayName = 'You';
                 }
-                JamTextStore.update((items) => [
+                ChatStore.update((items) => [
                     ...items,
                     { ...msg, payload: displayMsg },
                 ]);
@@ -233,12 +229,22 @@
         };
     });
 
+    let showChat: boolean = false;
+    function toggleChat() {
+        showChat = !showChat;
+    }
+
+    let showSettings: boolean = false;
+    function toggleSettings() {
+        showSettings = !showSettings;
+    }
+
     onDestroy(() => {
         unsubscribe();
     });
 </script>
 
-<div class="jam page">
+<Page class="jam">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">
@@ -249,15 +255,13 @@
                 {/if}
             </div>
             {#if showPiano}
-                <Piano
-                    on:INSTRUMENT_NOTE={noteHandler(
-                        $JamStore.ws,
-                        $UserStore.userId
-                    )} />
+                <Piano />
             {/if}
         </div>
         <div class="jam-extras">
-            <Chat />
+            {#if showChat}
+                <Chat />
+            {/if}
         </div>
     </div>
     <div class="jam-controls-con">
@@ -265,26 +269,41 @@
             <DeviceSelect bind:selected={audioDevice} />
         {/if}
         <div class="jam-controls">
+            <div class="ping">
+                <div class="ping-stats">
+                    <p><b>ping</b>: {$pingStats.avg.toFixed()} <i>ms</i></p>
+                </div>
+            </div>
             <div class="input">
-                <button
-                    class="btn"
+                <Button
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></button>
-                <button
-                    class="btn"
+                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
+                <Button
                     type="button"
-                    on:click={togglePiano}><Icon name="music" /></button>
+                    on:click={togglePiano}><Icon name="music" /></Button>
+                <Button
+                    type="button"
+                    on:click={toggleSettings}><Icon name="settings" /></Button>
+            </div>
+            <div class="chat">
+                <Button
+                    type="button"
+                    on:click={toggleChat}>
+                    <Icon name="message-square" />
+                </Button>
             </div>
         </div>
     </div>
-</div>
+    {#if showSettings}
+        <Settings closeFunc={toggleSettings} />
+    {/if}
+</Page>
 
 <style lang="scss">
-    .jam {
+    :global(.jam) {
         display: flex;
         flex-direction: column;
-        background-color: #fff;
 
         & > div {
             width: 100%;
@@ -293,13 +312,13 @@
         .jam-content {
             height: 100%;
             display: flex;
+            overflow: hidden;
 
             & > div {
                 height: 100%;
             }
 
             .jam-extras {
-                width: 30rem;
                 display: flex;
                 flex-direction: column;
                 padding: 1rem;
@@ -310,7 +329,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 1rem;
-                overflow: auto;
+                overflow: hidden;
 
                 .messages {
                     width: 100%;
@@ -336,14 +355,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
 
             .jam-controls {
                 width: 100%;
                 height: 5rem;
                 display: flex;
                 align-items: center;
-                justify-content: space-around;
+                justify-content: space-between;
                 border-radius: 0.5rem;
+                padding: 0 1rem;
 
                 & > div {
                     height: 100%;
@@ -351,11 +372,36 @@
                     align-items: center;
                 }
 
-                .input {
-                    & > button {
-                        border-radius: 100%;
-                        font-size: 1rem;
+                .ping {
+                    justify-content: flex-start;
+                    .ping-stats {
+                        border-radius: var(--border-radius);
+                        background-color: var(--background-accent);
                         padding: 1rem;
+
+                        p > b {
+                            color: var(--primary);
+                        }
+                    }
+                }
+
+                .input {
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    justify-content: center;
+
+                    :global(button) {
+                        border-radius: 100%;
+                        margin: 0.5rem;
+                    }
+                }
+
+                .chat {
+                    justify-content: flex-end;
+
+                    :global(button) {
+                        border-radius: 100%;
                         margin: 0.5rem;
                     }
                 }

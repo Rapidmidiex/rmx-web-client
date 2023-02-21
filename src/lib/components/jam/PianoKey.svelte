@@ -1,18 +1,11 @@
 <script lang="ts">
-    import type { RmxEvent } from '@lib/consts/events';
     import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
-    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
-    import { JamPianoStore } from '@store/jam';
-    import { createEventDispatcher } from 'svelte/internal';
+    import type { PianoKeyNote } from '@lib/types/jam';
+    import { PianoStore } from '@store/piano';
+    import { applyTheme, themeStore } from '@store/theme';
 
     export let key: PianoKeyNote;
     export let black: boolean;
-
-    const svelteDispatch = createEventDispatcher();
-    // Wrapping for type safety
-    const dispatch = (name: RmxEvent, detail: MIDIMsg) => {
-        svelteDispatch(name, detail);
-    };
 
     let keySpacing: number; // spacing for black keys only
     switch (key.note) {
@@ -34,36 +27,30 @@
     }
 
     function handleKeyDown() {
-        JamPianoStore.set({ keydown: true, currNote: key });
-        dispatch('INSTRUMENT_NOTE', {
-            state: NoteState.NOTE_ON,
-            number: key.midi,
-            velocity: 120,
-        });
+        $PianoStore = { keydown: true, currNote: key };
     }
 
     function handleKeyEnter() {
-        if (!$JamPianoStore.keydown) {
+        if (!$PianoStore.keydown) {
             return;
         }
 
-        JamPianoStore.update((v) => {
-            return {
-                ...v,
-                currNote: key,
-            };
-        });
+        $PianoStore.currNote = key;
     }
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <div
     on:mousedown={handleKeyDown}
     on:mouseenter={handleKeyEnter}
     on:focus
-    style={black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}
+    style={applyTheme(vars) +
+        `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}`}
     class="key"
     class:black
-    class:pressed={$JamPianoStore.currNote === key}>
+    class:pressed={$PianoStore.currNote === key}>
     <p>{key.note.name[0]}</p>
 </div>
 
@@ -73,13 +60,13 @@
         height: 100%;
         padding: 0.5rem;
         margin: 0.1rem;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.3rem;
+        border-bottom-right-radius: 0.3rem;
         display: flex;
         align-items: flex-end;
         justify-content: center;
         background-color: #fff;
-        box-shadow: 0 0.3rem 0.3rem #555;
+        box-shadow: var(--shadow);
         transition: 0.3s ease;
         cursor: pointer;
 
@@ -90,7 +77,7 @@
     }
 
     .key:hover {
-        background-color: #dadada;
+        background-color: #aaa;
     }
 
     .black {

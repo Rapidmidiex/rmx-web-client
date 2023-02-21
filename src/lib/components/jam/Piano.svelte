@@ -1,7 +1,15 @@
 <script lang="ts">
-    import type { PianoKeyNote } from '@lib/types/jam';
-    import { genPianoKeys } from '@lib/utils/piano';
-    import { JamPianoStore } from '@store/jam';
+    import { Envelope } from '@lib/envelope/envelope';
+    import { genPianoKeys } from '@lib/services/jam/piano';
+    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
+    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import { JamStore } from '@store/jam';
+    import { PianoStore } from '@store/piano';
+    import { pingStats } from '@store/ping';
+    import { UserStore } from '@store/user';
+    import { onDestroy } from 'svelte';
+    import { fly } from 'svelte/transition';
+    import { v4 as uuidv4 } from 'uuid';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -10,17 +18,43 @@
     let keyboard: PianoKeyNote[][];
 
     function handleKeyUp() {
-        JamPianoStore.set({ keydown: false, currNote: null });
+        $PianoStore = { keydown: false, currNote: null };
     }
 
-    $: {
-        keyboard = genPianoKeys(keyboardSize);
+    function sendMsg(midi: MIDIMsg) {
+        let msg: WSMsg<MIDIMsg> = {
+            id: uuidv4(),
+            type: WSMsgTyp.MIDI,
+            payload: midi,
+            userId: $UserStore.userId,
+        };
+
+        pingStats.msgOut(msg.id);
+        $JamStore.ws.send(JSON.stringify(msg));
     }
+
+    const unsubscribe = PianoStore.subscribe((v) => {
+        if (v.keydown && v.currNote) {
+            sendMsg({
+                state: NoteState.NOTE_ON,
+                number: v.currNote.midi,
+                velocity: 120,
+            });
+        }
+    });
+
+    $: keyboard = genPianoKeys(keyboardSize);
+
+    onDestroy(() => {
+        unsubscribe();
+    });
 </script>
 
 <svelte:window on:mouseup={handleKeyUp} />
 
-<div class="piano">
+<div
+    transition:fly={{ y: 200, duration: 300 }}
+    class="piano">
     <div class="controls">
         <Select
             label="Size:"
@@ -31,9 +65,7 @@
     <div class="wrapper">
         <div class="con">
             {#each keyboard as octave}
-                <PianoOctave
-                    keys={octave}
-                    on:INSTRUMENT_NOTE />
+                <PianoOctave keys={octave} />
             {/each}
         </div>
     </div>

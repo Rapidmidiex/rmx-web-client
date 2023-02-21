@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { AxiosError } from 'axios';
     import fuzzysort from 'fuzzysort';
     import { api } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
@@ -7,6 +6,9 @@
     import type { GetJamData } from '@lib/types/jam';
     import { onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
+    import Button from '@lib/components/global/Button.svelte';
+    import TextInput from '@lib/components/global/TextInput.svelte';
+    import { applyTheme, themeStore } from '@store/theme';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
@@ -18,16 +20,14 @@
         navigate(`/jam/${id}`, { replace: true });
     }
 
-    function loadJams() {
-        return api
-            .get<{ rooms: GetJamData[] }>('/jam')
-            .then(({ data }) => {
-                jams = data.rooms;
-            })
-            .catch((error: AxiosError) => {
-                Failure(error.message);
-                jamsProgress = "Couldn't load Jams list";
-            });
+    async function loadJams() {
+        try {
+            const { data } = await api.get<{ rooms: GetJamData[] }>('/jam');
+            jams = data.rooms;
+        } catch (error) {
+            Failure(error.message);
+            jamsProgress = "Couldn't load Jams list";
+        }
     }
 
     function searchJams() {
@@ -40,18 +40,21 @@
     onMount(async () => {
         await loadJams();
     });
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
-<Modal {closeFunc}>
-    <div class="join-modal">
+<Modal
+    name="join"
+    {closeFunc}>
+    <div
+        style={applyTheme(vars)}
+        class="join-modal">
         <div class="search-bar">
-            <input
-                class="inpt"
-                type="text"
+            <TextInput
                 bind:value={search}
                 on:input={searchJams}
-                name="search"
-                id="search"
                 placeholder="Search" />
         </div>
         <ul class="jams-list">
@@ -65,10 +68,8 @@
                                         {jam.obj.name}
                                     </div>
                                 </div>
-                                <button
-                                    class="btn"
-                                    on:click={() => joinJam(jam.obj.id)}
-                                    >Join</button>
+                                <Button on:click={() => joinJam(jam.obj.id)}
+                                    >Join</Button>
                             </li>
                         {/each}
                     {:else}
@@ -79,10 +80,8 @@
                                         {jam.name ? jam.name : jam.id}
                                     </div>
                                 </div>
-                                <button
-                                    class="btn"
-                                    on:click={() => joinJam(jam.id)}
-                                    >Join</button>
+                                <Button on:click={() => joinJam(jam.id)}
+                                    >Join</Button>
                             </li>
                         {/each}
                     {/if}
@@ -100,8 +99,7 @@
     .join-modal {
         width: 30rem;
         height: 80vh;
-        background-color: #fff;
-        border-radius: 0.5rem;
+        background-color: var(--background);
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -110,9 +108,9 @@
 
         & > .search-bar {
             width: 100%;
-            padding: 1rem 1rem 0;
+            padding: 0 0 1rem 0;
 
-            & > input {
+            :global(input) {
                 width: 100%;
             }
         }
@@ -125,15 +123,14 @@
             justify-content: flex-start;
             flex-wrap: wrap;
             overflow-y: auto;
-            padding: 1rem;
 
             & > .jam {
                 width: 100%;
                 height: 10rem;
                 margin: 0.5rem 0;
                 padding: 0.5rem;
-                box-shadow: 0px 0px 5px rgba($color: #000000, $alpha: 0.3);
-                border-radius: 0.5rem;
+                background-color: var(--background-accent);
+                border-radius: var(--border-radius);
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -145,9 +142,8 @@
                     word-break: break-all;
                 }
 
-                & > button {
+                :global(button) {
                     width: 100%;
-                    padding: 1rem;
                 }
             }
         }

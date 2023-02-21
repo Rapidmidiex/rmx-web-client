@@ -1,7 +1,8 @@
 <script lang="ts">
+    import Button from '@lib/components/global/Button.svelte';
+    import NavPage from '@lib/components/global/NavPage.svelte';
     import CreateSessionModal from '@lib/components/home/modals/CreateSessionModal.svelte';
     import JoinSessionModal from '@lib/components/home/modals/JoinSessionModal.svelte';
-    import Nav from '@lib/components/home/Nav.svelte';
 
     let createSessionModalOpen = false;
     let joinModalOpen = false;
@@ -15,8 +16,7 @@
     }
 </script>
 
-<div class="page home">
-    <Nav />
+<NavPage class="home">
     <div class="content">
         <section class="welcome">
             <h2>Welcome to Rapidmidiex!</h2>
@@ -24,12 +24,9 @@
             <p>A new way for musicians to perform</p>
             <br />
             <div class="session-con">
-                <button
-                    class="btn"
-                    on:click={toggleCreateSessionModal}>Start a new Jam</button>
-                <button
-                    class="btn"
-                    on:click={toggleJoinModal}>Join</button>
+                <Button on:click={toggleCreateSessionModal}
+                    >Start a new Jam</Button>
+                <Button on:click={toggleJoinModal}>Join</Button>
             </div>
         </section>
         {#if createSessionModalOpen}
@@ -39,10 +36,10 @@
             <JoinSessionModal closeFunc={toggleJoinModal} />
         {/if}
     </div>
-</div>
+</NavPage>
 
 <style lang="scss">
-    .home {
+    :global(.home) {
         display: flex;
 
         & > .content {
@@ -70,8 +67,7 @@
                     display: flex;
                     flex-wrap: wrap;
 
-                    & > button {
-                        padding: 1rem;
+                    :global(button) {
                         margin: 0.25rem;
                     }
                 }

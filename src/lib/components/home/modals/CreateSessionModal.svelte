@@ -5,6 +5,9 @@
     import { Failure, Success } from '@lib/notify/notify';
     import type { CreateJamData, GetJamData } from '@lib/types/jam';
     import { navigate } from 'svelte-navigator';
+    import Button from '@lib/components/global/Button.svelte';
+    import TextInput from '@lib/components/global/TextInput.svelte';
+    import NumberInput from '@lib/components/global/NumberInput.svelte';
 
     export let closeFunc: Function;
 
@@ -32,59 +35,45 @@
     }
 </script>
 
-<Modal {closeFunc}>
+<Modal
+    name="new jam"
+    {closeFunc}>
     <form
         class="new_session-form"
         on:submit|preventDefault={CreateSession}>
-        <h3>Start a new Jam</h3>
-        <input
+        <TextInput
             bind:value={name}
-            class="inpt"
-            type="text"
-            name="name"
-            id="name"
             placeholder="Room name (optional)" />
-        <input
+        <NumberInput
             bind:value={capacity}
-            class="inpt"
-            type="number"
-            name="capacity"
-            id="capacity"
             placeholder="Room capacity (default: 10)" />
-        <input
+        <NumberInput
             bind:value={bpm}
-            class="inpt"
-            type="number"
-            name="bpm"
-            id="bpm"
             placeholder="BPM (default: 120)" />
-        <button
-            class="btn"
-            type="submit">Start</button>
+        <Button type="submit">Start</Button>
     </form>
 </Modal>
 
 <style lang="scss">
     form {
         width: 25rem;
-        padding: 1rem;
         display: flex;
         align-items: center;
         flex-direction: column;
 
-        & > h3 {
-            margin: 1rem 0;
-        }
-
-        & > input {
+        :global(input) {
             width: 100%;
             margin: 0.5rem 0;
         }
 
-        & > button {
+        :global(button) {
             margin: 1rem 0 0rem 0;
-            padding: 1rem;
             width: 100%;
+        }
+
+        @media screen and (max-width: 35rem) {
+            width: 100%;
+            height: 100%;
         }
     }
 </style>

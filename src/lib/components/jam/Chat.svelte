@@ -3,10 +3,15 @@
     import ChatBubble from './ChatBubble.svelte';
     import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
     import type { TextMsg } from '@lib/types/jam';
-    import { JamStore, JamTextStore } from '@store/jam';
+    import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import { pingStats } from '@store/ping';
     import Icon from '../global/Icon.svelte';
+    import { ChatStore } from '@store/chat';
+    import Button from '../global/Button.svelte';
+    import TextInput from '../global/TextInput.svelte';
+    import { applyTheme, themeStore } from '@store/theme';
+    import { fly } from 'svelte/transition';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -38,14 +43,20 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
     }
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
-<div class="chat">
+<div
+    style={applyTheme(vars)}
+    class="chat"
+    transition:fly={{ x: 200, duration: 300 }}>
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if $JamTextStore.length > 0}
-            {#each $JamTextStore as msg}
+        {#if $ChatStore.length > 0}
+            {#each $ChatStore as msg}
                 <ChatBubble message={msg} />
             {/each}
         {:else}
@@ -55,25 +66,24 @@
     <form
         class="input"
         on:submit|preventDefault={sendMsg}>
-        <input
-            type="text"
+        <TextInput
             placeholder="Write your message here..."
             bind:value={message} />
-        <button
-            class="btn"
-            type="submit"><Icon name="send" /></button>
+        <Button
+            size="small"
+            type="submit"><Icon name="send" /></Button>
     </form>
 </div>
 
 <style lang="scss">
     .chat {
-        width: 100%;
+        width: 20rem;
         height: 100%;
         display: flex;
         flex-direction: column;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        box-shadow: 0px 0px 10px rgba($color: #000000, $alpha: 0.3);
+        background-color: var(--background-accent);
+        border-radius: var(--border-radius);
+        padding: 0.5rem;
 
         .messages {
             width: 100%;
@@ -96,19 +106,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: #eaeaea;
-            border-radius: 0.5rem;
+            background-color: var(--background);
+            border-radius: var(--border-radius);
             padding: 0 0.5rem;
+            transition: 0.3s ease;
 
-            & > input {
+            :global(input) {
                 width: 100%;
                 outline: none;
                 border: none;
                 background-color: transparent;
-            }
-
-            & > button {
-                padding: 0.5rem;
+                color: var(--on-background);
             }
         }
     }

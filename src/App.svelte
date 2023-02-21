@@ -1,51 +1,18 @@
 <script lang="ts">
     import { Route, Router } from 'svelte-navigator';
-    import Home from '@pages/home/Home.svelte';
-    import Jam from '@pages/jam/Jam.svelte';
+    import Home from '@pages/Home.svelte';
+    import Jam from '@pages/Jam.svelte';
+    import { themeStore } from '@store/theme';
+
+    let vars;
+    $: vars = $themeStore.vars;
 </script>
 
 <svelte:head>
     <link
         rel="apple-touch-icon"
-        sizes="57x57"
-        href="/favicon/apple-icon-57x57.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="60x60"
-        href="/favicon/apple-icon-60x60.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="72x72"
-        href="/favicon/apple-icon-72x72.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="76x76"
-        href="/favicon/apple-icon-76x76.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="114x114"
-        href="/favicon/apple-icon-114x114.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="120x120"
-        href="/favicon/apple-icon-120x120.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="144x144"
-        href="/favicon/apple-icon-144x144.png" />
-    <link
-        rel="apple-touch-icon"
-        sizes="152x152"
-        href="/favicon/apple-icon-152x152.png" />
-    <link
-        rel="apple-touch-icon"
         sizes="180x180"
-        href="/favicon/apple-icon-180x180.png" />
-    <link
-        rel="icon"
-        type="image/png"
-        sizes="192x192"
-        href="/favicon/android-icon-192x192.png" />
+        href="/favicon/apple-touch-icon.png" />
     <link
         rel="icon"
         type="image/png"
@@ -54,25 +21,21 @@
     <link
         rel="icon"
         type="image/png"
-        sizes="96x96"
-        href="/favicon/favicon-96x96.png" />
-    <link
-        rel="icon"
-        type="image/png"
         sizes="16x16"
         href="/favicon/favicon-16x16.png" />
     <link
         rel="manifest"
-        href="/manifest.json" />
+        href="/site.webmanifest" />
+    <link
+        rel="mask-icon"
+        href="/favicon/safari-pinned-tab.svg"
+        color="#5bbad5" />
     <meta
         name="msapplication-TileColor"
-        content="#ffffff" />
-    <meta
-        name="msapplication-TileImage"
-        content="/favicon/ms-icon-144x144.png" />
+        content="#da532c" />
     <meta
         name="theme-color"
-        content="#ffffff" />
+        content={vars['--primary']} />
 </svelte:head>
 
 <main>
@@ -103,41 +66,21 @@
         font-family: Raleway;
     }
 
-    :global(.page) {
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
+    :global(::-webkit-scrollbar) {
+        width: 0.5rem;
     }
 
-    :global(.inpt) {
-        padding: 1rem;
-        outline: none;
-        border: none;
-        background-color: #eaeaea;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
-        border-bottom: 3px solid #808080;
-        transition: 0.3s ease;
+    :global(::-webkit-scrollbar-track) {
+        background: var(--background);
+        border-radius: var(--border-radius);
     }
 
-    :global(.inpt:focus) {
-        background-color: #cfcfcf;
-        border-bottom: 3px solid #000;
+    :global(::-webkit-scrollbar-thumb) {
+        background: var(--primary);
+        border-radius: var(--border-radius);
     }
 
-    :global(.btn) {
-        border: 1px solid #000;
-        outline: none;
-        background-color: #000;
-        color: #fff;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-    :global(.btn:hover) {
-        background-color: transparent;
-        color: #000;
+    :global(::-webkit-scrollbar-thumb:hover) {
+        background: var(--primary-dark);
     }
 </style>
