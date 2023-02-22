@@ -1,6 +1,6 @@
 <script lang="ts">
     import { genPianoKeys, keyBindings } from '@lib/services/jam/piano';
-    import { NoteState, type MIDIMsg } from '@lib/types/jam';
+    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
     import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
