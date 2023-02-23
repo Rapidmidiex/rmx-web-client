@@ -4,21 +4,13 @@
     import { navigate } from 'svelte-navigator';
     import { api, WS_BASE_URL } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
-    import {
-        NoteState,
-        type ConnectMsg,
-        type GetJamData,
-        type MIDIMsg,
-        type TextMsg,
-    } from '@lib/types/jam';
-    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import type { GetJamData, MIDIMsg } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import Icon from '@lib/components/global/Icon.svelte';
     import Chat from '@lib/components/jam/Chat.svelte';
     import Piano from '@lib/components/jam/Piano.svelte';
     import { pingStats } from '@store/ping';
-    import { Envelope } from '@lib/envelope/envelope';
     import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
     import Settings from '@lib/components/jam/modals/Settings.svelte';
     import { ChatStore } from '@store/chat';
@@ -47,7 +39,6 @@
 
     let audioDevice: MediaDeviceInfo;
     $: handleDeviceSelect(audioDevice);
-
     function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
@@ -221,7 +212,7 @@
             Success('Connection established.');
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
-            // TODO -- this should still work
+            // TODO -- should we handle errors here? [try/catch]
             let message = MessageParser.decode(event.data);
             handleWSMsg(message);
         };
@@ -244,9 +235,11 @@
         showSettings = !showSettings;
     }
 
-    onDestroy(() => {
-        unsubscribe();
-    });
+    // onDestroy(() => {
+    //     unsubscribe();
+    // });
+    // NOTE -- can this not be done?
+    onDestroy(unsubscribe);
 </script>
 
 <Page class="jam">
