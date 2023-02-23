@@ -1,3 +1,4 @@
+// TODO -- to be delete and replace with the `message.ts` file
 import { v4 as uuidv4 } from 'uuid';
 import type { ConnectMsg, MIDIMsg, TextMsg } from '@lib/types/jam';
 import type { WSMsg, WSMsgTyp } from '@lib/types/websocket';
