@@ -109,18 +109,6 @@
         }
         noteHistory = [...noteHistory, noteNum];
         // FIXME: still sends repeated notes.
-        // send new note to websocket
-        const midi: MIDIMsg = {
-            state: NoteState.NOTE_ON,
-            number: noteNum,
-            velocity: 127,
-        };
-
-        const msg = new Envelope<MIDIMsg>(
-            $UserStore.userId,
-            WSMsgTyp.MIDI,
-            midi
-        );
         // TODO -- `sendMsg` got in the way, will want to update this
         // logic anyhow though
         {
