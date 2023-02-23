@@ -4,7 +4,7 @@
     import { navigate } from 'svelte-navigator';
     import { api, WS_BASE_URL } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
-    import type { GetJamData, MIDIMsg } from '@lib/types/jam';
+    import type { GetJamData } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import Icon from '@lib/components/global/Icon.svelte';
@@ -18,10 +18,14 @@
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
     import Button from '@lib/components/global/Button.svelte';
     import Page from '@lib/components/global/Page.svelte';
-    import { MessageParser, type Message } from '@lib/envelope/message';
+    import {
+        MessageParser,
+        type Message,
+        type MessagePayload,
+    } from '@lib/envelope/message';
 
     export let jamID: string;
-    let midi: MIDIMsg;
+    let midi: MessagePayload['midi']; //MIDIMsg;
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -147,11 +151,6 @@
         }
     }
 
-    let showPiano: boolean = false;
-    function togglePiano() {
-        showPiano = !showPiano;
-    }
-
     async function initJam() {
         try {
             const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
@@ -178,6 +177,8 @@
                 }
 
                 // TODO -- inside `store/chat` I omitted the type just to get this to pass
+                // make a wrapper around the store, so this api is cleaner, something like:
+                // ChatStore.update(messages:...Array<MessagePayload["text"]>)
                 ChatStore.update((items) => [
                     ...items,
                     { ...message, payload: displayMsg },
@@ -185,10 +186,8 @@
                 break;
             }
             case 'midi': {
-                // TODO -- `type` is currently an enum so this won't
-                // work.  Need to refactor to use a string literal
-                handleIncomingMIDI(message);
-                midi = message.payload as MIDIMsg; // TODO -- this can be made more type-safe
+                handleIncomingMIDI(message.payload);
+                midi = message.payload;
                 break;
             }
             case 'connect': {
@@ -225,6 +224,11 @@
         };
     });
 
+    let showPiano: boolean = false;
+    function togglePiano() {
+        showPiano = !showPiano;
+    }
+
     let showChat: boolean = false;
     function toggleChat() {
         showChat = !showChat;
@@ -235,11 +239,7 @@
         showSettings = !showSettings;
     }
 
-    // onDestroy(() => {
-    //     unsubscribe();
-    // });
-    // NOTE -- can this not be done?
-    onDestroy(unsubscribe);
+    onDestroy(() => unsubscribe());
 </script>
 
 <Page class="jam">
