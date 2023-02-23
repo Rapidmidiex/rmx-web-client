@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { v4 as uuidv4 } from 'uuid';
+    import { v4 as uuid } from 'uuid';
     import ChatBubble from './ChatBubble.svelte';
-    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
-    import type { TextMsg } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import { pingStats } from '@store/ping';
@@ -12,18 +10,19 @@
     import TextInput from '../global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { fly } from 'svelte/transition';
+    import type { Message } from '@lib/envelope/message';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
 
-    function sendWSMsg(msg: WSMsg<TextMsg>) {
-        $JamStore.ws.send(JSON.stringify(msg));
+    function sendWSMsg(message: Message) {
+        $JamStore.ws.send(JSON.stringify(message));
     }
 
     function sendMsg() {
-        let msg: WSMsg<TextMsg> = {
-            id: uuidv4(),
-            type: WSMsgTyp.TEXT,
+        let _message: Message<'text'> = {
+            id: uuid(),
+            type: 'text',
             payload: {
                 body: message,
                 displayName: $UserStore.userName,
@@ -31,8 +30,8 @@
             userId: $UserStore.userId,
         };
 
-        pingStats.msgOut(msg.id);
-        sendWSMsg(msg);
+        pingStats.msgOut(_message.id);
+        sendWSMsg(_message);
 
         // reset input
         message = '';

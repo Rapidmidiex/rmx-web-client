@@ -1,11 +1,10 @@
 <script lang="ts">
-    import type { TextMsg } from '@lib/types/jam';
-    import type { WSMsg } from '@lib/types/websocket';
+    import type { Message } from '@lib/envelope/message';
     import { applyTheme, themeStore } from '@store/theme';
     import { UserStore } from '@store/user';
     import { fly } from 'svelte/transition';
 
-    export let message: WSMsg<TextMsg>;
+    export let message: Omit<Message<'text'>, 'type'>;
 
     let vars;
     $: vars = $themeStore.vars;

@@ -1,15 +1,14 @@
 <script lang="ts">
-    import { Envelope } from '@lib/envelope/envelope';
+    import type { Message, MessagePayload } from '@lib/envelope/message';
     import { genPianoKeys } from '@lib/services/jam/piano';
-    import { NoteState, type MIDIMsg, type PianoKeyNote } from '@lib/types/jam';
-    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
+    import { NoteState, type PianoKeyNote } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { pingStats } from '@store/ping';
     import { UserStore } from '@store/user';
     import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
-    import { v4 as uuidv4 } from 'uuid';
+    import { v4 as uuid } from 'uuid';
     import Select from '../global/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
@@ -21,16 +20,16 @@
         $PianoStore = { keydown: false, currNote: null };
     }
 
-    function sendMsg(midi: MIDIMsg) {
-        let msg: WSMsg<MIDIMsg> = {
-            id: uuidv4(),
-            type: WSMsgTyp.MIDI,
+    function sendMsg(midi: MessagePayload['midi']) {
+        let message = {
+            id: uuid(),
+            type: 'midi',
             payload: midi,
             userId: $UserStore.userId,
-        };
+        } satisfies Message;
 
-        pingStats.msgOut(msg.id);
-        $JamStore.ws.send(JSON.stringify(msg));
+        pingStats.msgOut(message.id);
+        $JamStore.ws.send(JSON.stringify(message));
     }
 
     const unsubscribe = PianoStore.subscribe((v) => {
@@ -45,9 +44,7 @@
 
     $: keyboard = genPianoKeys(keyboardSize);
 
-    onDestroy(() => {
-        unsubscribe();
-    });
+    onDestroy(() => unsubscribe());
 </script>
 
 <svelte:window on:mouseup={handleKeyUp} />
