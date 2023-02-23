@@ -75,12 +75,18 @@ function calcRMS(buf: Float32Array): number {
  * noteFromPitch(261.6) === 60 // Middle C
  * @param frequency hertz
  * @param octaveLength Number of notes in an octave. Defaults to 12.
- * @returns MIDI note number
  */
-export function noteFromPitch(frequency: number, octaveLength: number = 12) {
+export function noteFromPitch(
+    frequency: number,
+    octaveLength: number = 12
+): number | null {
     const A4 = { freq: 440, midi: 69 };
     var noteNum = octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
-    return Math.round(noteNum) + A4.midi;
+    const midiNote = Math.round(noteNum) + A4.midi;
+    if (midiNote < 0 || midiNote > 127) {
+        return null;
+    }
+    return midiNote;
 }
 
 /**

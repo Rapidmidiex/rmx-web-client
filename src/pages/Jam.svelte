@@ -94,30 +94,35 @@
             requestAnimationFrame(updatePitch);
             return;
         }
-        let noteNum = noteFromPitch(loudestFreq, octaveLength);
-        if (noteNum !== noteHistory[noteHistory.length - 1]) {
-            if (noteHistory.length === historyLength) {
-                noteHistory.shift();
-            }
-            noteHistory = [...noteHistory, noteNum];
-            // FIXME: still sends repeated notes.
-            // send new note to websocket
-            const midi: MIDIMsg = {
-                state: NoteState.NOTE_ON,
-                number: noteNum,
-                velocity: 127,
-            };
-
-            const msg = new Envelope<MIDIMsg>(
-                $UserStore.userId,
-                WSMsgTyp.MIDI,
-                midi
-            );
-
-            console.log(loudestFreq);
-
-            sendWSMsg(msg);
+        // This explicit type should not be necessary, but TS is not picking up the possible null from
+        // noteFromPitch() return type def....
+        const noteNum: number | null = noteFromPitch(loudestFreq, octaveLength);
+        if (!noteNum || noteNum === noteHistory[noteHistory.length - 1]) {
+            requestAnimationFrame(updatePitch);
+            return;
         }
+
+        if (noteHistory.length === historyLength) {
+            noteHistory.shift();
+        }
+        noteHistory = [...noteHistory, noteNum];
+        // FIXME: still sends repeated notes.
+        // send new note to websocket
+        const midi: MIDIMsg = {
+            state: NoteState.NOTE_ON,
+            number: noteNum,
+            velocity: 127,
+        };
+
+        const msg = new Envelope<MIDIMsg>(
+            $UserStore.userId,
+            WSMsgTyp.MIDI,
+            midi
+        );
+
+        console.log(loudestFreq);
+
+        sendWSMsg(msg);
         requestAnimationFrame(updatePitch);
     }
 
