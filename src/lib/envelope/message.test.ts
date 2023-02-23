@@ -15,7 +15,7 @@ import { MessageParser } from "./message";
     }
     // Testing encoding
     {
-        let p = parser.encode<"midi">("midi", {
+        let p = parser.encode("midi", {
             state: 1,
             number: 1,
             velocity: 1,

@@ -26,6 +26,7 @@
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
     import Button from '@lib/components/global/Button.svelte';
     import Page from '@lib/components/global/Page.svelte';
+    import { MessageParser, type Message } from '@lib/envelope/message';
 
     export let jamID: string;
     let midi: MIDIMsg;
@@ -120,10 +121,17 @@
             WSMsgTyp.MIDI,
             midi
         );
-
+        // TODO -- `sendMsg` got in the way, will want to update this
+        // logic anyhow though
+        {
+            let raw = MessageParser.encode($UserStore.userId, 'midi', {
+                state: 1,
+                number: noteNum,
+                velocity: 127,
+            });
+            $JamStore.ws.send(raw);
+        }
         console.log(loudestFreq);
-
-        sendWSMsg(msg);
         requestAnimationFrame(updatePitch);
     }
 
@@ -181,40 +189,40 @@
         }
     }
 
-    // TODO -- in process of refactoring
-    function sendWSMsg(msg: Envelope<ConnectMsg | MIDIMsg | TextMsg>) {
-        $JamStore.ws.send(msg.json());
-    }
-
-    // TODO -- in process of refactoring
-    function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
-        pingStats.msgIn(msg.id);
-
-        switch (msg.type) {
-            case WSMsgTyp.TEXT:
-                let displayMsg = msg.payload as TextMsg;
-                if (msg.userId === $UserStore.userId) {
+    function handleWSMsg(message: Message) {
+        pingStats.msgIn(message.id);
+        switch (message.type) {
+            case 'text': {
+                let displayMsg = message.payload; //as TextMsg;
+                if (message.userId === $UserStore.userId) {
                     displayMsg.displayName = 'You';
                 }
+
+                // TODO -- inside `store/chat` I omitted the type just to get this to pass
                 ChatStore.update((items) => [
                     ...items,
-                    { ...msg, payload: displayMsg },
+                    { ...message, payload: displayMsg },
                 ]);
                 break;
-            case WSMsgTyp.MIDI:
-                handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
-                midi = msg.payload as MIDIMsg;
+            }
+            case 'midi': {
+                // TODO -- `type` is currently an enum so this won't
+                // work.  Need to refactor to use a string literal
+                handleIncomingMIDI(message);
+                midi = message.payload as MIDIMsg; // TODO -- this can be made more type-safe
                 break;
-            case WSMsgTyp.CONNECT:
-                const { userId, userName } = msg.payload as ConnectMsg;
-                UserStore.set({
-                    userId,
-                    userName,
-                });
+            }
+            case 'connect': {
+                // TODO -- looks like this type is equal to teh User
+                // defined in `store/user.ts`
+                UserStore.set(message.payload);
                 break;
-            default:
-                console.warn('Unknown message type', msg);
+            }
+            default: {
+                console.warn('Unknown message type', message);
                 Warning('Unknown message type');
+                break;
+            }
         }
     }
 
@@ -225,8 +233,9 @@
             Success('Connection established.');
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
-            let msg: WSMsg<any> = JSON.parse(event.data);
-            handleWSMsg(msg);
+            // TODO -- this should still work
+            let message = MessageParser.decode(event.data);
+            handleWSMsg(message);
         };
         $JamStore.ws.onerror = (event: ErrorEvent) => {
             Failure(event.error);

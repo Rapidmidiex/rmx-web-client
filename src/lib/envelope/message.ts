@@ -38,8 +38,15 @@ export class MessageParser {
         return JSON.parse(s);
     }
 
-    static encode<T extends MessageType>(m: Message<T>): string {
-        return JSON.stringify(m);
+    // TODO -- I would rather this accepts an object,
+    // but this will work for now
+    static encode<T extends MessageType>(userId: string, t: T, p: Payload[T]): string {
+        return JSON.stringify({
+            id: uuid(),
+            userId,
+            type: t,
+            payload: p
+        }satisfies Message<T>);
     }
 
     encode<T extends MessageType>(t: T, p: Payload[T]): string {

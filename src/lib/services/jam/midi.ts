@@ -23,7 +23,8 @@ class Instrument {
 
 const instrument = new Instrument();
 
-export function handleIncomingMIDI(msg: WSMsg<MIDIMsg>) {
+// TODO -- type is not needed here, so omitting for now
+export function handleIncomingMIDI(msg: Omit<WSMsg<MIDIMsg>, "type">) {
     // TODO play different users on different channels
     // TODO: use instrument from MIDI message
     const midi = msg.payload;
