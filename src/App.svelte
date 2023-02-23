@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Route, Router } from 'svelte-navigator';
     import Home from '@pages/Home.svelte';
     import Jam from '@pages/Jam.svelte';
     import { themeStore } from '@store/theme';
+    import { Route, Router } from 'svelte-navigator';
 
     let vars;
     $: vars = $themeStore.vars;
@@ -45,7 +45,7 @@
         </Route>
         <!--should this pass params to the Jam component or read directly from JamStore?-->
         <Route
-            path="/jam/:id"
+            path="/jams/:id"
             let:params>
             <Jam jamID={params.id} />
         </Route>
