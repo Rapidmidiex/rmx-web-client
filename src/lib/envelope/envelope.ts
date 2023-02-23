@@ -42,3 +42,5 @@ export class Envelope<T extends ConnectMsg | MIDIMsg | TextMsg> {
         return JSON.stringify(message);
     }
 }
+
+// TODO -- add new Envelope type
