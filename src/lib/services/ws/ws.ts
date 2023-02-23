@@ -1,7 +1,7 @@
 import type { Envelope } from '@lib/envelope/envelope';
 import type { ConnectMsg, MIDIMsg, TextMsg } from '@lib/types/jam';
 
-// planning to move everything inside classes
+// TODO -- this is not being used so can can be removed
 class WSConn {
     private conn: WebSocket;
 
