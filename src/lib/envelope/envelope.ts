@@ -43,4 +43,3 @@ export class Envelope<T extends ConnectMsg | MIDIMsg | TextMsg> {
     }
 }
 
-// TODO -- add new Envelope type
