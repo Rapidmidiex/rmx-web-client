@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
     import { api, WS_BASE_URL } from '@api/api';
@@ -180,10 +181,12 @@
         }
     }
 
+    // TODO -- in process of refactoring
     function sendWSMsg(msg: Envelope<ConnectMsg | MIDIMsg | TextMsg>) {
         $JamStore.ws.send(msg.json());
     }
 
+    // TODO -- in process of refactoring
     function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
         pingStats.msgIn(msg.id);
 
