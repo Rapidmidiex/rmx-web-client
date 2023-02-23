@@ -27,26 +27,6 @@ export enum NoteState {
     NOTE_ON,
 }
 
-// TODO -- these message types I would like to remove as the new `message.ts` file is more robust
-export interface MIDIMsg {
-    state: NoteState;
-    // channel:  number; // not required
-    number: number;
-    velocity: number;
-}
-
-// TODO -- these message types I would like to remove as the new `message.ts` file is more robust
-export interface ConnectMsg {
-    userId: string;
-    userName: string;
-}
-
-// TODO -- these message types I would like to remove as the new `message.ts` file is more robust
-export interface TextMsg {
-    displayName: string;
-    body: string;
-}
-
 export interface Note {
     name: string[];
     black: boolean;

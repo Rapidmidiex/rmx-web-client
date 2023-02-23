@@ -1,6 +1,5 @@
 import * as SoundFont from 'soundfont-player';
-import { NoteState, type MIDIMsg } from '@lib/types/jam';
-import type { WSMsg } from '@lib/types/websocket';
+import type {  MessagePayload } from "@lib/envelope/message";
 
 class Instrument {
     private ac: AudioContext;
@@ -23,19 +22,18 @@ class Instrument {
 
 const instrument = new Instrument();
 
-// TODO -- type is not needed here, so omitting for now
-export function handleIncomingMIDI(msg: Omit<WSMsg<MIDIMsg>, "type">) {
-    // TODO play different users on different channels
-    // TODO: use instrument from MIDI message
-    const midi = msg.payload;
+// TODO -- this may work in a different file
+export function handleIncomingMIDI(midi: MessagePayload["midi"]) {
+    // TODO -- objects passed by reference so should be able to just pass that
+    // via args
+    // const midi = message.payload;
     switch (midi.state) {
-        case NoteState.NOTE_ON:
+        case 1: // NOTE_ON
             instrument.noteOn(midi.number, midi.velocity);
             break;
-        case NoteState.NOTE_OFF:
+        case 0: // NOTE_OFF
             // synth.noteOff(0, midi.number);
             break;
-
         default:
             break;
     }
