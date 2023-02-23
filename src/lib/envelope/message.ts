@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-type Payload = {
+export type MessagePayload = {
     "text": {
         displayName: string;
         body: string;
@@ -16,12 +16,12 @@ type Payload = {
     };
 };
 
-type MessageType = keyof Payload;
+type MessageType = keyof MessagePayload;
 
 export type Message<T extends MessageType = MessageType> = {
     [K in T]: {
         type: K;
-        payload: Payload[K];
+        payload: MessagePayload[K];
         id: string;
         userId: string;
     }
@@ -40,7 +40,7 @@ export class MessageParser {
 
     // TODO -- I would rather this accepts an object,
     // but this will work for now
-    static encode<T extends MessageType>(userId: string, t: T, p: Payload[T]): string {
+    static encode<T extends MessageType>(userId: string, t: T, p: MessagePayload[T]): string {
         return JSON.stringify({
             id: uuid(),
             userId,
@@ -49,7 +49,7 @@ export class MessageParser {
         }satisfies Message<T>);
     }
 
-    encode<T extends MessageType>(t: T, p: Payload[T]): string {
+    encode<T extends MessageType>(t: T, p: MessagePayload[T]): string {
         return JSON.stringify({
             id: uuid(),
             userId: this.userId,
