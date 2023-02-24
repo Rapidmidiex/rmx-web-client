@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
-import { PingStats, RoundtripTimer } from '@lib/ping/PingStats';
+import { PingStats, RoundTripTimer  RoundTripTimer } from '@lib/ping/PingStats';
 
 function createStats() {
-    const timer = new RoundtripTimer();
+    const timer = new RoundTripTimer();
     const { subscribe, set, update } = writable<PingStats>(new PingStats());
 
     return {
@@ -15,8 +15,8 @@ function createStats() {
         },
         msgIn(msgId: string) {
             try {
-                const roundtripTime = timer.stopTimer(msgId);
-                update((stats) => stats.calcStats(roundtripTime));
+                const roundTripTime = timer.stopTimer(msgId);
+                update((stats) => stats.calcStats(roundTripTime));
             } catch (error) {
                 // Ignore messages missing from timer dictionary.
             }

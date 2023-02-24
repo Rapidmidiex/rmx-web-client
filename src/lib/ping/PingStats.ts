@@ -1,4 +1,4 @@
-export class RoundtripTimer {
+export class RoundTripTimer {
     private timestamps: Record<string, Date>;
 
     constructor() {
