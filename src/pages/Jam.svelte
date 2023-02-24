@@ -2,7 +2,7 @@
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
-    import { Agent, api, createWebsocket } from '@api/api';
+    import { Agent, createWebsocket } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import type { GetJamData } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
@@ -154,7 +154,7 @@
 
     async function initJam() {
         try {
-            const { data } = await api.get<GetJamData>(`/jams/${jamID}`);
+            const { data } = await Agent.Jams.get(jamID);
             JamStore.update((store) => ({
                 ...store,
                 ...data,
