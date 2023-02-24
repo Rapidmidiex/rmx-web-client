@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 
-export type MessagePayload = {
+// trying to not export this type, instead building types from this definition
+type MessagePayload = {
     "text": {
         displayName: string;
         body: string;
@@ -26,6 +27,12 @@ export type Message<T extends MessageType = MessageType> = {
         userId: string;
     }
 }[T];
+
+export type MidiMessage = Message<"midi">
+
+export type TextMessage = Message<"text">
+
+export type ConnectMessage = Message<"connect">
 
 export class MessageParser {
     constructor(private readonly userId: string) { }
