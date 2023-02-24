@@ -3,7 +3,7 @@ import axios from 'axios';
 import { navigate, type NavigateOptions } from "svelte-navigator";
 import cfg from '../config';
 
-export const api = axios.create({
+const api = axios.create({
     baseURL: cfg.apiBaseUrl,
     headers: {
         'Content-Type': 'application/json',
