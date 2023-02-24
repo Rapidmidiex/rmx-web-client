@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Message, MessagePayload } from '@lib/envelope/message';
+    import type { Message } from '@lib/envelope/message';
     import { genPianoKeys } from '@lib/services/jam/piano';
-    import { NoteState, type PianoKeyNote } from '@lib/types/jam';
+    import type { PianoKeyNote } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { pingStats } from '@store/ping';
@@ -20,25 +20,27 @@
         $PianoStore = { keydown: false, currNote: null };
     }
 
-    function sendMsg(midi: MessagePayload['midi']) {
-        let message = {
-            id: uuid(),
-            type: 'midi',
-            payload: midi,
-            userId: $UserStore.userId,
-        } satisfies Message;
-
-        pingStats.msgOut(message.id);
-        $JamStore.ws.send(JSON.stringify(message));
-    }
-
     const unsubscribe = PianoStore.subscribe((v) => {
         if (v.keydown && v.currNote) {
-            sendMsg({
-                state: NoteState.NOTE_ON,
-                number: v.currNote.midi,
-                velocity: 120,
-            });
+            // TODO -- clean this up with a better API
+            // at least its a bit more consistent
+            // due to pingStags, needing an ID
+            // I can't use the `MessageParser, so will need to revise that
+            {
+                let message = {
+                    id: uuid(),
+                    type: 'midi',
+                    payload: {
+                        state: 1,
+                        number: v.currNote.midi,
+                        velocity: 120,
+                    },
+                    userId: $UserStore.userId,
+                } satisfies Message;
+
+                pingStats.msgOut(message.id);
+                $JamStore.ws.send(JSON.stringify(message));
+            }
         }
     });
 

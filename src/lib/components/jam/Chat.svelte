@@ -10,7 +10,7 @@
     import TextInput from '../global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { fly } from 'svelte/transition';
-    import type { Message } from '@lib/envelope/message';
+    import type { Message, TextMessage } from '@lib/envelope/message';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -20,7 +20,7 @@
     }
 
     function sendMsg() {
-        let _message: Message<'text'> = {
+        let _message: TextMessage = {
             id: uuid(),
             type: 'text',
             payload: {

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type { Message } from '@lib/envelope/message';
+    import type { TextMessage } from '@lib/envelope/message';
     import { applyTheme, themeStore } from '@store/theme';
     import { UserStore } from '@store/user';
     import { fly } from 'svelte/transition';
 
-    export let message: Omit<Message<'text'>, 'type'>;
+    export let message: TextMessage;
 
     let vars;
     $: vars = $themeStore.vars;
