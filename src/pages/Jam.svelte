@@ -52,8 +52,8 @@
     }
 
     async function getUserMedia(deviceId?: string) {
-        navigator.mediaDevices
-            .getUserMedia({
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: {
                     echoCancellation: false,
                     autoGainControl: false,
@@ -61,15 +61,13 @@
                     deviceId,
                 },
                 video: false,
-            })
-            .then((stream) => {
-                mediaStream = stream;
-                gotStream();
-            })
-            .catch((err) => {
-                alert('getUserMedia threw exception:' + err);
-                micInit = false;
             });
+
+            gotStream();
+        } catch (error) {
+            alert('getUserMedia threw exception:' + error);
+            micInit = false;
+        }
     }
 
     function gotStream() {
@@ -119,17 +117,19 @@
         requestAnimationFrame(updatePitch);
     }
 
-    function initMic() {
+    async function initMic() {
+        // TODO -- this can be done at the variable declaration level
+        // easier to track
         audioContext = new (window.AudioContext ||
             globalThis.webkitAudioContext)({ latencyHint: 'interactive' });
-        getUserMedia()
-            .then(() => {
-                micInit = true;
-            })
-            .catch((err: Error) => {
-                micInit = false;
-                Failure(err.message);
-            });
+        try {
+            await getUserMedia();
+            micInit = true;
+        } catch (err) {
+            micInit = false;
+            Failure(err.message);
+            return;
+        }
     }
 
     /*^^^^^^^^^^^^^^^^^^- Audio related code -^^^^^^^^^^^^^^^^^*/
