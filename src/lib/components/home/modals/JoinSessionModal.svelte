@@ -1,6 +1,5 @@
 <script lang="ts">
     import fuzzysort from 'fuzzysort';
-    import { api } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
     import { Failure } from '@lib/notify/notify';
     import type { GetJamData } from '@lib/types/jam';
@@ -9,6 +8,7 @@
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
+    import { Agent } from '@api/api';
 
     export let closeFunc: Function;
     let jams: GetJamData[];
@@ -18,13 +18,12 @@
 
     function joinJam(id: string) {
         // TODO -- this is for the web client
-        navigate(`/jam/${id}`, { replace: true });
+        Agent.Redirect.jam(id);
     }
 
     async function loadJams() {
         try {
-            // /api/v1/jam
-            const { data } = await api.get<{ rooms: GetJamData[] }>('/jams');
+            const { data } = await Agent.Jams.list();
             jams = data.rooms;
         } catch (error) {
             Failure(error.message);

@@ -19,7 +19,7 @@ export const Agent = {
             return api.post<GetJamData>("/jams", JSON.stringify(body));
         },
         list: () => {
-            return api.get("/jams");
+            return api.get<{ rooms: GetJamData[]; }>("/jams");
         },
         get: (id: string) => {
             return api.get<GetJamData>(`/jams/${id}`);
@@ -34,7 +34,8 @@ export const Agent = {
             navigate(`jam/${id}`, opt);
         },
         home: () => {
-            navigate("/", { replace: true });
+            let opt: NavigateOptions = { replace: true };
+            navigate("/", opt);
         }
     }
 } as const;
