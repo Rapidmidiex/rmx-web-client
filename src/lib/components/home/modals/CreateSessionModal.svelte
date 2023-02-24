@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { AxiosError } from 'axios';
-    import { Agent, api } from '@api/api';
+    import { Agent } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
     import { Failure, Success } from '@lib/notify/notify';
     import type { CreateJamData, GetJamData } from '@lib/types/jam';
@@ -18,12 +18,12 @@
 
     async function createSession() {
         try {
-            const {data} = await Agent.Jams.create({name,capacity,bpm});
+            const { data } = await Agent.Jams.create({ name, capacity, bpm });
             Success('new Jam room created. redirecting...');
             Agent.Redirect.jam(data.id);
         } catch (error) {
             Failure(error.message);
-        } finally{
+        } finally {
             closeFunc();
         }
     }
