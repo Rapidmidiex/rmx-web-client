@@ -21,11 +21,11 @@
     import {
         MessageParser,
         type Message,
-        type MessagePayload,
+        type MidiMessage,
     } from '@lib/envelope/message';
 
     export let jamID: string;
-    let midi: MessagePayload['midi']; //MIDIMsg;
+    let midi: MidiMessage['payload'];
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -188,6 +188,7 @@
             case 'midi': {
                 handleIncomingMIDI(message.payload);
                 midi = message.payload;
+                // midi = message.payload;
                 break;
             }
             case 'connect': {
