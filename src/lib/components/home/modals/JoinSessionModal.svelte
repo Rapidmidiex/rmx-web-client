@@ -11,41 +11,61 @@
     import { Agent } from '@api/api';
 
     export let closeFunc: Function;
-    let jams: GetJamData[];
     let searchResult: Fuzzysort.KeyResults<GetJamData>;
     let jamsProgress: string = 'Loading...';
     let search: string;
+
+    let response = getJamRooms();
 
     function joinJam(id: string) {
         // TODO -- this is for the web client
         Agent.Redirect.jam(id);
     }
 
-    async function loadJams() {
-        try {
-            const { data } = await Agent.Jams.list();
-            jams = data.rooms;
-        } catch (error) {
-            Failure(error.message);
-            jamsProgress = "Couldn't load Jams list";
-        }
+    async function getJamRooms() {
+        const {
+            data: { rooms },
+        } = await Agent.Jams.list();
+
+        return rooms;
+        // return fuzzysort.go<GetJamData>(search, rooms, {
+        //     all: false,
+        //     key: 'name',
+        // });
     }
 
-    function searchJams() {
-        searchResult = fuzzysort.go<GetJamData>(search, jams, {
-            all: false,
-            key: 'name',
-        });
-    }
-
-    onMount(async () => {
-        await loadJams();
-    });
+    // async function loadJams() {
+    //     try {
+    //         const { data } = await Agent.Jams.list();
+    //         jams = data.rooms;
+    //     } catch (error) {
+    //         Failure(error.message);
+    //         jamsProgress = "Couldn't load Jams list";
+    //     }
+    // }
 
     let vars;
     $: vars = $themeStore.vars;
 </script>
 
+{#await response}
+    <div>loading</div>
+{:then rooms}
+    {#each rooms as room}
+        <div class="jam">
+            <div class="info">
+                <div class="name">
+                    {room.name}
+                </div>
+            </div>
+            <Button on:click={() => Agent.Redirect.jam(room.id)}>Join</Button>
+        </div>
+    {/each}
+{:catch error}
+    <div>{error}</div>
+{/await}
+
+<!-- 
 <Modal
     name="join"
     {closeFunc}>
@@ -94,8 +114,7 @@
             {/if}
         </ul>
     </div>
-</Modal>
-
+</Modal> -->
 <style lang="scss">
     .join-modal {
         width: 30rem;
