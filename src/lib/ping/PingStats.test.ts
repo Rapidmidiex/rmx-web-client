@@ -1,9 +1,9 @@
-import { RoundtripTimer, PingStats } from './PingStats';
+import { RoundTripTimer, PingStats } from './PingStats';
 import { describe, expect, it } from 'vitest';
 
 describe('RoundtripTimer', () => {
     it('should time messages', async () => {
-        const rtt = new RoundtripTimer();
+        const rtt = new RoundTripTimer();
         const msgId = 'abc';
 
         rtt.startTimer(msgId);
@@ -14,7 +14,7 @@ describe('RoundtripTimer', () => {
     });
 
     it('startTimer() should throw if a timer has already started for a message', () => {
-        const rtt = new RoundtripTimer();
+        const rtt = new RoundTripTimer();
         const msgId = 'abc';
 
         rtt.startTimer(msgId);
@@ -24,7 +24,7 @@ describe('RoundtripTimer', () => {
     });
 
     it('stopTimer() should throw if the timer was not started for a given message', () => {
-        const rtt = new RoundtripTimer();
+        const rtt = new RoundTripTimer();
 
         expect(() => {
             rtt.stopTimer('msgId');
@@ -32,7 +32,7 @@ describe('RoundtripTimer', () => {
     });
 
     it('should reset if a timer has been stopped for a message', async () => {
-        const rtt = new RoundtripTimer();
+        const rtt = new RoundTripTimer();
         const msgId = 'abc';
 
         rtt.startTimer(msgId);
