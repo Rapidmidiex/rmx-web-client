@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { AxiosError } from 'axios';
-    import { api } from '@api/api';
+    import { Agent, api } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
     import { Failure, Success } from '@lib/notify/notify';
     import type { CreateJamData, GetJamData } from '@lib/types/jam';
@@ -11,27 +11,21 @@
 
     export let closeFunc: Function;
 
+    // bounded values
     let name: string;
     let capacity: number;
     let bpm: number;
-    function CreateSession() {
-        const payload: CreateJamData = {
-            name,
-            capacity,
-            bpm,
-        };
 
-        api.post<GetJamData>('/jam', JSON.stringify(payload))
-            .then(({ data }) => {
-                Success('new Jam room created. redirecting...');
-                navigate(`/api/v1/jam/${data.id}`, { replace: true });
-            })
-            .catch((error: AxiosError) => {
-                Failure(error.message);
-            })
-            .finally(() => {
-                closeFunc();
-            });
+    async function createSession() {
+        try {
+            const {data} = await Agent.Jams.create({name,capacity,bpm});
+            Success('new Jam room created. redirecting...');
+            Agent.Redirect.jam(data.id);
+        } catch (error) {
+            Failure(error.message);
+        } finally{
+            closeFunc();
+        }
     }
 </script>
 
@@ -40,7 +34,7 @@
     {closeFunc}>
     <form
         class="new_session-form"
-        on:submit|preventDefault={CreateSession}>
+        on:submit|preventDefault={createSession}>
         <TextInput
             bind:value={name}
             placeholder="Room name (optional)" />

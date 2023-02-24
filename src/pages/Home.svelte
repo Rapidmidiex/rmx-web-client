@@ -4,15 +4,14 @@
     import CreateSessionModal from '@lib/components/home/modals/CreateSessionModal.svelte';
     import JoinSessionModal from '@lib/components/home/modals/JoinSessionModal.svelte';
 
-    let createSessionModalOpen = false;
-    let joinModalOpen = false;
-
-    function toggleCreateSessionModal() {
-        createSessionModalOpen = !createSessionModalOpen;
+    let createModel = false;
+    function toggleCreateModal() {
+        createModel = !createModel;
     }
 
+    let joinModal = false;
     function toggleJoinModal() {
-        joinModalOpen = !joinModalOpen;
+        joinModal = !joinModal;
     }
 </script>
 
@@ -24,15 +23,14 @@
             <p>A new way for musicians to perform</p>
             <br />
             <div class="session-con">
-                <Button on:click={toggleCreateSessionModal}
-                    >Start a new Jam</Button>
+                <Button on:click={toggleCreateModal}>Start a new Jam</Button>
                 <Button on:click={toggleJoinModal}>Join</Button>
             </div>
         </section>
-        {#if createSessionModalOpen}
-            <CreateSessionModal closeFunc={toggleCreateSessionModal} />
+        {#if createModel}
+            <CreateSessionModal closeFunc={toggleCreateModal} />
         {/if}
-        {#if joinModalOpen}
+        {#if joinModal}
             <JoinSessionModal closeFunc={toggleJoinModal} />
         {/if}
     </div>

@@ -2,7 +2,7 @@
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
-    import { api, createWebsocket } from '@api/api';
+    import { Agent, api, createWebsocket } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import type { GetJamData } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
@@ -107,6 +107,7 @@
         // TODO -- `sendMsg` got in the way, will want to update this
         // logic anyhow though
         {
+            // let raw = MessageParser.encode($UserStore.userId, 'midi', {
             let raw = MessageParser.encode($UserStore.userId, 'midi', {
                 state: 1,
                 number: noteNum,
@@ -153,22 +154,23 @@
 
     async function initJam() {
         try {
-            const { data } = await api.get<GetJamData>(`/api/v1/jam/${jamID}`);
+            const { data } = await api.get<GetJamData>(`/jams/${jamID}`);
             JamStore.update((store) => ({
                 ...store,
                 ...data,
                 players: [],
-                ws: createWebsocket(`/ws/jam/${jamID}`),
+                ws: Agent.Jams.ws(jamID),
             }));
             Success('Jam data loaded');
         } catch (err) {
             Failure(err.message);
-            navigate('/', { replace: true });
+            Agent.Redirect.home();
         }
     }
 
     function handleWSMsg(message: Message) {
         pingStats.msgIn(message.id);
+
         switch (message.type) {
             case 'text': {
                 let displayMsg = message.payload; //as TextMsg;
@@ -188,7 +190,6 @@
             case 'midi': {
                 handleIncomingMIDI(message.payload);
                 midi = message.payload;
-                // midi = message.payload;
                 break;
             }
             case 'connect': {
@@ -213,6 +214,7 @@
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
             // TODO -- should we handle errors here? [try/catch]
+            console.log(event.data);
             let message = MessageParser.decode(event.data);
             handleWSMsg(message);
         };

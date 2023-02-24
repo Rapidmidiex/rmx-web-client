@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 
 // trying to not export this type, instead building types from this definition
 type MessagePayload = {
-    "text": {
+    "text"  : {
         displayName: string;
         body: string;
     };

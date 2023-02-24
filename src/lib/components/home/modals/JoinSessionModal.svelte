@@ -17,13 +17,14 @@
     let search: string;
 
     function joinJam(id: string) {
+        // TODO -- this is for the web client
         navigate(`/jam/${id}`, { replace: true });
     }
 
     async function loadJams() {
         try {
             // /api/v1/jam
-            const { data } = await api.get<{ rooms: GetJamData[] }>('/api/v1/jam');
+            const { data } = await api.get<{ rooms: GetJamData[] }>('/jams');
             jams = data.rooms;
         } catch (error) {
             Failure(error.message);

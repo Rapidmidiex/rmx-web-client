@@ -6,6 +6,7 @@
 
     export let message: TextMessage;
 
+    // TODO -- add some form of types here
     let vars;
     $: vars = $themeStore.vars;
 </script>
