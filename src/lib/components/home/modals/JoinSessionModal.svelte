@@ -22,7 +22,8 @@
 
     async function loadJams() {
         try {
-            const { data } = await api.get<{ rooms: GetJamData[] }>('/jam');
+            // /api/v1/jam
+            const { data } = await api.get<{ rooms: GetJamData[] }>('/api/v1/jam');
             jams = data.rooms;
         } catch (error) {
             Failure(error.message);

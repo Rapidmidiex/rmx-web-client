@@ -24,7 +24,7 @@
         api.post<GetJamData>('/jam', JSON.stringify(payload))
             .then(({ data }) => {
                 Success('new Jam room created. redirecting...');
-                navigate(`/jam/${data.id}`, { replace: true });
+                navigate(`/api/v1/jam/${data.id}`, { replace: true });
             })
             .catch((error: AxiosError) => {
                 Failure(error.message);
