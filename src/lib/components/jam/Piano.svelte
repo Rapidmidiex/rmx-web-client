@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Message } from '@lib/envelope/message';
     import { genPianoKeys } from '@lib/services/jam/piano';
     import type { PianoKeyNote } from '@lib/types/jam';
+    import type { Message } from "@lib/types/message";
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { pingStats } from '@store/ping';

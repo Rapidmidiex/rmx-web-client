@@ -10,7 +10,7 @@
     import TextInput from '../global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { fly } from 'svelte/transition';
-    import type { Message, TextMessage } from '@lib/envelope/message';
+    import type { Message, TextMessage } from '@lib/types/message';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;

@@ -2,13 +2,11 @@
     import Button from '@lib/components/global/Button.svelte';
     import Icon from '@lib/components/global/Icon.svelte';
     import Modal from '@lib/components/global/Modal.svelte';
-
-    export let closeFunc: Function;
 </script>
 
 <Modal
     name="settings"
-    {closeFunc}
+    on:close
     ><div class="settings">
         <div class="categories">
             <Button type="button"
