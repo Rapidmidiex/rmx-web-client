@@ -3,11 +3,13 @@
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
-    import { Agent } from '@api/api';
-    import { fetchState, fuzzySearch, getJamRooms } from './getJamRooms';
-    import { onDestroy, onMount } from 'svelte';
-
-    export let closeFunc: Function;
+    import { agent } from '@api/api';
+    import {
+        fetchState,
+        getFilteredJams,
+        getJamRooms,
+    } from '../../../../store/getJamRooms';
+    import { onMount } from 'svelte';
 
     onMount(() => {
         getJamRooms().then((value) => {
@@ -19,16 +21,12 @@
     $: themeVars = $themeStore.vars;
 
     let searchQuery = '';
-    $: rooms = fuzzySearch(searchQuery);
-
-    onDestroy(() => {
-        searchQuery = '';
-    });
+    $: rooms = getFilteredJams(searchQuery);
 </script>
 
 <Modal
     name="join"
-    {closeFunc}>
+    on:close>
     {#if $fetchState === 'loading'}
         <h2>Loading...</h2>
     {:else}
@@ -55,7 +53,7 @@
                                     {room.name}
                                 </div>
                             </div>
-                            <Button on:click={() => Agent.Redirect.jam(room.id)}
+                            <Button on:click={() => agent.redirect.jam(room.id)}
                                 >Join</Button>
                         </li>
                     {/each}

@@ -3,22 +3,29 @@
     import { fade, fly } from 'svelte/transition';
     import Button from './Button.svelte';
     import Icon from './Icon.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     let className = '';
     export { className as class };
-    export let closeFunc;
+    // export let closeFunc;
     export let name: string;
 
     let vars;
     $: vars = $themeStore.vars;
+
+    let dispatch = createEventDispatcher();
+
+    function onClose() {
+        dispatch('close');
+    }
 </script>
 
 <div
     transition:fade
     style={applyTheme(vars)}
     class={`modal ${className}`}
-    on:click|self={closeFunc}
-    on:keydown|self={closeFunc}>
+    on:click|self={onClose}
+    on:keydown|self={onClose}>
     <div
         class="con"
         transition:fly={{ y: 200, duration: 300 }}>
@@ -26,7 +33,7 @@
             <p>{name.toUpperCase()}</p>
             <Button
                 size="small"
-                on:click={closeFunc}><Icon name="x" /></Button>
+                on:click={onClose}><Icon name="x" /></Button>
         </div>
         <div class="content">
             <slot />

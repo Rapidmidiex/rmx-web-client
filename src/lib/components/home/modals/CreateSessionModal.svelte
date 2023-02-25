@@ -1,15 +1,12 @@
 <script lang="ts">
-    import type { AxiosError } from 'axios';
-    import { Agent } from '@api/api';
+    import { agent } from '@api/api';
     import Modal from '@lib/components/global/Modal.svelte';
     import { Failure, Success } from '@lib/notify/notify';
-    import type { CreateJamData, GetJamData } from '@lib/types/jam';
-    import { navigate } from 'svelte-navigator';
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import NumberInput from '@lib/components/global/NumberInput.svelte';
 
-    export let closeFunc: Function;
+    // export let closeFunc: Function;
 
     // bounded values
     let name: string;
@@ -18,20 +15,18 @@
 
     async function createSession() {
         try {
-            const { data } = await Agent.Jams.create({ name, capacity, bpm });
+            const { data } = await agent.jams.create({ name, capacity, bpm });
             Success('new Jam room created. redirecting...');
-            Agent.Redirect.jam(data.id);
+            agent.redirect.jam(data.id);
         } catch (error) {
             Failure(error.message);
-        } finally {
-            closeFunc();
         }
     }
 </script>
 
 <Modal
     name="new jam"
-    {closeFunc}>
+    on:close>
     <form
         class="new_session-form"
         on:submit|preventDefault={createSession}>
