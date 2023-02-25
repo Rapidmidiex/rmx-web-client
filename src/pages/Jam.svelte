@@ -1,10 +1,8 @@
 <script lang="ts">
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
-    import { navigate } from 'svelte-navigator';
-    import { agent, createWebsocket } from '@api/api';
+    import { agent } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
-    import type { GetJamData } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import Icon from '@lib/components/global/Icon.svelte';
@@ -18,14 +16,12 @@
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
     import Button from '@lib/components/global/Button.svelte';
     import Page from '@lib/components/global/Page.svelte';
-    import {
-        MessageParser,
-        type Message,
-        type MidiMessage,
-    } from '@lib/envelope/message';
+    import { MessageParser } from '@lib/services/parser/message';
+    import type { Message, Payload } from '@lib/types/message';
+    import { createToggle } from '@store/toggle';
 
     export let jamID: string;
-    let midi: MidiMessage['payload']; // NOTE -- I dont like having to do this with types, so any suggestions welcome
+    let midi: Payload<'midi'>;
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -227,20 +223,12 @@
         };
     });
 
-    let showPiano: boolean = false;
-    function togglePiano() {
-        showPiano = !showPiano;
-    }
 
-    let showChat: boolean = false;
-    function toggleChat() {
-        showChat = !showChat;
-    }
+    const toggleChat = createToggle(false)
 
-    let showSettings: boolean = false;
-    function toggleSettings() {
-        showSettings = !showSettings;
-    }
+    const togglePiano = createToggle(false)
+
+    const toggleSettings = createToggle(false);
 
     onDestroy(() => unsubscribe());
 </script>
@@ -255,12 +243,12 @@
                     <p>No message available</p>
                 {/if}
             </div>
-            {#if showPiano}
+            {#if $togglePiano}
                 <Piano />
             {/if}
         </div>
         <div class="jam-extras">
-            {#if showChat}
+            {#if $toggleChat}
                 <Chat />
             {/if}
         </div>
@@ -282,22 +270,23 @@
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
                 <Button
                     type="button"
-                    on:click={togglePiano}><Icon name="music" /></Button>
+                    on:click={togglePiano.toggle}><Icon name="music" /></Button>
                 <Button
                     type="button"
-                    on:click={toggleSettings}><Icon name="settings" /></Button>
+                    on:click={toggleSettings.toggle}
+                    ><Icon name="settings" /></Button>
             </div>
             <div class="chat">
                 <Button
                     type="button"
-                    on:click={toggleChat}>
+                    on:click={toggleChat.toggle}>
                     <Icon name="message-square" />
                 </Button>
             </div>
         </div>
     </div>
-    {#if showSettings}
-        <Settings closeFunc={toggleSettings} />
+    {#if $toggleSettings}
+        <Settings on:close={toggleSettings.toggle} />
     {/if}
 </Page>
 
