@@ -1,5 +1,5 @@
+import type { Payload } from "@lib/types/message";
 import * as SoundFont from 'soundfont-player';
-import type {   MidiMessage } from "@lib/envelope/message";
 
 class Instrument {
     private ac: AudioContext;
@@ -22,11 +22,7 @@ class Instrument {
 
 const instrument = new Instrument();
 
-// TODO -- this may work in a different file
-export function handleIncomingMIDI(midi: MidiMessage["payload"]) {
-    // TODO -- objects passed by reference so should be able to just pass that
-    // via args
-    // const midi = message.payload;
+export function handleIncomingMIDI(midi: Payload<"midi">) {
     switch (midi.state) {
         case 1: // NOTE_ON
             instrument.noteOn(midi.number, midi.velocity);

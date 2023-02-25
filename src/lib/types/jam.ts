@@ -22,10 +22,7 @@ export interface GetJamData {
     bpm: number;
 }
 
-export enum NoteState {
-    NOTE_OFF,
-    NOTE_ON,
-}
+export type NoteState = 0 | 1;
 
 export interface Note {
     name: string[];
