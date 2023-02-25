@@ -3,7 +3,7 @@
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
-    import { agent } from 'src/api';
+    import { agent } from '@lib/api';
     import {
         fetchState,
         getFilteredJams,
