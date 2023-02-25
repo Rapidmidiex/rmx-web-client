@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
-import { PingStats,  RoundTripTimer } from '@lib/ping/PingStats';
+import { writable } from "svelte/store";
+import { PingStats } from "./pingStats";
+import { RoundTripTimer } from "./roundTripTimer";
 
-// can a store take a dependency?
 function createStats() {
     const timer = new RoundTripTimer();
     const { subscribe, set, update } = writable<PingStats>(new PingStats());

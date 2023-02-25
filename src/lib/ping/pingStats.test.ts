@@ -1,4 +1,4 @@
-import { RoundTripTimer, PingStats } from './PingStats';
+import { RoundTripTimer, PingStats } from './pingStats';
 import { describe, expect, it } from 'vitest';
 
 describe('RoundtripTimer', () => {

@@ -1,5 +1,15 @@
-import type { Jam } from '@lib/types/jam';
-import { writable, type Readable, type Subscriber } from 'svelte/store';
+import { writable } from "svelte/store";
+
+export interface Jam {
+    id: string;
+    name: string;
+    capacity: number;
+    bpm: number;
+    players: string[];
+    ws: WebSocket;
+    audioInputDevice: MediaDeviceInfo | null;
+    availableDevices: MediaDeviceInfo[];
+}
 
 export const JamStore = writable<Jam>({
     id: '',

@@ -1,7 +1,6 @@
-import type { CreateJamData, GetJamData } from "@lib/types/jam";
 import axios from 'axios';
-import { navigate, type NavigateOptions } from "svelte-navigator";
-import cfg from '../config';
+import { navigate } from "svelte-navigator";
+import cfg from '../../config';
 
 const api = axios.create({
     baseURL: cfg.apiBaseUrl,
@@ -10,19 +9,30 @@ const api = axios.create({
     },
 });
 
-// TODO -- add agent for jams
+type CreateJamRoom = {
+    name: string;
+    capacity: number;
+    bpm: number;
+};
+
+export type JamRoom = {
+    id: string;
+    name: string;
+    capacity: number;
+    bpm: number;
+};
 
 export const agent = {
     jams: {
-        create: (body: CreateJamData) => {
+        create: (body: CreateJamRoom) => {
             // TODO -- handle promise here
-            return api.post<GetJamData>("/jams", body);
+            return api.post<JamRoom>("/jams", body);
         },
         list: () => {
-            return api.get<{ rooms: GetJamData[]; }>("/jams");
+            return api.get<{ rooms: JamRoom[]; }>("/jams");
         },
         get: (id: string) => {
-            return api.get<GetJamData>(`/jams/${id}`);
+            return api.get<JamRoom>(`/jams/${id}`);
         },
         ws: (id: string) => {
             return createWebsocket(`/jams/${id}`);

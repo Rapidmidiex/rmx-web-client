@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { applyTheme, themeStore } from '@store/theme';
+       import { themeStore, applyTheme } from "@lib/theme";
+
     import Nav from './Nav.svelte';
 
     let className;

@@ -1,11 +1,10 @@
 // TODO -- I need to rename this as there is already a jam store file
 // I can merge them but either case, I need to rename these variable names
-import { agent } from "@lib/api";
-import type { GetJamData } from "@lib/types/jam";
+import { agent, type JamRoom } from "@lib/api";
 import fuzzysort from "fuzzysort";
 import { derived, get, writable } from "svelte/store";
 
-export const jamRoomStore = writable<GetJamData[]>([]);
+export const jamRoomStore = writable<JamRoom[]>([]);
 
 export const fetchState = writable<"loading" | "done">("loading");
 

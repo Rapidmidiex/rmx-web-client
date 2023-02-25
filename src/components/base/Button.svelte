@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { applyTheme, themeStore } from '@store/theme';
+    import { themeStore, applyTheme } from '@lib/theme';
 
     export let type: 'button' | 'submit' | 'reset' = 'button';
     export let size: 'small' | 'medium' | 'large' = 'medium';

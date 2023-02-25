@@ -1,6 +1,6 @@
 <script lang="ts">
+    import { JamStore, setAvailableDevices } from '@lib/jam';
     import { onMount } from 'svelte';
-    import { JamStore, setAvailableDevices } from '@store/jam';
     import Select from './base/Select.svelte';
 
     export let selected: MediaDeviceInfo;

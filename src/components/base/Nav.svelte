@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { applyTheme, switchTheme, themeStore } from '@store/theme';
+    import { applyTheme, switchTheme, themeStore } from '@lib/theme';
     import { Link } from 'svelte-navigator';
     import { fly } from 'svelte/transition';
     import Button from './Button.svelte';

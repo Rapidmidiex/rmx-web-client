@@ -1,7 +1,7 @@
 <script lang="ts">
     import { agent } from '@lib/api';
     import Modal from '@components/base/Modal.svelte';
-    import { Failure, Success } from '@lib/notify/notify';
+    import { notification } from '@lib/notification';
     import Button from '@components/base/Button.svelte';
     import TextInput from '@components/base/TextInput.svelte';
     import NumberInput from '@components/base/NumberInput.svelte';
@@ -14,10 +14,10 @@
     async function createSession() {
         try {
             const { data } = await agent.jams.create({ name, capacity, bpm });
-            Success('new Jam room created. redirecting...');
+            notification.success('new Jam room created. redirecting...');
             agent.redirect.jam(data.id);
         } catch (error) {
-            Failure(error.message);
+            notification.failure(error.message);
         }
     }
 </script>

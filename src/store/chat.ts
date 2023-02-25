@@ -1,4 +1,4 @@
-import type { TextMessage } from "@lib/types/message";
-import { storage } from '@lib/services/store/store';
+import type { TextMessage } from "@lib/message";
+import { createStorage } from "../lib/storage";
 
-export const ChatStore = storage<TextMessage[]>('CHAT_STORE', []);
+export const ChatStore = createStorage<TextMessage[]>('CHAT_STORE', []);

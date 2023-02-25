@@ -1,7 +1,13 @@
 <script lang="ts">
-    import { AS, CS, DS, FS, GS } from '@lib/consts/piano';
-    import type { PianoKeyNote } from '@lib/types/jam';
-    import { PianoStore } from '@store/piano';
+    import {
+        type PianoKeyNote,
+        PianoStore,
+        AS,
+        CS,
+        DS,
+        FS,
+        GS,
+    } from '@lib/audio/piano';
     import { applyTheme, themeStore } from '@store/theme';
 
     export let key: PianoKeyNote;

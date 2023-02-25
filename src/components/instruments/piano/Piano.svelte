@@ -1,18 +1,18 @@
 <script lang="ts">
-    import { genPianoKeys } from '@lib/services/jam/piano';
-    import type { PianoKeyNote } from '@lib/types/jam';
-    import type { Message } from '@lib/types/message';
-    import { JamStore } from '@store/jam';
-    import { PianoStore } from '@store/piano';
-    import { pingStats } from '@store/ping';
-    import { getUserStoreContext } from '@store/user';
+    import {
+        genPianoKeys,
+        PianoStore,
+        type PianoKeyNote,
+    } from '@lib/audio/piano';
+    import { JamStore } from '@lib/jam';
+    import type { Message } from '@lib/message';
+    import { pingStats } from '@lib/ping';
+    import { UserStore } from '@lib/user';
     import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
     import { v4 as uuid } from 'uuid';
     import Select from '../../base/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
-
-    const currentUser = getUserStoreContext();
 
     const sizes = [49, 61];
     let keyboardSize: 49 | 61 = 49;
@@ -37,7 +37,7 @@
                         number: v.currNote.midi,
                         velocity: 120,
                     },
-                    userId: $currentUser.userId,
+                    userId: $UserStore.userId,
                 } satisfies Message;
 
                 pingStats.msgOut(message.id);

@@ -1,18 +1,16 @@
 <script lang="ts">
     import { v4 as uuid } from 'uuid';
     import ChatBubble from './ChatBubble.svelte';
-    import { JamStore } from '@store/jam';
-    import { pingStats } from '@store/ping';
+    import { JamStore } from '@lib/jam';
+    import { pingStats } from '@lib/ping';
     import Icon from '../base/Icon.svelte';
     import { ChatStore } from '@store/chat';
     import Button from '../base/Button.svelte';
     import TextInput from '../base/TextInput.svelte';
-    import { applyTheme, themeStore } from '@store/theme';
+    import { themeStore, applyTheme } from '@lib/theme';
     import { fly } from 'svelte/transition';
-    import type { Message, TextMessage } from '@lib/types/message';
-    import { getUserStoreContext } from '@store/user';
-
-    const currentUser = getUserStoreContext();
+    import { UserStore } from '@lib/user';
+    import type { Message, TextMessage } from '@lib/message';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -27,9 +25,9 @@
             type: 'text',
             payload: {
                 body: message,
-                displayName: $currentUser.userName,
+                displayName: $UserStore.userName,
             },
-            userId: $currentUser.userId,
+            userId: $UserStore.userId,
         };
 
         pingStats.msgOut(_message.id);

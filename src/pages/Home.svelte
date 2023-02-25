@@ -3,7 +3,7 @@
     import NavPage from '@components/base/NavPage.svelte';
     import CreateSessionModal from '@components/modals/CreateSessionModal.svelte';
     import JoinSessionModal from '@components/modals/JoinSessionModal.svelte';
-    import { createToggle } from '@store/toggle';
+    import { createToggle } from '@lib/toggle';
 
     const toggleCreate = createToggle(false);
     const toggleJoin = createToggle(false);

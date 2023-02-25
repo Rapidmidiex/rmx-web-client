@@ -2,13 +2,10 @@
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
     import { agent } from '@lib/api';
-    import { Failure, Info, Success, Warning } from '@lib/notify/notify';
-    import { JamStore } from '@store/jam';
-    import { createUser, setUserStoreContext } from '@store/user';
+    import { notification } from '@lib/notification';
     import Icon from '@components/base/Icon.svelte';
     import Chat from '@components/chat/Chat.svelte';
     import Piano from '@components/instruments/piano/Piano.svelte';
-    import { pingStats } from '@store/ping';
     import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
     import { ChatStore } from '@store/chat';
@@ -16,17 +13,17 @@
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
     import Button from '@components/base/Button.svelte';
     import Page from '@components/base/Page.svelte';
-    import { MessageParser } from '@lib/services/parser/message';
-    import type { Message, Payload } from '@lib/types/message';
-    import { createToggle } from '@store/toggle';
+    import { createToggle } from '@lib/toggle';
+    import { type Payload, MessageParser, type Message } from '@lib/message';
+    import { pingStats } from '@lib/ping';
+    import { JamStore } from '@lib/jam';
+    import { UserStore } from "@lib/user";
 
     export let jamID: string;
+
     let midi: Payload<'midi'>;
     let micOn: boolean = false;
     let micInit: boolean = false;
-
-    const currentUser = createUser();
-    setUserStoreContext(currentUser);
 
     /*-------------------Audio related code---------------------*/
 
@@ -105,7 +102,7 @@
         // logic anyhow though
         {
             // let raw = MessageParser.encode($UserStore.userId, 'midi', {
-            let raw = MessageParser.encode($currentUser.userId, 'midi', {
+            let raw = MessageParser.encode($UserStore.userId, 'midi', {
                 state: 1,
                 number: noteNum,
                 velocity: 127,
@@ -126,7 +123,7 @@
             micInit = true;
         } catch (err) {
             micInit = false;
-            Failure(err.message);
+            notification.failure(err.message);
             return;
         }
     }
@@ -160,9 +157,9 @@
                 players: [],
                 ws: agent.jams.ws(jamID),
             }));
-            Success('Jam data loaded');
+            notification.success('Jam data loaded');
         } catch (err) {
-            Failure(err.message);
+            notification.failure(err.message);
             agent.redirect.home();
         }
     }
@@ -173,7 +170,7 @@
         switch (message.type) {
             case 'text': {
                 let displayMsg = message.payload; //as TextMsg;
-                if (message.userId === $currentUser.userId) {
+                if (message.userId === $UserStore.userId) {
                     displayMsg.displayName = 'You';
                 }
 
@@ -194,12 +191,12 @@
             case 'connect': {
                 // TODO -- looks like this type is equal to teh User
                 // defined in `store/user.ts`
-                currentUser.set(message.payload);
+                UserStore.set(message.payload);
                 break;
             }
             default: {
                 console.warn('Unknown message type', message);
-                Warning('Unknown message type');
+                notification.warning('Unknown message type');
                 break;
             }
         }
@@ -209,7 +206,7 @@
         await initJam();
 
         $JamStore.ws.onopen = () => {
-            Success('Connection established.');
+            notification.success('Connection established.');
         };
         $JamStore.ws.onmessage = (event: MessageEvent) => {
             // TODO -- should we handle errors here? [try/catch]
@@ -218,11 +215,11 @@
             handleWSMsg(message);
         };
         $JamStore.ws.onerror = (event: ErrorEvent) => {
-            Failure(event.error);
+            notification.failure(event.error);
             $JamStore.ws.close();
         };
         $JamStore.ws.onclose = () => {
-            Info('Connection was closed.');
+            notification.info('Connection was closed.');
         };
     });
 
