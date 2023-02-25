@@ -1,6 +1,6 @@
 // TODO -- I need to rename this as there is already a jam store file
 // I can merge them but either case, I need to rename these variable names
-import { agent } from "@api/api";
+import { agent } from "src/api";
 import type { GetJamData } from "@lib/types/jam";
 import fuzzysort from "fuzzysort";
 import { derived, get, writable } from "svelte/store";

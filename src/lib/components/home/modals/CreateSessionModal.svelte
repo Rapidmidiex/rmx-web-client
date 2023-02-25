@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { agent } from '@api/api';
+    import { agent } from 'src/api';
     import Modal from '@lib/components/global/Modal.svelte';
     import { Failure, Success } from '@lib/notify/notify';
     import Button from '@lib/components/global/Button.svelte';
