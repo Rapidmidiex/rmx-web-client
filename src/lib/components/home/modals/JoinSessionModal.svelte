@@ -1,69 +1,80 @@
 <script lang="ts">
     import fuzzysort from 'fuzzysort';
     import Modal from '@lib/components/global/Modal.svelte';
-    import { Failure } from '@lib/notify/notify';
     import type { GetJamData } from '@lib/types/jam';
-    import { onMount } from 'svelte';
-    import { navigate } from 'svelte-navigator';
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { Agent } from '@api/api';
 
     export let closeFunc: Function;
-    let searchResult: Fuzzysort.KeyResults<GetJamData>;
-    let jamsProgress: string = 'Loading...';
-    let search: string;
 
-    let response = getJamRooms();
+    let search = '';
 
-    function joinJam(id: string) {
-        // TODO -- this is for the web client
-        Agent.Redirect.jam(id);
-    }
+    $: response = getJamRoomsResponse();
 
-    async function getJamRooms() {
+    async function getJamRoomsResponse() {
         const {
             data: { rooms },
         } = await Agent.Jams.list();
-
         return rooms;
-        // return fuzzysort.go<GetJamData>(search, rooms, {
-        //     all: false,
-        //     key: 'name',
-        // });
     }
 
-    // async function loadJams() {
-    //     try {
-    //         const { data } = await Agent.Jams.list();
-    //         jams = data.rooms;
-    //     } catch (error) {
-    //         Failure(error.message);
-    //         jamsProgress = "Couldn't load Jams list";
-    //     }
-    // }
+    function handleResults(rooms: GetJamData[], search = ''): GetJamData[] {
+        if (search === '') return rooms; //.map((room) => ({ obj: room }));
 
-    let vars;
+        return fuzzysort
+            .go<GetJamData>(search, rooms, {
+                all: false,
+                key: 'name',
+            })
+            .map((res) => res.obj);
+    }
+
+    let vars; //FIXME -- `applyTheme expects `Theme` but this is `any`
     $: vars = $themeStore.vars;
 </script>
 
-{#await response}
-    <div>loading</div>
-{:then rooms}
-    {#each rooms as room}
-        <div class="jam">
-            <div class="info">
-                <div class="name">
-                    {room.name}
-                </div>
+<Modal
+    name="join"
+    {closeFunc}>
+    {#await response}
+        <h2>Loading...</h2>
+    {:then rooms}
+        <div
+            class="join-modal"
+            style={applyTheme(vars)}>
+            <div class="search-bar">
+                <TextInput
+                    bind:value={search}
+                    placeholder="Search" />
             </div>
-            <Button on:click={() => Agent.Redirect.jam(room.id)}>Join</Button>
+            <ul class="jams-list">
+                {#if handleResults(rooms, search).length === 0}
+                    <li class="jam">
+                        <div class="info">
+                            <div class="name">No rooms found</div>
+                        </div>
+                    </li>
+                {:else}
+                    {#each handleResults(rooms, search) as room}
+                        <li class="jam">
+                            <div class="info">
+                                <div class="name">
+                                    {room.name}
+                                </div>
+                            </div>
+                            <Button on:click={() => Agent.Redirect.jam(room.id)}
+                                >Join</Button>
+                        </li>
+                    {/each}
+                {/if}
+            </ul>
         </div>
-    {/each}
-{:catch error}
-    <div>{error}</div>
-{/await}
+    {:catch error}
+        <div>{error}</div>
+    {/await}
+</Modal>
 
 <!-- 
 <Modal
