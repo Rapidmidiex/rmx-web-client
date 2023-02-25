@@ -1,14 +1,14 @@
 <script lang="ts">
-    import Modal from '@lib/components/global/Modal.svelte';
-    import Button from '@lib/components/global/Button.svelte';
-    import TextInput from '@lib/components/global/TextInput.svelte';
+    import Modal from '@components/global/Modal.svelte';
+    import Button from '@components/global/Button.svelte';
+    import TextInput from '@components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { agent } from '@lib/api';
     import {
         fetchState,
         getFilteredJams,
         getJamRooms,
-    } from '../../../../store/getJamRooms';
+    } from '@store/getJamRooms';
     import { onMount } from 'svelte';
 
     onMount(() => {

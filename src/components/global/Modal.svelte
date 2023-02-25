@@ -7,7 +7,6 @@
 
     let className = '';
     export { className as class };
-    // export let closeFunc;
     export let name: string;
 
     let vars;
