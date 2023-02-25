@@ -8,7 +8,7 @@
         FS,
         GS,
     } from '@lib/audio/piano';
-    import { applyTheme, themeStore } from '@store/theme';
+    import { applyTheme, themeStore } from '@lib/theme';
 
     export let key: PianoKeyNote;
     export let black: boolean;
