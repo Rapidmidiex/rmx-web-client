@@ -5,12 +5,14 @@
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { pingStats } from '@store/ping';
-    import { UserStore } from '@store/user';
+    import { getUserStoreContext } from '@store/user';
     import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
     import { v4 as uuid } from 'uuid';
     import Select from '../../base/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
+
+    const currentUser = getUserStoreContext();
 
     const sizes = [49, 61];
     let keyboardSize: 49 | 61 = 49;
@@ -35,7 +37,7 @@
                         number: v.currNote.midi,
                         velocity: 120,
                     },
-                    userId: $UserStore.userId,
+                    userId: $currentUser.userId,
                 } satisfies Message;
 
                 pingStats.msgOut(message.id);

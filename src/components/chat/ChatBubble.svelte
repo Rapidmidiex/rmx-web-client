@@ -1,10 +1,12 @@
 <script lang="ts">
     import type { TextMessage } from '@lib/types/message';
     import { applyTheme, themeStore } from '@store/theme';
-    import { UserStore } from '@store/user';
+    import { getUserStoreContext } from '@store/user';
     import { fly } from 'svelte/transition';
 
     export let message: TextMessage; //NOTE -- would rather use the Payload<"text"> type here
+
+    const currentUser = getUserStoreContext();
 
     // TODO -- add some form of types here
     let vars;
@@ -15,7 +17,7 @@
     in:fly={{ y: 200, duration: 300 }}
     style={applyTheme(vars) +
         `justify-content: ${
-            message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
+            message.userId === $currentUser.userId ? 'flex-end' : 'flex-start'
         };`}
     class="wrapper">
     <div class="bubble">

@@ -4,7 +4,7 @@
     import { agent } from '@lib/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import { JamStore } from '@store/jam';
-    import { UserStore } from '@store/user';
+    import { createUser, setUserStoreContext } from '@store/user';
     import Icon from '@components/base/Icon.svelte';
     import Chat from '@components/chat/Chat.svelte';
     import Piano from '@components/instruments/piano/Piano.svelte';
@@ -24,6 +24,9 @@
     let midi: Payload<'midi'>;
     let micOn: boolean = false;
     let micInit: boolean = false;
+
+    const currentUser = createUser();
+    setUserStoreContext(currentUser);
 
     /*-------------------Audio related code---------------------*/
 
@@ -102,7 +105,7 @@
         // logic anyhow though
         {
             // let raw = MessageParser.encode($UserStore.userId, 'midi', {
-            let raw = MessageParser.encode($UserStore.userId, 'midi', {
+            let raw = MessageParser.encode($currentUser.userId, 'midi', {
                 state: 1,
                 number: noteNum,
                 velocity: 127,
@@ -170,7 +173,7 @@
         switch (message.type) {
             case 'text': {
                 let displayMsg = message.payload; //as TextMsg;
-                if (message.userId === $UserStore.userId) {
+                if (message.userId === $currentUser.userId) {
                     displayMsg.displayName = 'You';
                 }
 
@@ -191,7 +194,7 @@
             case 'connect': {
                 // TODO -- looks like this type is equal to teh User
                 // defined in `store/user.ts`
-                UserStore.set(message.payload);
+                currentUser.set(message.payload);
                 break;
             }
             default: {
