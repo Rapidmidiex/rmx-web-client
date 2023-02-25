@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 
 // trying to not export this type, instead building types from this definition
 type MessagePayload = {
-    "text"  : {
+    "text": {
         displayName: string;
         body: string;
     };
@@ -28,20 +28,14 @@ export type Message<T extends MessageType = MessageType> = {
     }
 }[T];
 
-export type MidiMessage = Message<"midi">
+export type MidiMessage = Message<"midi">;
 
-export type TextMessage = Message<"text">
+export type TextMessage = Message<"text">;
 
-export type ConnectMessage = Message<"connect">
+export type ConnectMessage = Message<"connect">;
 
 export class MessageParser {
-    constructor(private readonly userId: string) { }
-
     static decode<T extends MessageType>(s: string): Message<T> {
-        return JSON.parse(s);
-    }
-
-    decode<T extends MessageType>(s: string): Message<T> {
         return JSON.parse(s);
     }
 
@@ -51,15 +45,6 @@ export class MessageParser {
         return JSON.stringify({
             id: uuid(),
             userId,
-            type: t,
-            payload: p
-        }satisfies Message<T>);
-    }
-
-    encode<T extends MessageType>(t: T, p: MessagePayload[T]): string {
-        return JSON.stringify({
-            id: uuid(),
-            userId: this.userId,
             type: t,
             payload: p
         }satisfies Message<T>);
