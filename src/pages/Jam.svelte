@@ -5,17 +5,17 @@
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
-    import Icon from '@components/global/Icon.svelte';
+    import Icon from '@components/base/Icon.svelte';
     import Chat from '@components/jam/Chat.svelte';
-    import Piano from '@components/jam/Piano.svelte';
+    import Piano from '@components/instruments/piano/Piano.svelte';
     import { pingStats } from '@store/ping';
     import DeviceSelect from '@components/jam/DeviceSelect.svelte';
-    import Settings from '@components/jam/modals/Settings.svelte';
+    import SettingsModal from '@components/modals/SettingsModal.svelte';
     import { ChatStore } from '@store/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
     import { handleIncomingMIDI } from '@lib/services/jam/midi';
-    import Button from '@components/global/Button.svelte';
-    import Page from '@components/global/Page.svelte';
+    import Button from '@components/base/Button.svelte';
+    import Page from '@components/base/Page.svelte';
     import { MessageParser } from '@lib/services/parser/message';
     import type { Message, Payload } from '@lib/types/message';
     import { createToggle } from '@store/toggle';
@@ -285,7 +285,7 @@
         </div>
     </div>
     {#if $toggleSettings}
-        <Settings on:close={toggleSettings.toggle} />
+        <SettingsModal on:close={toggleSettings.toggle} />
     {/if}
 </Page>
 

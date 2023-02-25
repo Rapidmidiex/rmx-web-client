@@ -4,10 +4,10 @@
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import { pingStats } from '@store/ping';
-    import Icon from '../global/Icon.svelte';
+    import Icon from '../base/Icon.svelte';
     import { ChatStore } from '@store/chat';
-    import Button from '../global/Button.svelte';
-    import TextInput from '../global/TextInput.svelte';
+    import Button from '../base/Button.svelte';
+    import TextInput from '../base/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { fly } from 'svelte/transition';
     import type { Message, TextMessage } from '@lib/types/message';

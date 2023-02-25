@@ -1,7 +1,7 @@
 <script lang="ts">
     import { genPianoKeys } from '@lib/services/jam/piano';
     import type { PianoKeyNote } from '@lib/types/jam';
-    import type { Message } from "@lib/types/message";
+    import type { Message } from '@lib/types/message';
     import { JamStore } from '@store/jam';
     import { PianoStore } from '@store/piano';
     import { pingStats } from '@store/ping';
@@ -9,7 +9,7 @@
     import { onDestroy } from 'svelte';
     import { fly } from 'svelte/transition';
     import { v4 as uuid } from 'uuid';
-    import Select from '../global/Select.svelte';
+    import Select from '../../base/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
     const sizes = [49, 61];

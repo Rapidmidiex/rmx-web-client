@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Button from '@components/global/Button.svelte';
-    import Icon from '@components/global/Icon.svelte';
-    import Modal from '@components/global/Modal.svelte';
+    import Button from '@components/base/Button.svelte';
+    import Icon from '@components/base/Icon.svelte';
+    import Modal from '@components/base/Modal.svelte';
 </script>
 
 <Modal

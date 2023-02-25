@@ -12,8 +12,8 @@
     let vars;
     $: vars = $themeStore.vars;
 
+    // TODO -- keydown for `esc` key
     let dispatch = createEventDispatcher();
-
     function onClose() {
         dispatch('close');
     }

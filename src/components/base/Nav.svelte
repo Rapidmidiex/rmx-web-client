@@ -2,8 +2,8 @@
     import { applyTheme, switchTheme, themeStore } from '@store/theme';
     import { Link } from 'svelte-navigator';
     import { fly } from 'svelte/transition';
-    import Button from '../global/Button.svelte';
-    import Icon from '../global/Icon.svelte';
+    import Button from './Button.svelte';
+    import Icon from './Icon.svelte';
 
     function toggleTheme() {
         $themeStore.name === 'DARK_THEME'

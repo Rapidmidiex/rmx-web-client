@@ -1,10 +1,10 @@
 <script lang="ts">
     import { agent } from '@lib/api';
-    import Modal from '@lib/components/global/Modal.svelte';
+    import Modal from '@components/base/Modal.svelte';
     import { Failure, Success } from '@lib/notify/notify';
-    import Button from '@lib/components/global/Button.svelte';
-    import TextInput from '@lib/components/global/TextInput.svelte';
-    import NumberInput from '@lib/components/global/NumberInput.svelte';
+    import Button from '@components/base/Button.svelte';
+    import TextInput from '@components/base/TextInput.svelte';
+    import NumberInput from '@components/base/NumberInput.svelte';
 
     // export let closeFunc: Function;
 

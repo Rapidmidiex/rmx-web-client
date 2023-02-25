@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Modal from '@components/global/Modal.svelte';
-    import Button from '@components/global/Button.svelte';
-    import TextInput from '@components/global/TextInput.svelte';
+    import Modal from '@components/base/Modal.svelte';
+    import Button from '@components/base/Button.svelte';
+    import TextInput from '@components/base/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { agent } from '@lib/api';
     import {
