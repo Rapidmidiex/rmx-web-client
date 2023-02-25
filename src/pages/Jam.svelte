@@ -6,10 +6,10 @@
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
     import Icon from '@components/base/Icon.svelte';
-    import Chat from '@components/jam/Chat.svelte';
+    import Chat from '@components/chat/Chat.svelte';
     import Piano from '@components/instruments/piano/Piano.svelte';
     import { pingStats } from '@store/ping';
-    import DeviceSelect from '@components/jam/DeviceSelect.svelte';
+    import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
     import { ChatStore } from '@store/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';

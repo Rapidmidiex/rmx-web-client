@@ -6,8 +6,6 @@
     import TextInput from '@components/base/TextInput.svelte';
     import NumberInput from '@components/base/NumberInput.svelte';
 
-    // export let closeFunc: Function;
-
     // bounded values
     let name: string;
     let capacity: number;
