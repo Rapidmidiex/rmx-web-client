@@ -1,7 +1,7 @@
 <script lang="ts">
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
-    import { agent } from 'src/api';
+    import { agent } from '@lib/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import { JamStore } from '@store/jam';
     import { UserStore } from '@store/user';
