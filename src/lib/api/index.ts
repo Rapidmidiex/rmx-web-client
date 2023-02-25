@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { navigate } from "svelte-navigator";
-import cfg from '../../config';
+import { config } from '../../config';
 
 const api = axios.create({
-    baseURL: cfg.apiBaseUrl,
+    baseURL: config.apiBaseUrl,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -45,6 +45,6 @@ export const agent = {
 } as const;
 
 const createWebsocket = (pathId = "/") => {
-    const ws = cfg.apiBaseUrl.replace(/^http/, 'ws');
+    const ws = config.apiBaseUrl.replace(/^http/, 'ws');
     return new WebSocket(ws + pathId + "/ws");
 };

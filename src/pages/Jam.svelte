@@ -8,16 +8,16 @@
     import Piano from '@components/instruments/piano/Piano.svelte';
     import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
-    import { ChatStore } from '@store/chat';
-    import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
-    import { handleIncomingMIDI } from '@lib/services/jam/midi';
+    import { ChatStore } from '@lib/jam/chat';
+    import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
+    import { handleIncomingMIDI } from '@lib/audio/midi';
     import Button from '@components/base/Button.svelte';
     import Page from '@components/base/Page.svelte';
     import { createToggle } from '@lib/toggle';
     import { type Payload, MessageParser, type Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
     import { JamStore } from '@lib/jam';
-    import { UserStore } from "@lib/user";
+    import { UserStore } from '@lib/user';
 
     export let jamID: string;
 

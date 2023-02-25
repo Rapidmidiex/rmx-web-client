@@ -2,13 +2,9 @@
     import Modal from '@components/base/Modal.svelte';
     import Button from '@components/base/Button.svelte';
     import TextInput from '@components/base/TextInput.svelte';
-    import { applyTheme, themeStore } from '@store/theme';
+    import { applyTheme, themeStore } from '@lib/theme';
     import { agent } from '@lib/api';
-    import {
-        fetchState,
-        getFilteredJams,
-        getJamRooms,
-    } from '@store/getJamRooms';
+    import { fetchState, getFilteredJams, getJamRooms } from '@lib/jam/rooms';
     import { onMount } from 'svelte';
 
     onMount(() => {

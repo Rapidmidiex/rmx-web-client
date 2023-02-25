@@ -1,4 +1,4 @@
-import type { Payload } from "@lib/types/message";
+import type { Payload } from "@lib/message";
 import * as SoundFont from 'soundfont-player';
 
 class Instrument {

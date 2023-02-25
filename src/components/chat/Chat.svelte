@@ -4,7 +4,7 @@
     import { JamStore } from '@lib/jam';
     import { pingStats } from '@lib/ping';
     import Icon from '../base/Icon.svelte';
-    import { ChatStore } from '@store/chat';
+    import { ChatStore } from '@lib/jam/chat';
     import Button from '../base/Button.svelte';
     import TextInput from '../base/TextInput.svelte';
     import { themeStore, applyTheme } from '@lib/theme';
