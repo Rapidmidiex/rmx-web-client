@@ -12,7 +12,7 @@ const api = axios.create({
 
 // TODO -- add agent for jams
 
-export const Agent = {
+export const agent = {
     Jams: {
         create: (body: CreateJamData) => {
             // TODO -- handle promise here
