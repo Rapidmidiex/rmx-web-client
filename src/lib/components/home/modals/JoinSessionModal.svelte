@@ -1,63 +1,54 @@
 <script lang="ts">
-    import fuzzysort from 'fuzzysort';
     import Modal from '@lib/components/global/Modal.svelte';
-    import type { GetJamData } from '@lib/types/jam';
     import Button from '@lib/components/global/Button.svelte';
     import TextInput from '@lib/components/global/TextInput.svelte';
     import { applyTheme, themeStore } from '@store/theme';
     import { Agent } from '@api/api';
+    import { fetchState, fuzzySearch, getJamRooms } from './getJamRooms';
+    import { onDestroy, onMount } from 'svelte';
 
     export let closeFunc: Function;
 
-    let search = '';
+    onMount(() => {
+        getJamRooms().then((value) => {
+            rooms = value;
+        });
+    });
 
-    $: response = getJamRoomsResponse();
+    let themeVars; //FIXME -- `applyTheme expects `Theme` but this is `any`
+    $: themeVars = $themeStore.vars;
 
-    async function getJamRoomsResponse() {
-        const {
-            data: { rooms },
-        } = await Agent.Jams.list();
-        return rooms;
-    }
+    let searchQuery = '';
+    $: rooms = fuzzySearch(searchQuery);
 
-    function handleResults(rooms: GetJamData[], search = ''): GetJamData[] {
-        if (search === '') return rooms; //.map((room) => ({ obj: room }));
-
-        return fuzzysort
-            .go<GetJamData>(search, rooms, {
-                all: false,
-                key: 'name',
-            })
-            .map((res) => res.obj);
-    }
-
-    let vars; //FIXME -- `applyTheme expects `Theme` but this is `any`
-    $: vars = $themeStore.vars;
+    onDestroy(() => {
+        searchQuery = '';
+    });
 </script>
 
 <Modal
     name="join"
     {closeFunc}>
-    {#await response}
+    {#if $fetchState === 'loading'}
         <h2>Loading...</h2>
-    {:then rooms}
+    {:else}
         <div
             class="join-modal"
-            style={applyTheme(vars)}>
+            style={applyTheme(themeVars)}>
             <div class="search-bar">
                 <TextInput
-                    bind:value={search}
+                    bind:value={searchQuery}
                     placeholder="Search" />
             </div>
             <ul class="jams-list">
-                {#if handleResults(rooms, search).length === 0}
+                {#if rooms.length === 0}
                     <li class="jam">
                         <div class="info">
                             <div class="name">No rooms found</div>
                         </div>
                     </li>
                 {:else}
-                    {#each handleResults(rooms, search) as room}
+                    {#each rooms as room}
                         <li class="jam">
                             <div class="info">
                                 <div class="name">
@@ -71,61 +62,9 @@
                 {/if}
             </ul>
         </div>
-    {:catch error}
-        <div>{error}</div>
-    {/await}
+    {/if}
 </Modal>
 
-<!-- 
-<Modal
-    name="join"
-    {closeFunc}>
-    <div
-        style={applyTheme(vars)}
-        class="join-modal">
-        <div class="search-bar">
-            <TextInput
-                bind:value={search}
-                on:input={searchJams}
-                placeholder="Search" />
-        </div>
-        <ul class="jams-list">
-            {#if jams}
-                {#if jams.length > 0}
-                    {#if searchResult && searchResult.length > 0}
-                        {#each searchResult as jam}
-                            <li class="jam">
-                                <div class="info">
-                                    <div class="name">
-                                        {jam.obj.name}
-                                    </div>
-                                </div>
-                                <Button on:click={() => joinJam(jam.obj.id)}
-                                    >Join</Button>
-                            </li>
-                        {/each}
-                    {:else}
-                        {#each jams as jam}
-                            <li class="jam">
-                                <div class="info">
-                                    <div class="name">
-                                        {jam.name ? jam.name : jam.id}
-                                    </div>
-                                </div>
-                                <Button on:click={() => joinJam(jam.id)}
-                                    >Join</Button>
-                            </li>
-                        {/each}
-                    {/if}
-                {:else}
-                    <h2>No Jam room created yet</h2>
-                {/if}
-            {:else}
-                <h2>{jamsProgress}</h2>
-            {/if}
-        </ul>
-    </div>
-</Modal> -->
 <style lang="scss">
     .join-modal {
         width: 30rem;
