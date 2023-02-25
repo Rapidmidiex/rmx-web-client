@@ -2,7 +2,7 @@
     // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
     import { navigate } from 'svelte-navigator';
-    import { Agent, createWebsocket } from '@api/api';
+    import { agent, createWebsocket } from '@api/api';
     import { Failure, Info, Success, Warning } from '@lib/notify/notify';
     import type { GetJamData } from '@lib/types/jam';
     import { JamStore } from '@store/jam';
@@ -25,7 +25,7 @@
     } from '@lib/envelope/message';
 
     export let jamID: string;
-    let midi: MidiMessage['payload'];
+    let midi: MidiMessage['payload']; // NOTE -- I dont like having to do this with types, so any suggestions welcome
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -154,17 +154,17 @@
 
     async function initJam() {
         try {
-            const { data } = await Agent.Jams.get(jamID);
+            const { data } = await agent.jams.get(jamID);
             JamStore.update((store) => ({
                 ...store,
                 ...data,
                 players: [],
-                ws: Agent.Jams.ws(jamID),
+                ws: agent.jams.ws(jamID),
             }));
             Success('Jam data loaded');
         } catch (err) {
             Failure(err.message);
-            Agent.Redirect.home();
+            agent.redirect.home();
         }
     }
 

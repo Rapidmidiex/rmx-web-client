@@ -13,10 +13,10 @@ const api = axios.create({
 // TODO -- add agent for jams
 
 export const agent = {
-    Jams: {
+    jams: {
         create: (body: CreateJamData) => {
             // TODO -- handle promise here
-            return api.post<GetJamData>("/jams", JSON.stringify(body));
+            return api.post<GetJamData>("/jams", body);
         },
         list: () => {
             return api.get<{ rooms: GetJamData[]; }>("/jams");
@@ -28,16 +28,10 @@ export const agent = {
             return createWebsocket(`/jams/${id}`);
         }
     },
-    Redirect: {
-        jam: (id: string) => {
-            let opt: NavigateOptions = { replace: true };
-            navigate(`jam/${id}`, opt);
-        },
-        home: () => {
-            let opt: NavigateOptions = { replace: true };
-            navigate("/", opt);
-        }
-    }
+    redirect: {
+        jam: (id: string) => navigate(`jam/${id}`),
+        home: () => navigate("/")
+    },
 } as const;
 
 export const createWebsocket = (pathId = "/") => {
