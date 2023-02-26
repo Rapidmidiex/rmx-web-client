@@ -9,9 +9,7 @@ export const jamRoomStore = writable<JamRoom[]>([]);
 export const fetchState = writable<'loading' | 'done'>('loading');
 
 export async function getJamRooms() {
-    const {
-        data: { rooms },
-    } = await agent.jams.list();
+    const rooms = await agent.jams.list();
     jamRoomStore.set(rooms);
     fetchState.set('done');
     return rooms;

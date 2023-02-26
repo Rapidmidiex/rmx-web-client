@@ -22,20 +22,28 @@ export type JamRoom = {
     bpm: number;
 };
 
+/** WebSocket base */
+const ws = config.apiBaseUrl.replace(/^http/, 'ws');
+
 export const agent = {
     jams: {
-        create: (body: CreateJamRoom) => {
-            // TODO -- handle promise here
-            return api.post<JamRoom>('/jams', body);
+        create: async (body: CreateJamRoom) => {
+            const { data } = await api.post<JamRoom>('/jams', body);
+
+            return data;
         },
-        list: () => {
-            return api.get<{ rooms: JamRoom[] }>('/jams');
+        list: async () => {
+            const { data: { rooms } } = await api.get<{ rooms: JamRoom[]; }>('/jams');
+
+            return rooms;
         },
-        get: (id: string) => {
-            return api.get<JamRoom>(`/jams/${id}`);
+        get: async (id: string) => {
+            const { data } = await api.get<JamRoom>(`/jams/${id}`);
+
+            return data;
         },
         ws: (id: string) => {
-            return createWebsocket(`/jams/${id}`);
+            return new WebSocket(ws + `/jams/${id}/ws`);
         },
     },
     redirect: {
@@ -43,8 +51,3 @@ export const agent = {
         home: () => navigate('/'),
     },
 } as const;
-
-const createWebsocket = (pathId = '/') => {
-    const ws = config.apiBaseUrl.replace(/^http/, 'ws');
-    return new WebSocket(ws + pathId + '/ws');
-};

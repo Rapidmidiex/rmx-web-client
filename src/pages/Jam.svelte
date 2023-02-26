@@ -183,10 +183,10 @@
     onMount(async () => {
         try {
             // TODO -- this can be handled by the store
-            const { data } = await agent.jams.get(jamID);
+            const roomInfo = await agent.jams.get(jamID);
             notification.success('Jam data loaded');
 
-            jamStore.updateRoomInfo(data);
+            jamStore.updateRoomInfo(roomInfo);
             jamStore.connectWS(jamID, onMessage);
         } catch (err) {
             notification.failure(err.message);
