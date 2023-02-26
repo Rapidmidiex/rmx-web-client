@@ -4,7 +4,7 @@
         PianoStore,
         type PianoKeyNote,
     } from '@lib/audio/piano';
-    import { JamStore } from '@lib/jam';
+    import { jamStore } from '@lib/jam';
     import type { Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
     import { UserStore } from '@lib/user';
@@ -41,7 +41,7 @@
                 } satisfies Message;
 
                 pingStats.msgOut(message.id);
-                $JamStore.ws.send(JSON.stringify(message));
+                $jamStore.ws.send(JSON.stringify(message));
             }
         }
     });

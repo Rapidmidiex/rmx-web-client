@@ -8,7 +8,7 @@
     import Piano from '@components/instruments/piano/Piano.svelte';
     import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
-    import { ChatStore } from '@lib/jam/chat';
+    import { chatStore } from '@lib/jam/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
     import { handleIncomingMIDI } from '@lib/audio/midi';
     import Button from '@components/base/Button.svelte';
@@ -16,7 +16,7 @@
     import { createToggle } from '@lib/toggle';
     import { type Payload, MessageParser, type Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
-    import { JamStore } from '@lib/jam';
+    import { jamStore } from '@lib/jam';
     import { UserStore } from '@lib/user';
 
     export let jamID: string;
@@ -107,7 +107,7 @@
                 number: noteNum,
                 velocity: 127,
             });
-            $JamStore.ws.send(raw);
+            $jamStore.ws.send(raw);
         }
         console.log(loudestFreq);
         requestAnimationFrame(updatePitch);
@@ -148,23 +148,7 @@
         }
     }
 
-    async function initJam() {
-        try {
-            const { data } = await agent.jams.get(jamID);
-            JamStore.update((store) => ({
-                ...store,
-                ...data,
-                players: [],
-                ws: agent.jams.ws(jamID),
-            }));
-            notification.success('Jam data loaded');
-        } catch (err) {
-            notification.failure(err.message);
-            agent.redirect.home();
-        }
-    }
-
-    function handleWSMsg(message: Message) {
+    function onMessage(message: Message) {
         pingStats.msgIn(message.id);
 
         switch (message.type) {
@@ -174,13 +158,7 @@
                     displayMsg.displayName = 'You';
                 }
 
-                // TODO -- inside `store/chat` I omitted the type just to get this to pass
-                // make a wrapper around the store, so this api is cleaner, something like:
-                // ChatStore.update(messages:...Array<MessagePayload["text"]>)
-                ChatStore.update((items) => [
-                    ...items,
-                    { ...message, payload: displayMsg },
-                ]);
+                chatStore.saveMessage({ ...message, payload: displayMsg });
                 break;
             }
             case 'midi': {
@@ -203,24 +181,17 @@
     }
 
     onMount(async () => {
-        await initJam();
+        try {
+            // TODO -- this can be handled by the store
+            const { data } = await agent.jams.get(jamID);
+            notification.success('Jam data loaded');
 
-        $JamStore.ws.onopen = () => {
-            notification.success('Connection established.');
-        };
-        $JamStore.ws.onmessage = (event: MessageEvent) => {
-            // TODO -- should we handle errors here? [try/catch]
-            console.log(event.data);
-            let message = MessageParser.decode(event.data);
-            handleWSMsg(message);
-        };
-        $JamStore.ws.onerror = (event: ErrorEvent) => {
-            notification.failure(event.error);
-            $JamStore.ws.close();
-        };
-        $JamStore.ws.onclose = () => {
-            notification.info('Connection was closed.');
-        };
+            jamStore.updateRoomInfo(data);
+            jamStore.connectWS(jamID, onMessage);
+        } catch (err) {
+            notification.failure(err.message);
+            agent.redirect.home();
+        }
     });
 
     const toggleChat = createToggle(false);
@@ -232,7 +203,7 @@
     onDestroy(() => unsubscribe());
 </script>
 
-<Page class="jam">
+. <Page class="jam">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">

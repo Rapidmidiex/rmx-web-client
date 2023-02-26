@@ -1,6 +1,6 @@
 export class PingStats {
     totalMsgs: number;
-    // milliseconds
+    /** milliseconds */
     avg: number;
     latest: number;
     min: number;

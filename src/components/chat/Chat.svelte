@@ -1,10 +1,10 @@
 <script lang="ts">
     import { v4 as uuid } from 'uuid';
     import ChatBubble from './ChatBubble.svelte';
-    import { JamStore } from '@lib/jam';
+    import { jamStore } from '@lib/jam';
     import { pingStats } from '@lib/ping';
     import Icon from '../base/Icon.svelte';
-    import { ChatStore } from '@lib/jam/chat';
+    import { chatStore } from '@lib/jam/chat';
     import Button from '../base/Button.svelte';
     import TextInput from '../base/TextInput.svelte';
     import { themeStore, applyTheme } from '@lib/theme';
@@ -16,7 +16,8 @@
     let messagesDiv: HTMLDivElement = null;
 
     function sendWSMsg(message: Message) {
-        $JamStore.ws.send(JSON.stringify(message));
+        // TODO -- try to not expose this outside of the store
+        $jamStore.ws.send(JSON.stringify(message));
     }
 
     function sendMsg() {
@@ -54,9 +55,9 @@
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if $ChatStore.length > 0}
-            {#each $ChatStore as msg}
-                <ChatBubble message={msg} />
+        {#if $chatStore.length > 0}
+            {#each $chatStore as message}
+                <ChatBubble {message} />
             {/each}
         {:else}
             <div class="empty">No message available</div>

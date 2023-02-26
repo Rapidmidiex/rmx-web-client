@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { JamStore, setAvailableDevices } from '@lib/jam';
+    import { jamStore        } from '@lib/jam';
     import { onMount } from 'svelte';
     import Select from './base/Select.svelte';
 
     export let selected: MediaDeviceInfo;
 
-    async function listDevices() {
+    onMount(async () => {
         if (!navigator.mediaDevices?.enumerateDevices) {
             console.warn('enumerateDevices() not supported.');
             return [];
@@ -13,18 +13,14 @@
 
         // List cameras and microphones.
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const audioDevices = devices.filter((d) => d.kind === 'audioinput');
+        const audioDevices = devices.filter((device) => device.kind === 'audioinput');
 
-        setAvailableDevices(audioDevices);
-    }
-
-    onMount(async () => {
-        await listDevices();
+        jamStore.setAudioDevices(audioDevices);
     });
 </script>
 
 <Select
     label={'Device'}
-    options={$JamStore.availableDevices}
-    display={(d) => d.label || d.deviceId}
+    options={$jamStore.availableDevices}
+    display={(device) => device.label || device.deviceId}
     bind:value={selected} />
