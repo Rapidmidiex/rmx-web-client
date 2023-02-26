@@ -4,6 +4,7 @@
     import { fly } from 'svelte/transition';
     import Button from './Button.svelte';
     import Icon from './Icon.svelte';
+    import logo from '@assets/logo.png';
 
     function toggleTheme() {
         $themeStore.name === 'DARK_THEME'
@@ -15,7 +16,9 @@
     $: vars = $themeStore.vars;
 </script>
 
-<div class="con">
+<div
+    class="con"
+    style="--url: url({logo})">
     <nav
         transition:fly={{ x: -200, duration: 300, delay: 300 }}
         style={applyTheme(vars)}>
@@ -46,9 +49,6 @@
                         ? 'moon'
                         : 'sun'} /></Button>
         </div>
-        <!-- <div class="nav-account">
-        <Link to="/account" />
-    </div> -->
     </nav>
 </div>
 
@@ -92,7 +92,7 @@
                         border-radius: var(--border-radius);
                         text-decoration: none;
                         transition: 0.3s ease;
-                        background-image: url('../../../assets/RMX-logo-500.png');
+                        background-image: var(--url);
                         background-position: center;
                         background-repeat: no-repeat;
                         background-size: cover;
