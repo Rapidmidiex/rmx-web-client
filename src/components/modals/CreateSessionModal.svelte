@@ -13,9 +13,9 @@
 
     async function createSession() {
         try {
-            const { data } = await agent.jams.create({ name, capacity, bpm });
+            const newRoom = await agent.jams.create({ name, capacity, bpm });
             notification.success('new Jam room created. redirecting...');
-            agent.redirect.jam(data.id);
+            agent.redirect.jam(newRoom.id);
         } catch (error) {
             notification.failure(error.message);
         }
