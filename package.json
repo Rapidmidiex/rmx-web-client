@@ -9,12 +9,21 @@
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "test": "npx vitest",
-        "format": "npx prettier --write ."
+        "format": "prettier --write ./src/**/*.{js,svelte,html,ts}",
+        "lint": "eslint './src/**/*.{js,ts,svelte}'",
+        "lint:fix": "eslint --fix './src/**/*.{js,ts,svelte}'",
+        "prelint": "npm run format"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.0.3",
         "@tsconfig/svelte": "^3.0.0",
         "@types/tinycolor2": "^1.4.3",
+        "@typescript-eslint/eslint-plugin": "^5.53.0",
+        "@typescript-eslint/parser": "^5.53.0",
+        "eslint": "^8.35.0",
+        "eslint-plugin-svelte3": "^4.0.0",
+        "prettier": "^2.8.4",
+        "prettier-plugin-svelte": "^2.9.0",
         "sass": "^1.58.3",
         "svelte": "^3.55.1",
         "svelte-check": "^3.0.4",

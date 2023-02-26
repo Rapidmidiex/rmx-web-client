@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from "@lib/theme";
+    import { themeStore, applyTheme } from '@lib/theme';
 
     import { fade, fly } from 'svelte/transition';
     import Button from './Button.svelte';
