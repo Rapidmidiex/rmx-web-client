@@ -1,4 +1,4 @@
-import { createStorage } from "@lib/storage";
+import { createStorage } from '@lib/storage';
 
 export type ThemeName = `${string}_THEME`;
 export type ThemeVariant = 'LIGHT' | 'DARK';
@@ -90,7 +90,10 @@ const getOSTheme = (): ThemeName => {
 const getTheme = (name: ThemeName): Theme =>
     themes.find((t) => t.name === name);
 
-export const themeStore = createStorage<Theme>('THEME_STORE', getTheme(getOSTheme()));
+export const themeStore = createStorage<Theme>(
+    'THEME_STORE',
+    getTheme(getOSTheme())
+);
 
 export const switchTheme = (name: ThemeName) => {
     themeStore.set(getTheme(name));

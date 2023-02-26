@@ -1,4 +1,4 @@
-import type { Payload } from "@lib/message";
+import type { Payload } from '@lib/message';
 import * as SoundFont from 'soundfont-player';
 
 class Instrument {
@@ -22,7 +22,7 @@ class Instrument {
 
 const instrument = new Instrument();
 
-export function handleIncomingMIDI(midi: Payload<"midi">) {
+export function handleIncomingMIDI(midi: Payload<'midi'>) {
     switch (midi.state) {
         case 1: // NOTE_ON
             instrument.noteOn(midi.number, midi.velocity);

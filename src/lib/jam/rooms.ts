@@ -1,27 +1,32 @@
 // TODO -- I need to rename this as there is already a jam store file
 // I can merge them but either case, I need to rename these variable names
-import { agent, type JamRoom } from "@lib/api";
-import fuzzysort from "fuzzysort";
-import { derived, get, writable } from "svelte/store";
+import { agent, type JamRoom } from '@lib/api';
+import fuzzysort from 'fuzzysort';
+import { derived, get, writable } from 'svelte/store';
 
 export const jamRoomStore = writable<JamRoom[]>([]);
 
-export const fetchState = writable<"loading" | "done">("loading");
+export const fetchState = writable<'loading' | 'done'>('loading');
 
 export async function getJamRooms() {
-    const { data: { rooms } } = await agent.jams.list();
+    const {
+        data: { rooms },
+    } = await agent.jams.list();
     jamRoomStore.set(rooms);
-    fetchState.set("done");
+    fetchState.set('done');
     return rooms;
 }
 
-const filteredJams = (query: string) => derived([jamRoomStore], ([$jamRoomStore]) => {
-    if (query === '') return $jamRoomStore;
-    return fuzzysort.go(query, $jamRoomStore, {
-        all: false,
-        key: 'name',
-    }).map((res) => res.obj);
-});
+const filteredJams = (query: string) =>
+    derived([jamRoomStore], ([$jamRoomStore]) => {
+        if (query === '') return $jamRoomStore;
+        return fuzzysort
+            .go(query, $jamRoomStore, {
+                all: false,
+                key: 'name',
+            })
+            .map((res) => res.obj);
+    });
 
 export function getFilteredJams(query: string) {
     return get(filteredJams(query));

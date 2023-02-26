@@ -1,17 +1,17 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export const A: Note = { name: ["A", "La"], black: false };
-export const AS: Note = { name: ["A#", "La#"], black: true };
-export const B: Note = { name: ["B", "Ti"], black: false };
-export const C: Note = { name: ["C", "Do"], black: false };
-export const CS: Note = { name: ["C#", "Do#"], black: true };
-export const D: Note = { name: ["D", "Re"], black: false };
-export const DS: Note = { name: ["D#", "Re#"], black: true };
-export const E: Note = { name: ["E", "Mi"], black: false };
-export const F: Note = { name: ["F", "Fa"], black: false };
-export const FS: Note = { name: ["F#", "Fa#"], black: true };
-export const G: Note = { name: ["G", "So"], black: false };
-export const GS: Note = { name: ["G#", "So#"], black: true };
+export const A: Note = { name: ['A', 'La'], black: false };
+export const AS: Note = { name: ['A#', 'La#'], black: true };
+export const B: Note = { name: ['B', 'Ti'], black: false };
+export const C: Note = { name: ['C', 'Do'], black: false };
+export const CS: Note = { name: ['C#', 'Do#'], black: true };
+export const D: Note = { name: ['D', 'Re'], black: false };
+export const DS: Note = { name: ['D#', 'Re#'], black: true };
+export const E: Note = { name: ['E', 'Mi'], black: false };
+export const F: Note = { name: ['F', 'Fa'], black: false };
+export const FS: Note = { name: ['F#', 'Fa#'], black: true };
+export const G: Note = { name: ['G', 'So'], black: false };
+export const GS: Note = { name: ['G#', 'So#'], black: true };
 
 const octaveNotes: PianoKeyNote[] = [
     { midi: 21, note: A },
@@ -28,7 +28,7 @@ const octaveNotes: PianoKeyNote[] = [
     { midi: 32, note: GS },
 ];
 
-const blackMap = "wetyuop";
+const blackMap = 'wetyuop';
 const whiteMap = "asdfghjkl;'";
 
 export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
@@ -56,7 +56,10 @@ export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
     firstNoteMIDI = 21 + startIdx;
 
     for (let i = 0; i < size; i++) {
-        const { note } = octaveNotes[((i % octaveNotes.length) + startIdx) % octaveNotes.length];
+        const { note } =
+            octaveNotes[
+                ((i % octaveNotes.length) + startIdx) % octaveNotes.length
+            ];
         const n: PianoKeyNote = { midi: i + firstNoteMIDI, note };
         notes.push(n);
     }
@@ -94,4 +97,3 @@ export const PianoStore = writable<PianoState>({
     keydown: false,
     currNote: null,
 });
-

@@ -1,7 +1,7 @@
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from 'uuid';
 
 export class MessageParser {
-    constructor(private userId: string) { }
+    constructor(private userId: string) {}
 
     static decode<T extends MessageType>(raw: string): Message<T> {
         return JSON.parse(raw);
@@ -10,35 +10,39 @@ export class MessageParser {
         return JSON.parse(raw);
     }
 
-    static encode<T extends MessageType>(userId: string, messageType: T, payload: Payload<T>): string {
+    static encode<T extends MessageType>(
+        userId: string,
+        messageType: T,
+        payload: Payload<T>
+    ): string {
         return JSON.stringify({
             id: uuid(),
             userId,
             type: messageType,
-            payload: payload
-        }satisfies Message<T>);
+            payload: payload,
+        } satisfies Message<T>);
     }
     encode<T extends MessageType>(messageType: T, payload: Payload<T>): string {
         return JSON.stringify({
             id: uuid(),
             userId: this.userId,
             type: messageType,
-            payload: payload
-        }satisfies Message<T>);
+            payload: payload,
+        } satisfies Message<T>);
     }
 }
 
 export type MessagePayload = {
-    "text": {
+    text: {
         displayName: string;
         body: string;
     };
-    "midi": {
+    midi: {
         state: NoteState;
         number: number;
         velocity: number;
     };
-    "connect": {
+    connect: {
         userId: string;
         userName: string;
     };
@@ -52,7 +56,6 @@ export type NoteState = 0 | 1;
 
 // Connect Messages
 
-
 export type Payload<T extends MessageType = MessageType> = MessagePayload[T];
 
 export type MessageType = keyof MessagePayload;
@@ -63,11 +66,11 @@ export type Message<T extends MessageType = MessageType> = {
         payload: MessagePayload[K];
         id: string;
         userId: string;
-    }
+    };
 }[T];
 
-export type MidiMessage = Message<"midi">;
+export type MidiMessage = Message<'midi'>;
 
-export type TextMessage = Message<"text">;
+export type TextMessage = Message<'text'>;
 
-export type ConnectMessage = Message<"connect">;
+export type ConnectMessage = Message<'connect'>;

@@ -8,7 +8,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "test": "npx vitest"
+        "test": "npx vitest",
+        "format": "npx prettier --write ."
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.0.3",

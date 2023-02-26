@@ -16,21 +16,10 @@
         "checkJs": true,
         "isolatedModules": true,
         "paths": {
-            "@assets/*": [
-                "src/assets/*"
-            ],
-            "@components/*": [
-                "src/components/*"
-            ],
-            "@lib/*": [
-                "src/lib/*"
-            ],
-            "@pages/*": [
-                "src/pages/*"
-            ],
-            "@store/*": [
-                "src/store/*"
-            ]
+            "@assets/*": ["src/assets/*"],
+            "@components/*": ["src/components/*"],
+            "@lib/*": ["src/lib/*"],
+            "@pages/*": ["src/pages/*"]
         }
     },
     "include": [
