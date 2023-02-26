@@ -88,7 +88,7 @@ const getOSTheme = (): ThemeName => {
 };
 
 const getTheme = (name: ThemeName): Theme =>
-    themes.find((t) => t.name === name);
+    themes.find((theme) => theme.name === name);
 
 export const themeStore = createStorage<Theme>(
     'THEME_STORE',
