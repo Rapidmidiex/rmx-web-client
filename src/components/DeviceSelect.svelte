@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { jamStore        } from '@lib/jam';
+    import { jamStore } from '@lib/jam';
     import { onMount } from 'svelte';
     import Select from './base/Select.svelte';
 
@@ -13,7 +13,9 @@
 
         // List cameras and microphones.
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const audioDevices = devices.filter((device) => device.kind === 'audioinput');
+        const audioDevices = devices.filter(
+            (device) => device.kind === 'audioinput'
+        );
 
         jamStore.setAudioDevices(audioDevices);
     });
