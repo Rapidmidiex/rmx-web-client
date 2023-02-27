@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { navigate } from 'svelte-navigator';
+import { writable } from "svelte/store";
 import { config } from '../../config';
 
 const api = axios.create({
@@ -35,7 +36,7 @@ export const agent = {
         list: async () => {
             const {
                 data: { rooms },
-            } = await api.get<{ rooms: JamRoom[] }>('/jams');
+            } = await api.get<{ rooms: JamRoom[]; }>('/jams');
 
             return rooms;
         },
