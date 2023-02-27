@@ -4,7 +4,12 @@
     import TextInput from '@components/base/TextInput.svelte';
     import { applyTheme, themeStore } from '@lib/theme';
     import { agent } from '@lib/api';
-    import { fetchState, getFilteredJams, getJamRooms } from '@lib/jam/rooms';
+    import {
+        fetchState,
+        errorState,
+        getFilteredJams,
+        getJamRooms,
+    } from '@lib/jam/rooms';
     import { onMount } from 'svelte';
 
     onMount(() => {
@@ -13,7 +18,7 @@
         });
     });
 
-    let themeVars; //FIXME -- `applyTheme expects `Theme` but this is `any`
+    let themeVars; // FIXME -- `applyTheme expects `Theme` but this is `any`
     $: themeVars = $themeStore.vars;
 
     let searchQuery = '';
@@ -35,7 +40,15 @@
                     placeholder="Search" />
             </div>
             <ul class="jams-list">
-                {#if rooms.length === 0}
+                {#if $errorState !== null}
+                    <li class="jam">
+                        <div class="info">
+                            <div class="name">
+                                Could't not load Jam list/div>
+                            </div>
+                        </div>
+                    </li>
+                {:else if rooms.length === 0}
                     <li class="jam">
                         <div class="info">
                             <div class="name">No rooms found</div>
