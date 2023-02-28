@@ -203,7 +203,7 @@
     onDestroy(() => unsubscribe());
 </script>
 
-. <Page class="jam">
+<Page class="jam">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">
