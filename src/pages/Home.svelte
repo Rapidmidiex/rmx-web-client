@@ -1,19 +1,12 @@
 <script lang="ts">
-    import Button from '@lib/components/global/Button.svelte';
-    import NavPage from '@lib/components/global/NavPage.svelte';
-    import CreateSessionModal from '@lib/components/home/modals/CreateSessionModal.svelte';
-    import JoinSessionModal from '@lib/components/home/modals/JoinSessionModal.svelte';
+    import Button from '@components/base/Button.svelte';
+    import NavPage from '@components/base/NavPage.svelte';
+    import CreateSessionModal from '@components/modals/CreateSessionModal.svelte';
+    import JoinSessionModal from '@components/modals/JoinSessionModal.svelte';
+    import { createToggle } from '@lib/toggle';
 
-    let createSessionModalOpen = false;
-    let joinModalOpen = false;
-
-    function toggleCreateSessionModal() {
-        createSessionModalOpen = !createSessionModalOpen;
-    }
-
-    function toggleJoinModal() {
-        joinModalOpen = !joinModalOpen;
-    }
+    const toggleCreate = createToggle(false);
+    const toggleJoin = createToggle(false);
 </script>
 
 <NavPage class="home">
@@ -24,16 +17,15 @@
             <p>A new way for musicians to perform</p>
             <br />
             <div class="session-con">
-                <Button on:click={toggleCreateSessionModal}
-                    >Start a new Jam</Button>
-                <Button on:click={toggleJoinModal}>Join</Button>
+                <Button on:click={toggleCreate.toggle}>Start a new Jam</Button>
+                <Button on:click={toggleJoin.toggle}>Join</Button>
             </div>
         </section>
-        {#if createSessionModalOpen}
-            <CreateSessionModal closeFunc={toggleCreateSessionModal} />
+        {#if $toggleCreate}
+            <CreateSessionModal on:close={toggleCreate.toggle} />
         {/if}
-        {#if joinModalOpen}
-            <JoinSessionModal closeFunc={toggleJoinModal} />
+        {#if $toggleJoin}
+            <JoinSessionModal on:close={toggleJoin.toggle} />
         {/if}
     </div>
 </NavPage>

@@ -2,7 +2,7 @@
     import { Route, Router } from 'svelte-navigator';
     import Home from '@pages/Home.svelte';
     import Jam from '@pages/Jam.svelte';
-    import { themeStore } from '@store/theme';
+    import { themeStore } from '@lib/theme';
 
     let vars;
     $: vars = $themeStore.vars;

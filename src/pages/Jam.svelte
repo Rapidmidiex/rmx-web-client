@@ -1,33 +1,27 @@
 <script lang="ts">
+    // TODO -- I would like to ask why we are importing so much, try and reduce this
     import { onDestroy, onMount } from 'svelte';
-    import { navigate } from 'svelte-navigator';
-    import { api, WS_BASE_URL } from '@api/api';
-    import { Failure, Info, Success, Warning } from '@lib/notify/notify';
-    import {
-        NoteState,
-        type ConnectMsg,
-        type GetJamData,
-        type MIDIMsg,
-        type TextMsg,
-    } from '@lib/types/jam';
-    import { WSMsgTyp, type WSMsg } from '@lib/types/websocket';
-    import { JamStore } from '@store/jam';
-    import { UserStore } from '@store/user';
-    import Icon from '@lib/components/global/Icon.svelte';
-    import Chat from '@lib/components/jam/Chat.svelte';
-    import Piano from '@lib/components/jam/Piano.svelte';
-    import { pingStats } from '@store/ping';
-    import { Envelope } from '@lib/envelope/envelope';
-    import DeviceSelect from '@lib/components/jam/DeviceSelect.svelte';
-    import Settings from '@lib/components/jam/modals/Settings.svelte';
-    import { ChatStore } from '@store/chat';
-    import { freqAnalyze, noteFromPitch } from '@lib/services/jam/mic';
-    import { handleIncomingMIDI } from '@lib/services/jam/midi';
-    import Button from '@lib/components/global/Button.svelte';
-    import Page from '@lib/components/global/Page.svelte';
+    import { agent } from '@lib/api';
+    import { notification } from '@lib/notification';
+    import Icon from '@components/base/Icon.svelte';
+    import Chat from '@components/chat/Chat.svelte';
+    import Piano from '@components/instruments/piano/Piano.svelte';
+    import DeviceSelect from '@components/DeviceSelect.svelte';
+    import SettingsModal from '@components/modals/SettingsModal.svelte';
+    import { chatStore } from '@lib/jam/chat';
+    import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
+    import { handleIncomingMIDI } from '@lib/audio/midi';
+    import Button from '@components/base/Button.svelte';
+    import Page from '@components/base/Page.svelte';
+    import { createToggle } from '@lib/toggle';
+    import { type Payload, MessageParser, type Message } from '@lib/message';
+    import { pingStats } from '@lib/ping';
+    import { jamStore } from '@lib/jam';
+    import { UserStore } from '@lib/user';
 
     export let jamID: string;
-    let midi: MIDIMsg;
+
+    let midi: Payload<'midi'>;
     let micOn: boolean = false;
     let micInit: boolean = false;
 
@@ -45,7 +39,6 @@
 
     let audioDevice: MediaDeviceInfo;
     $: handleDeviceSelect(audioDevice);
-
     function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
@@ -55,8 +48,8 @@
     }
 
     async function getUserMedia(deviceId?: string) {
-        navigator.mediaDevices
-            .getUserMedia({
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: {
                     echoCancellation: false,
                     autoGainControl: false,
@@ -64,15 +57,13 @@
                     deviceId,
                 },
                 video: false,
-            })
-            .then((stream) => {
-                mediaStream = stream;
-                gotStream();
-            })
-            .catch((err) => {
-                alert('getUserMedia threw exception:' + err);
-                micInit = false;
             });
+
+            gotStream();
+        } catch (error) {
+            alert('getUserMedia threw exception:' + error);
+            micInit = false;
+        }
     }
 
     function gotStream() {
@@ -107,36 +98,34 @@
         }
         noteHistory = [...noteHistory, noteNum];
         // FIXME: still sends repeated notes.
-        // send new note to websocket
-        const midi: MIDIMsg = {
-            state: NoteState.NOTE_ON,
-            number: noteNum,
-            velocity: 127,
-        };
-
-        const msg = new Envelope<MIDIMsg>(
-            $UserStore.userId,
-            WSMsgTyp.MIDI,
-            midi
-        );
-
+        // TODO -- `sendMsg` got in the way, will want to update this
+        // logic anyhow though
+        {
+            // let raw = MessageParser.encode($UserStore.userId, 'midi', {
+            let raw = MessageParser.encode($UserStore.userId, 'midi', {
+                state: 1,
+                number: noteNum,
+                velocity: 127,
+            });
+            $jamStore.ws.send(raw);
+        }
         console.log(loudestFreq);
-
-        sendWSMsg(msg);
         requestAnimationFrame(updatePitch);
     }
 
-    function initMic() {
+    async function initMic() {
+        // TODO -- this can be done at the variable declaration level
+        // easier to track
         audioContext = new (window.AudioContext ||
             globalThis.webkitAudioContext)({ latencyHint: 'interactive' });
-        getUserMedia()
-            .then(() => {
-                micInit = true;
-            })
-            .catch((err: Error) => {
-                micInit = false;
-                Failure(err.message);
-            });
+        try {
+            await getUserMedia();
+            micInit = true;
+        } catch (err) {
+            micInit = false;
+            notification.failure(err.message);
+            return;
+        }
     }
 
     /*^^^^^^^^^^^^^^^^^^- Audio related code -^^^^^^^^^^^^^^^^^*/
@@ -159,97 +148,62 @@
         }
     }
 
-    let showPiano: boolean = false;
-    function togglePiano() {
-        showPiano = !showPiano;
-    }
+    function onMessage(message: Message) {
+        pingStats.msgIn(message.id);
 
-    async function initJam() {
-        try {
-            const { data } = await api.get<GetJamData>(`/jam/${jamID}`);
-            JamStore.update((store) => ({
-                ...store,
-                ...data,
-                players: [],
-                ws: new WebSocket(`${WS_BASE_URL}/jam/${jamID}`),
-            }));
-            Success('Jam data loaded');
-        } catch (err) {
-            Failure(err.message);
-            navigate('/', { replace: true });
-        }
-    }
-
-    function sendWSMsg(msg: Envelope<ConnectMsg | MIDIMsg | TextMsg>) {
-        $JamStore.ws.send(msg.json());
-    }
-
-    function handleWSMsg(msg: WSMsg<ConnectMsg | MIDIMsg | TextMsg>) {
-        pingStats.msgIn(msg.id);
-
-        switch (msg.type) {
-            case WSMsgTyp.TEXT:
-                let displayMsg = msg.payload as TextMsg;
-                if (msg.userId === $UserStore.userId) {
+        switch (message.type) {
+            case 'text': {
+                let displayMsg = message.payload; //as TextMsg;
+                if (message.userId === $UserStore.userId) {
                     displayMsg.displayName = 'You';
                 }
-                ChatStore.update((items) => [
-                    ...items,
-                    { ...msg, payload: displayMsg },
-                ]);
+
+                chatStore.saveMessage({ ...message, payload: displayMsg });
                 break;
-            case WSMsgTyp.MIDI:
-                handleIncomingMIDI(msg as WSMsg<MIDIMsg>);
-                midi = msg.payload as MIDIMsg;
+            }
+            case 'midi': {
+                handleIncomingMIDI(message.payload);
+                midi = message.payload;
                 break;
-            case WSMsgTyp.CONNECT:
-                const { userId, userName } = msg.payload as ConnectMsg;
-                UserStore.set({
-                    userId,
-                    userName,
-                });
+            }
+            case 'connect': {
+                // TODO -- looks like this type is equal to teh User
+                // defined in `store/user.ts`
+                UserStore.set(message.payload);
                 break;
-            default:
-                console.warn('Unknown message type', msg);
-                Warning('Unknown message type');
+            }
+            default: {
+                console.warn('Unknown message type', message);
+                notification.warning('Unknown message type');
+                break;
+            }
         }
     }
 
     onMount(async () => {
-        await initJam();
+        try {
+            // TODO -- this can be handled by the store
+            const roomInfo = await agent.jams.get(jamID);
+            notification.success('Jam data loaded');
 
-        $JamStore.ws.onopen = () => {
-            Success('Connection established.');
-        };
-        $JamStore.ws.onmessage = (event: MessageEvent) => {
-            let msg: WSMsg<any> = JSON.parse(event.data);
-            handleWSMsg(msg);
-        };
-        $JamStore.ws.onerror = (event: ErrorEvent) => {
-            Failure(event.error);
-            $JamStore.ws.close();
-        };
-        $JamStore.ws.onclose = () => {
-            Info('Connection was closed.');
-        };
+            jamStore.updateRoomInfo(roomInfo);
+            jamStore.connectWS(jamID, onMessage);
+        } catch (err) {
+            notification.failure(err.message);
+            agent.redirect.home();
+        }
     });
 
-    let showChat: boolean = false;
-    function toggleChat() {
-        showChat = !showChat;
-    }
+    const toggleChat = createToggle(false);
 
-    let showSettings: boolean = false;
-    function toggleSettings() {
-        showSettings = !showSettings;
-    }
+    const togglePiano = createToggle(false);
 
-    onDestroy(() => {
-        unsubscribe();
-    });
+    const toggleSettings = createToggle(false);
+
+    onDestroy(() => unsubscribe());
 </script>
 
-<Page class="jam">
+. <Page class="jam">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">
@@ -259,12 +213,12 @@
                     <p>No message available</p>
                 {/if}
             </div>
-            {#if showPiano}
+            {#if $togglePiano}
                 <Piano />
             {/if}
         </div>
         <div class="jam-extras">
-            {#if showChat}
+            {#if $toggleChat}
                 <Chat />
             {/if}
         </div>
@@ -286,22 +240,23 @@
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
                 <Button
                     type="button"
-                    on:click={togglePiano}><Icon name="music" /></Button>
+                    on:click={togglePiano.toggle}><Icon name="music" /></Button>
                 <Button
                     type="button"
-                    on:click={toggleSettings}><Icon name="settings" /></Button>
+                    on:click={toggleSettings.toggle}
+                    ><Icon name="settings" /></Button>
             </div>
             <div class="chat">
                 <Button
                     type="button"
-                    on:click={toggleChat}>
+                    on:click={toggleChat.toggle}>
                     <Icon name="message-square" />
                 </Button>
             </div>
         </div>
     </div>
-    {#if showSettings}
-        <Settings closeFunc={toggleSettings} />
+    {#if $toggleSettings}
+        <SettingsModal on:close={toggleSettings.toggle} />
     {/if}
 </Page>
 
