@@ -1,7 +1,6 @@
-// TODO -- I need to rename this as there is already a jam store file
-// I can merge them but either case, I need to rename these variable names
 import { agent, type JamRoom } from '@lib/api';
-import { notification } from "@lib/notification";
+import { notification } from '@lib/notification';
+import { AxiosError } from 'axios';
 import fuzzysort from 'fuzzysort';
 import { derived, get, writable } from 'svelte/store';
 
@@ -15,12 +14,13 @@ export async function getJamRooms() {
     try {
         const rooms = await agent.jams.list();
         jamRoomStore.set(rooms);
-        fetchState.set('done');
         errorState.set(null);
         return rooms;
     } catch (error) {
-        errorState.set(error);
-        notification.failure(error.message)
+        errorState.set(error as Error);
+        notification.failure((error as AxiosError).message);
+    } finally {
+        fetchState.set('done');
     }
 }
 

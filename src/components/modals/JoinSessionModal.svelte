@@ -43,9 +43,7 @@
                 {#if $errorState !== null}
                     <li class="jam">
                         <div class="info">
-                            <div class="name">
-                                Could't not load Jam list/div>
-                            </div>
+                            <div class="name">Could not load Jam list</div>
                         </div>
                     </li>
                 {:else if rooms.length === 0}
