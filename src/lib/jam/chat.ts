@@ -1,11 +1,8 @@
 import type { TextMessage } from '@lib/message';
-import { createStorage } from '../storage';
+import { writable } from 'svelte/store';
 
-const createChatStorage = (init: TextMessage[] = []) => {
-    const { subscribe, update } = createStorage<TextMessage[]>(
-        'CHAT_STORE',
-        init
-    );
+const createChatStorage = () => {
+    const { subscribe, update } = writable<TextMessage[]>([]);
 
     function saveMessage(...message: TextMessage[]) {
         update(($storage) => {
