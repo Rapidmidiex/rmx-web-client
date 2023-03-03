@@ -11,7 +11,7 @@
     import { fly } from 'svelte/transition';
     import { UserStore } from '@lib/user';
     import type { Message, TextMessage } from '@lib/message';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -45,9 +45,16 @@
         }, 500);
     }
 
+    let chats: Map<string, TextMessage[]>
+    const unsubscribe = chatStore.subscribe((v) => {
+        chats = v
+    })
+
     onMount(() => {
         chatStore.newChat($jamStore.id);
     });
+
+    onDestroy(unsubscribe)
 </script>
 
 <div
@@ -57,8 +64,8 @@
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if $chatStore.has($jamStore.id) && $chatStore.get($jamStore.id).length > 0}
-            {#each $chatStore.get($jamStore.id) as message}
+        {#if chats.has($jamStore.id) && chats.get($jamStore.id).length > 0}
+            {#each chats.get($jamStore.id) as message}
                 <ChatBubble {message} />
             {/each}
         {:else}
