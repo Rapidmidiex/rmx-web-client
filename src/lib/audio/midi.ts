@@ -16,7 +16,11 @@ class Instrument {
     }
 
     // FIXME - _velocity defined but never used
+<<<<<<< HEAD
     noteOn(note: number, _velocity: number) {
+=======
+    noteOn(note: number) {
+>>>>>>> main
         this.player.play(note.toString());
     }
 }

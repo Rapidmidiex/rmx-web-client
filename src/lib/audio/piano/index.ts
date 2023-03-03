@@ -28,10 +28,6 @@ const octaveNotes: PianoKeyNote[] = [
     { midi: 32, note: GS },
 ];
 
-// FIXME - never used in this file
-// const blackMap = 'wetyuop';
-// const whiteMap = "asdfghjkl;'";
-
 export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
     const notes: PianoKeyNote[] = [];
     let startIdx: number;

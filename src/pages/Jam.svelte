@@ -39,8 +39,7 @@
 
     let audioDevice: MediaDeviceInfo;
 
-    // FIXME - too many async/await here
-    $: async () => await handleDeviceSelect(audioDevice);
+    $:  () => handleDeviceSelect(audioDevice);
     async function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
