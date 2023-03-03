@@ -11,9 +11,10 @@ const createChatStorage = () => {
     function newChat(jamId: string) {
         update(($storage) => {
             if ($storage[jamId] === undefined) {
-                console.log('isnt there');
-                return { ...$storage, [jamId]: [] };
+                $storage[jamId] = []
             }
+
+            return $storage
         });
     }
 

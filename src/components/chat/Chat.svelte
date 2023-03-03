@@ -11,7 +11,7 @@
     import { fly } from 'svelte/transition';
     import { UserStore } from '@lib/user';
     import type { Message, TextMessage } from '@lib/message';
-    import { onDestroy, onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
