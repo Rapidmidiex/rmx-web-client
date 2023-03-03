@@ -11,6 +11,7 @@
     import { fly } from "svelte/transition";
     import { UserStore } from "@lib/user";
     import type { Message, TextMessage } from "@lib/message";
+    import { onMount } from "svelte";
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -43,6 +44,10 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
     }
+
+    onMount(() => {
+        chatStore.newChat($jamStore.id);
+    })
 </script>
 
 <div
@@ -52,8 +57,8 @@
     <div
         bind:this={messagesDiv}
         class="messages">
-        {#if $chatStore.length > 0}
-            {#each $chatStore as message}
+        {#if $chatStore.has($jamStore.id) && $chatStore.get($jamStore.id).length > 0}
+            {#each $chatStore.get($jamStore.id) as message}
                 <ChatBubble {message} />
             {/each}
         {:else}

@@ -1,19 +1,29 @@
 import type { TextMessage } from "@lib/message";
 import { createStorage } from "../storage";
 
-const createChatStorage = (init: TextMessage[] = []) => {
-    const { subscribe, update } = createStorage<TextMessage[]>(
+const createChatStorage = () => {
+    const { subscribe, update } = createStorage<Map<string, TextMessage[]>>(
         "CHAT_STORE",
-        init
+        new Map<string, TextMessage[]>()
     );
 
-    function saveMessage(...message: TextMessage[]) {
+    function newChat(jamId: string) {
         update(($storage) => {
-            return [...$storage, ...message];
+            if (!$storage.has(jamId)) return $storage.set(jamId, []);
         });
     }
 
-    return { subscribe, saveMessage };
+    function saveMessage(jamId: string, ...message: TextMessage[]) {
+        update(($storage) => {
+            if ($storage.has(jamId))
+                return $storage.set(jamId, [
+                    ...$storage.get(jamId),
+                    ...message,
+                ]);
+        });
+    }
+
+    return { subscribe, newChat, saveMessage };
 };
 
 export const chatStore = createChatStorage();

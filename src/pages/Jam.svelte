@@ -119,7 +119,7 @@
         // TODO -- this can be done at the variable declaration level
         // easier to track
         // FIXME - webkitAudioContext doesn't exist in type `Window` (d.ts file needed)
-        audioContext = new (window.AudioContext || window.webkitAudioContext)({
+        audioContext = new (window.AudioContext || globalThis.webkitAudioContext)({
             latencyHint: "interactive",
         });
         try {
@@ -162,7 +162,7 @@
                     displayMsg.displayName = "You";
                 }
 
-                chatStore.saveMessage({ ...message, payload: displayMsg });
+                chatStore.saveMessage($jamStore.id, { ...message, payload: displayMsg });
                 break;
             }
             case "midi": {
