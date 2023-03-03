@@ -1,25 +1,29 @@
 import type { TextMessage } from '@lib/message';
 import { createStorage } from '../storage';
 
+interface ChatHistory {
+    [jamId: string]: TextMessage[];
+}
+
 const createChatStorage = () => {
-    const { subscribe, update } = createStorage<Map<string, TextMessage[]>>(
-        'CHAT_STORE',
-        new Map<string, TextMessage[]>()
-    );
+    const { subscribe, update } = createStorage<ChatHistory>('CHAT_STORE', {});
 
     function newChat(jamId: string) {
         update(($storage) => {
-            if (!$storage.has(jamId)) return $storage.set(jamId, []);
+            if ($storage[jamId] === undefined) {
+                console.log('isnt there');
+                return { ...$storage, [jamId]: [] };
+            }
         });
     }
 
     function saveMessage(jamId: string, ...message: TextMessage[]) {
         update(($storage) => {
-            if ($storage.has(jamId))
-                return $storage.set(jamId, [
-                    ...$storage.get(jamId),
-                    ...message,
-                ]);
+            if ($storage[jamId])
+                return {
+                    ...$storage,
+                    [jamId]: [...$storage[jamId], ...message],
+                };
         });
     }
 
