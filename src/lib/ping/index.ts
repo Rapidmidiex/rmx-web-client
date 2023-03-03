@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
-import { PingStats } from './pingStats';
-import { RoundTripTimer } from './roundTripTimer';
+import { writable } from "svelte/store";
+import { PingStats } from "./pingStats";
+import { RoundTripTimer } from "./roundTripTimer";
 
 function createStats() {
     const timer = new RoundTripTimer();

@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { noteFromPitch } from './mic';
+import { describe, expect, it } from "vitest";
+import { noteFromPitch } from "./mic";
 
-describe('noteFromPitch()', () => {
+describe("noteFromPitch()", () => {
     const cases: { expectedMidi: number; pitch: number }[] = [
         // Control
         { pitch: 440, expectedMidi: 69 },

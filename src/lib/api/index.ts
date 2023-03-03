@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { navigate } from 'svelte-navigator';
-import { config } from '../../config';
+import axios from "axios";
+import { navigate } from "svelte-navigator";
+import { config } from "../../config";
 
 const api = axios.create({
     baseURL: config.apiBaseUrl,
     headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
     },
 });
 
@@ -23,19 +23,19 @@ export type JamRoom = {
 };
 
 /** WebSocket base */
-const ws = config.apiBaseUrl.replace(/^http/, 'ws');
+const ws = config.apiBaseUrl.replace(/^http/, "ws");
 
 export const agent = {
     jams: {
         create: async (body: CreateJamRoom) => {
-            const { data } = await api.post<JamRoom>('/jams', body);
+            const { data } = await api.post<JamRoom>("/jams", body);
 
             return data;
         },
         list: async () => {
             const {
                 data: { rooms },
-            } = await api.get<{ rooms: JamRoom[]; }>('/jams');
+            } = await api.get<{ rooms: JamRoom[] }>("/jams");
 
             return rooms;
         },
@@ -50,6 +50,6 @@ export const agent = {
     },
     redirect: {
         jam: (id: string) => navigate(`jam/${id}`),
-        home: () => navigate('/'),
+        home: () => navigate("/"),
     },
 } as const;

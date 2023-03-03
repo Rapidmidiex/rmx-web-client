@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from '@lib/theme';
+    import { themeStore, applyTheme } from "@lib/theme";
 
-    import Nav from './Nav.svelte';
+    import Nav from "./Nav.svelte";
 
     let className: string;
     export { className as class };

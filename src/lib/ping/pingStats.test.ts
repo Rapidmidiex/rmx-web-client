@@ -1,10 +1,10 @@
-import { RoundTripTimer, PingStats } from './pingStats';
-import { describe, expect, it } from 'vitest';
+import { RoundTripTimer, PingStats } from "./pingStats";
+import { describe, expect, it } from "vitest";
 
-describe('RoundtripTimer', () => {
-    it('should time messages', async () => {
+describe("RoundtripTimer", () => {
+    it("should time messages", async () => {
         const rtt = new RoundTripTimer();
-        const msgId = 'abc';
+        const msgId = "abc";
 
         rtt.startTimer(msgId);
         await wait(20);
@@ -13,9 +13,9 @@ describe('RoundtripTimer', () => {
         expect(elapsed).greaterThan(0);
     });
 
-    it('startTimer() should throw if a timer has already started for a message', () => {
+    it("startTimer() should throw if a timer has already started for a message", () => {
         const rtt = new RoundTripTimer();
-        const msgId = 'abc';
+        const msgId = "abc";
 
         rtt.startTimer(msgId);
         expect(() => {
@@ -23,17 +23,17 @@ describe('RoundtripTimer', () => {
         }).toThrowError(`timer already exists with ID: ${msgId}`);
     });
 
-    it('stopTimer() should throw if the timer was not started for a given message', () => {
+    it("stopTimer() should throw if the timer was not started for a given message", () => {
         const rtt = new RoundTripTimer();
 
         expect(() => {
-            rtt.stopTimer('msgId');
+            rtt.stopTimer("msgId");
         }).toThrowError(`timestamp not found!`);
     });
 
-    it('should reset if a timer has been stopped for a message', async () => {
+    it("should reset if a timer has been stopped for a message", async () => {
         const rtt = new RoundTripTimer();
-        const msgId = 'abc';
+        const msgId = "abc";
 
         rtt.startTimer(msgId);
         await wait(40);
@@ -44,8 +44,8 @@ describe('RoundtripTimer', () => {
     });
 });
 
-describe('PingStats', () => {
-    it('should calculate new stats based on existing stats', () => {
+describe("PingStats", () => {
+    it("should calculate new stats based on existing stats", () => {
         const durations = [19, 1000, 129, 34, 36, 49, 234];
 
         const initial = new PingStats();

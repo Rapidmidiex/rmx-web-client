@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Route, Router } from 'svelte-navigator';
-    import Home from '@pages/Home.svelte';
-    import Jam from '@pages/Jam.svelte';
-    import { themeStore } from '@lib/theme';
+    import { Route, Router } from "svelte-navigator";
+    import Home from "@pages/Home.svelte";
+    import Jam from "@pages/Jam.svelte";
+    import { themeStore } from "@lib/theme";
 </script>
 
 <svelte:head>
@@ -32,7 +32,7 @@
         content="#da532c" />
     <meta
         name="theme-color"
-        content={$themeStore.vars['--primary']} />
+        content={$themeStore.vars["--primary"]} />
 </svelte:head>
 
 <main>

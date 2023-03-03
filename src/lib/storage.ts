@@ -1,7 +1,7 @@
-import type { Writable } from 'svelte/store';
-import { writable, get } from 'svelte/store';
+import type { Writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 
-export type StoreName = `${'CHAT' | 'THEME'}_STORE`;
+export type StoreName = `${"CHAT" | "THEME"}_STORE`;
 
 export const createStorage = <T>(key: StoreName, initValue: T): Writable<T> => {
     const storage = writable(initValue);
@@ -18,7 +18,7 @@ export const createStorage = <T>(key: StoreName, initValue: T): Writable<T> => {
     });
 
     // TODO -- need to add a way to remove the listener
-    window.addEventListener('storage', () => {
+    window.addEventListener("storage", () => {
         const storedValueStr = localStorage.getItem(key);
         if (storedValueStr == null) return;
 

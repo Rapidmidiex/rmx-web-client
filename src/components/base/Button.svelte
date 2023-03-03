@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from '@lib/theme';
+    import { themeStore, applyTheme } from "@lib/theme";
 
-    export let type: 'button' | 'submit' | 'reset' = 'button';
-    export let size: 'small' | 'medium' | 'large' = 'medium';
-    export let style = '';
-    let className = '';
+    export let type: "button" | "submit" | "reset" = "button";
+    export let size: "small" | "medium" | "large" = "medium";
+    export let style = "";
+    let className = "";
     export { className as class };
 </script>
 

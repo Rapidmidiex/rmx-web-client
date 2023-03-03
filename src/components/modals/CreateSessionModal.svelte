@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { agent } from '@lib/api';
-    import Modal from '@components/base/Modal.svelte';
-    import { notification } from '@lib/notification';
-    import Button from '@components/base/Button.svelte';
-    import TextInput from '@components/base/TextInput.svelte';
-    import NumberInput from '@components/base/NumberInput.svelte';
+    import { agent } from "@lib/api";
+    import Modal from "@components/base/Modal.svelte";
+    import { notification } from "@lib/notification";
+    import Button from "@components/base/Button.svelte";
+    import TextInput from "@components/base/TextInput.svelte";
+    import NumberInput from "@components/base/NumberInput.svelte";
 
     // bounded values
     let name: string;
@@ -14,7 +14,7 @@
     async function createSession() {
         try {
             const newRoom = await agent.jams.create({ name, capacity, bpm });
-            notification.success('new Jam room created. redirecting...');
+            notification.success("new Jam room created. redirecting...");
             agent.redirect.jam(newRoom.id);
         } catch (error) {
             if (error instanceof Error) notification.failure(error.message);

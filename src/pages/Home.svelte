@@ -1,9 +1,9 @@
 <script lang="ts">
-    import Button from '@components/base/Button.svelte';
-    import NavPage from '@components/base/NavPage.svelte';
-    import CreateSessionModal from '@components/modals/CreateSessionModal.svelte';
-    import JoinSessionModal from '@components/modals/JoinSessionModal.svelte';
-    import { createToggle } from '@lib/toggle';
+    import Button from "@components/base/Button.svelte";
+    import NavPage from "@components/base/NavPage.svelte";
+    import CreateSessionModal from "@components/modals/CreateSessionModal.svelte";
+    import JoinSessionModal from "@components/modals/JoinSessionModal.svelte";
+    import { createToggle } from "@lib/toggle";
 
     const toggleCreate = createToggle(false);
     const toggleJoin = createToggle(false);

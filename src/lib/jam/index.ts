@@ -1,7 +1,7 @@
-import { agent, type JamRoom } from '@lib/api';
-import { MessageParser, type Message } from '@lib/message';
-import { notification } from '@lib/notification';
-import { writable } from 'svelte/store';
+import { agent, type JamRoom } from "@lib/api";
+import { MessageParser, type Message } from "@lib/message";
+import { notification } from "@lib/notification";
+import { writable } from "svelte/store";
 
 export interface JamState {
     id: string;
@@ -17,8 +17,8 @@ export interface JamState {
 function createJamSession() {
     // TODO -- this handles too much state, imo
     const { subscribe, update } = writable<JamState>({
-        id: '',
-        name: '',
+        id: "",
+        name: "",
         capacity: 5,
         bpm: 90,
         ws: null,
@@ -28,7 +28,7 @@ function createJamSession() {
     });
 
     function setAudioDevices(devices: MediaDeviceInfo[]) {
-        console.log('setAudioDevices', devices);
+        console.log("setAudioDevices", devices);
         update(($jamRoom) => {
             return { ...$jamRoom, availableDevices: devices };
         });
@@ -37,20 +37,20 @@ function createJamSession() {
     function connectWS(id: string, onmessage: (msg: Message) => void) {
         const ws = agent.jams.ws(id);
 
-        ws.addEventListener('open', () => {
-            notification.success('Connection established.');
+        ws.addEventListener("open", () => {
+            notification.success("Connection established.");
         });
 
-        ws.addEventListener('close', () => {
-            notification.info('Connection was closed.');
+        ws.addEventListener("close", () => {
+            notification.info("Connection was closed.");
         });
 
-        ws.addEventListener('error', (e: ErrorEvent) => {
+        ws.addEventListener("error", (e: ErrorEvent) => {
             notification.failure(e.error);
             ws.close();
         });
 
-        ws.addEventListener('message', (e) => {
+        ws.addEventListener("message", (e) => {
             let message = MessageParser.decode(e.data);
             onmessage(message);
         });
@@ -61,7 +61,7 @@ function createJamSession() {
         };
 
         ws.onclose = () => {
-            notification.info('Connection was closed.');
+            notification.info("Connection was closed.");
         };
 
         update(($jamRoom) => {

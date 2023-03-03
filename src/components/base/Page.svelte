@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from '@lib/theme';
+    import { themeStore, applyTheme } from "@lib/theme";
 
     let className: string;
     export { className as class };
