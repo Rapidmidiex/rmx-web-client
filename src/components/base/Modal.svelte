@@ -10,9 +10,6 @@
     export { className as class };
     export let name: string;
 
-    let vars;
-    $: vars = $themeStore.vars;
-
     // TODO -- keydown for `esc` key
     let dispatch = createEventDispatcher();
     function onClose() {
@@ -22,7 +19,7 @@
 
 <div
     transition:fade
-    style={applyTheme(vars)}
+    style={applyTheme($themeStore)}
     class={`modal ${className}`}
     on:click|self={onClose}
     on:keydown|self={onClose}>

@@ -17,7 +17,7 @@
             notification.success('new Jam room created. redirecting...');
             agent.redirect.jam(newRoom.id);
         } catch (error) {
-            notification.failure(error.message);
+            if (error instanceof Error) notification.failure(error.message);
         }
     }
 </script>

@@ -1,19 +1,16 @@
 <script lang="ts">
     import { themeStore, applyTheme } from '@lib/theme';
 
-    export let label: String;
+    export let label: string;
     export let options: any[] = [];
-    export let display: Function = (o: any) => o;
+    export let display = (o: any) => o;
     export let value: any;
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <label>
     {label}
     <select
-        style={applyTheme(vars)}
+        style={applyTheme($themeStore)}
         on:change
         bind:value>
         {#each options as opt}

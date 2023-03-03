@@ -29,7 +29,7 @@ export type Theme = {
     };
 };
 
-export let themes: Theme[] = [
+export const themes: Theme[] = [
     {
         name: 'LIGHT_THEME',
         variant: 'LIGHT',
@@ -100,5 +100,5 @@ export const switchTheme = (name: ThemeName) => {
 };
 
 export const applyTheme = (theme: Theme) => {
-    return Object.entries(theme).reduce((s, [n, v]) => `${s}${n}:${v};`, '');
+    return Object.entries(theme.vars).reduce((rules, [prop, val]) => `${rules}${prop}:${val};`, '');
 };

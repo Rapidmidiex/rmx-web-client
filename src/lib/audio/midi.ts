@@ -15,7 +15,8 @@ class Instrument {
             });
     }
 
-    noteOn(note: number, _velocity: number) {
+    // FIXME - _velocity defined but never used
+    noteOn(note: number) {
         this.player.play(note.toString());
     }
 }

@@ -22,8 +22,8 @@
     export let jamID: string;
 
     let midi: Payload<'midi'>;
-    let micOn: boolean = false;
-    let micInit: boolean = false;
+    let micOn = false;
+    let micInit = false;
 
     /*-------------------Audio related code---------------------*/
 
@@ -38,13 +38,14 @@
     const historyLength = 2;
 
     let audioDevice: MediaDeviceInfo;
-    $: handleDeviceSelect(audioDevice);
-    function handleDeviceSelect(device?: MediaDeviceInfo) {
+
+    $:  () => handleDeviceSelect(audioDevice);
+    async function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
             return;
         }
-        getUserMedia(device.deviceId);
+        await getUserMedia(device.deviceId);
     }
 
     async function getUserMedia(deviceId?: string) {
@@ -116,8 +117,10 @@
     async function initMic() {
         // TODO -- this can be done at the variable declaration level
         // easier to track
-        audioContext = new (window.AudioContext ||
-            globalThis.webkitAudioContext)({ latencyHint: 'interactive' });
+        // FIXME - webkitAudioContext doesn't exist in type `Window` (d.ts file needed)
+        audioContext = new (window.AudioContext || window.webkitAudioContext)({
+            latencyHint: 'interactive',
+        });
         try {
             await getUserMedia();
             micInit = true;
@@ -134,9 +137,9 @@
         console.log(value);
     });
 
-    function toggleMic() {
+    async function toggleMic() {
         if (!micInit) {
-            initMic();
+            await initMic();
         }
 
         micOn = !micOn;

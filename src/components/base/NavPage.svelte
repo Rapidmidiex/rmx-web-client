@@ -3,16 +3,13 @@
 
     import Nav from './Nav.svelte';
 
-    let className;
+    let className: string;
     export { className as class };
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <div
     class="nav-page"
-    style={applyTheme(vars)}>
+    style={applyTheme($themeStore)}>
     <div>
         <Nav />
     </div>

@@ -2,15 +2,12 @@
     import { themeStore, applyTheme } from '@lib/theme';
 
     export let placeholder = '';
-    export let disabled: boolean = false;
+    export let disabled = false;
     export let value: string;
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <input
-    style={applyTheme(vars)}
+    style={applyTheme($themeStore)}
     type="password"
     {placeholder}
     {disabled}

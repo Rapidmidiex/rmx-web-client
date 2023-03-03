@@ -10,7 +10,8 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number) {
     // Trim buffer to the section containing levels above the thres.
     let leftBoundary = 0;
     let rightBoundary = SIZE - 1;
-    let thres = 0.2;
+    const thres = 0.2;
+
     // Trim left
     for (let i = 0; i < SIZE / 2; i++)
         if (Math.abs(buf[i]) < thres) {
@@ -28,7 +29,8 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number) {
     // End Trim
 
     // Create a new buffer with the trimmed size.
-    let cBuf = new Array(SIZE).fill(0);
+    // FIXME - shouldn't use `any` type
+    const cBuf = new Array(SIZE).fill(0);
     for (let i = 0; i < SIZE; i++) {
         for (let j = 0; j < SIZE - i; j++) {
             // TODO: Document this
@@ -47,11 +49,11 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number) {
         }
     }
     let T0 = maxPos;
-    let x1 = cBuf[T0 - 1];
-    let x2 = cBuf[T0];
-    let x3 = cBuf[T0 + 1];
-    let a = (x1 + x3 - 2 * x2) / 2;
-    let b = (x3 - x1) / 2;
+    const x1 = cBuf[T0 - 1];
+    const x2 = cBuf[T0];
+    const x3 = cBuf[T0 + 1];
+    const a = (x1 + x3 - 2 * x2) / 2;
+    const b = (x3 - x1) / 2;
     if (a) T0 = T0 - b / (2 * a);
     return sampleRate / T0;
 }
@@ -59,11 +61,12 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number) {
 /**
  * Calculates the root-mean-squared (RMS) of audio samples. The RMS is the average squared value of all the samples in a buffer.
  */
+// FIXME - never used
 function calcRMS(buf: Float32Array): number {
     let rms = 0;
     const size = buf.length;
     for (let i = 0; i < size; i++) {
-        let val = buf[i];
+        const val = buf[i];
         rms += val * val;
     }
     return Math.sqrt(rms / size);
@@ -78,10 +81,10 @@ function calcRMS(buf: Float32Array): number {
  */
 export function noteFromPitch(
     frequency: number,
-    octaveLength: number = 12
+    octaveLength = 12
 ): number | null {
     const A4 = { freq: 440, midi: 69 };
-    var noteNum = octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
+    const noteNum = octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
     const midiNote = Math.round(noteNum) + A4.midi;
     if (midiNote < 0 || midiNote > 127) {
         return null;
@@ -110,7 +113,7 @@ export function meter(analyser: AnalyserNode) {
 export function freqAnalyze(
     analyser: AnalyserNode,
     threshold: number,
-    debug: boolean = false
+    debug = false
 ) {
     const buf = new Uint8Array(analyser.frequencyBinCount);
 

@@ -28,13 +28,9 @@ const octaveNotes: PianoKeyNote[] = [
     { midi: 32, note: GS },
 ];
 
-const blackMap = 'wetyuop';
-const whiteMap = "asdfghjkl;'";
-
 export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
-    let notes: PianoKeyNote[] = [];
+    const notes: PianoKeyNote[] = [];
     let startIdx: number;
-    let firstNoteMIDI: number;
 
     switch (size) {
         case 49:
@@ -53,7 +49,7 @@ export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
             startIdx = 3;
     }
 
-    firstNoteMIDI = 21 + startIdx;
+    const firstNoteMIDI = 21 + startIdx;
 
     for (let i = 0; i < size; i++) {
         const { note } =
@@ -68,7 +64,7 @@ export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
 }
 
 function chunkBy<T>(arr: T[], chunkSize: number): T[][] {
-    let result: T[][] = [];
+    const result: T[][] = [];
 
     for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize);

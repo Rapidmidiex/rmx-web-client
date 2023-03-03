@@ -3,17 +3,14 @@
 
     export let type: 'button' | 'submit' | 'reset' = 'button';
     export let size: 'small' | 'medium' | 'large' = 'medium';
-    export let style: string = '';
-    let className: string = '';
+    export let style = '';
+    let className = '';
     export { className as class };
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <button
     class={`${size} ${className}`}
-    style={applyTheme(vars) + style}
+    style={applyTheme($themeStore) + style}
     {type}
     on:click
     on:dblclick
