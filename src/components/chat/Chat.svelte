@@ -43,13 +43,10 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }, 500);
     }
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <div
-    style={applyTheme(vars)}
+    style={applyTheme($themeStore)}
     class="chat"
     transition:fly={{ x: 200, duration: 300 }}>
     <div

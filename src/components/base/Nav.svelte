@@ -11,9 +11,6 @@
             ? switchTheme('LIGHT_THEME')
             : switchTheme('DARK_THEME');
     }
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <div
@@ -21,7 +18,7 @@
     style="--url: url({logo})">
     <nav
         transition:fly={{ x: -200, duration: 300, delay: 300 }}
-        style={applyTheme(vars)}>
+        style={applyTheme($themeStore)}>
         <div class="logo-con">
             <div class="logo">
                 <Link to="/" />

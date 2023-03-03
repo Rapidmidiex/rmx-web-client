@@ -3,9 +3,6 @@
     import Home from '@pages/Home.svelte';
     import Jam from '@pages/Jam.svelte';
     import { themeStore } from '@lib/theme';
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <svelte:head>
@@ -35,7 +32,7 @@
         content="#da532c" />
     <meta
         name="theme-color"
-        content={vars['--primary']} />
+        content={$themeStore.vars['--primary']} />
 </svelte:head>
 
 <main>

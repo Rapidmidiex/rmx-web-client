@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { navigate } from 'svelte-navigator';
-import { writable } from "svelte/store";
 import { config } from '../../config';
 
 const api = axios.create({

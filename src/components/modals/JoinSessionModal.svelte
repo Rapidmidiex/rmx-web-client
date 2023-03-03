@@ -12,14 +12,11 @@
     } from '@lib/jam/rooms';
     import { onMount } from 'svelte';
 
-    onMount(() => {
-        getJamRooms().then((value) => {
+    onMount(async () => {
+        await getJamRooms().then((value) => {
             rooms = value;
         });
     });
-
-    let themeVars; // FIXME -- `applyTheme expects `Theme` but this is `any`
-    $: themeVars = $themeStore.vars;
 
     let searchQuery = '';
     $: rooms = getFilteredJams(searchQuery);
@@ -33,7 +30,7 @@
     {:else}
         <div
             class="join-modal"
-            style={applyTheme(themeVars)}>
+            style={applyTheme($themeStore)}>
             <div class="search-bar">
                 <TextInput
                     bind:value={searchQuery}

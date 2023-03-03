@@ -5,15 +5,11 @@
     import { fly } from 'svelte/transition';
 
     export let message: TextMessage; //NOTE -- would rather use the Payload<"text"> type here
-
-    // TODO -- add some form of types here
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <div
     in:fly={{ y: 200, duration: 300 }}
-    style={applyTheme(vars) +
+    style={applyTheme($themeStore) +
         `justify-content: ${
             message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
         };`}

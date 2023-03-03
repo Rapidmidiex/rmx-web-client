@@ -43,16 +43,13 @@
 
         $PianoStore.currNote = key;
     }
-
-    let vars;
-    $: vars = $themeStore.vars;
 </script>
 
 <div
     on:mousedown={handleKeyDown}
     on:mouseenter={handleKeyEnter}
     on:focus
-    style={applyTheme(vars) +
+    style={applyTheme($themeStore) +
         `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}`}
     class="key"
     class:black
