@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { v4 as uuid } from "uuid";
-    import ChatBubble from "./ChatBubble.svelte";
-    import { jamStore } from "@lib/jam";
-    import { pingStats } from "@lib/ping";
-    import Icon from "../base/Icon.svelte";
-    import { chatStore } from "@lib/jam/chat";
-    import Button from "../base/Button.svelte";
-    import TextInput from "../base/TextInput.svelte";
-    import { themeStore, applyTheme } from "@lib/theme";
-    import { fly } from "svelte/transition";
-    import { UserStore } from "@lib/user";
-    import type { Message, TextMessage } from "@lib/message";
-    import { onMount } from "svelte";
+    import { v4 as uuid } from 'uuid';
+    import ChatBubble from './ChatBubble.svelte';
+    import { jamStore } from '@lib/jam';
+    import { pingStats } from '@lib/ping';
+    import Icon from '../base/Icon.svelte';
+    import { chatStore } from '@lib/jam/chat';
+    import Button from '../base/Button.svelte';
+    import TextInput from '../base/TextInput.svelte';
+    import { themeStore, applyTheme } from '@lib/theme';
+    import { fly } from 'svelte/transition';
+    import { UserStore } from '@lib/user';
+    import type { Message, TextMessage } from '@lib/message';
+    import { onMount } from 'svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -24,7 +24,7 @@
     function sendMsg() {
         let _message: TextMessage = {
             id: uuid(),
-            type: "text",
+            type: 'text',
             payload: {
                 body: message,
                 displayName: $UserStore.userName,
@@ -36,7 +36,7 @@
         sendWSMsg(_message);
 
         // reset input
-        message = "";
+        message = '';
 
         // should scroll immediately on user input
         // and listen for new messages then scroll to bottom
@@ -47,7 +47,7 @@
 
     onMount(() => {
         chatStore.newChat($jamStore.id);
-    })
+    });
 </script>
 
 <div

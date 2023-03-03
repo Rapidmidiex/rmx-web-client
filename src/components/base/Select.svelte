@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from "@lib/theme";
+    import { themeStore, applyTheme } from '@lib/theme';
 
     export let label: string;
     export let options: any[] = [];

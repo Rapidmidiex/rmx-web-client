@@ -3,16 +3,16 @@
         genPianoKeys,
         PianoStore,
         type PianoKeyNote,
-    } from "@lib/audio/piano";
-    import { jamStore } from "@lib/jam";
-    import type { Message } from "@lib/message";
-    import { pingStats } from "@lib/ping";
-    import { UserStore } from "@lib/user";
-    import { onDestroy } from "svelte";
-    import { fly } from "svelte/transition";
-    import { v4 as uuid } from "uuid";
-    import Select from "../../base/Select.svelte";
-    import PianoOctave from "./PianoOctave.svelte";
+    } from '@lib/audio/piano';
+    import { jamStore } from '@lib/jam';
+    import type { Message } from '@lib/message';
+    import { pingStats } from '@lib/ping';
+    import { UserStore } from '@lib/user';
+    import { onDestroy } from 'svelte';
+    import { fly } from 'svelte/transition';
+    import { v4 as uuid } from 'uuid';
+    import Select from '../../base/Select.svelte';
+    import PianoOctave from './PianoOctave.svelte';
 
     const sizes = [49, 61];
     let keyboardSize: 49 | 61 = 49;
@@ -31,7 +31,7 @@
             {
                 let message = {
                     id: uuid(),
-                    type: "midi",
+                    type: 'midi',
                     payload: {
                         state: 1,
                         number: v.currNote.midi,

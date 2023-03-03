@@ -1,12 +1,12 @@
-import { agent, type JamRoom } from "@lib/api";
-import { notification } from "@lib/notification";
-import { AxiosError } from "axios";
-import fuzzysort from "fuzzysort";
-import { derived, get, writable } from "svelte/store";
+import { agent, type JamRoom } from '@lib/api';
+import { notification } from '@lib/notification';
+import { AxiosError } from 'axios';
+import fuzzysort from 'fuzzysort';
+import { derived, get, writable } from 'svelte/store';
 
 export const jamRoomStore = writable<JamRoom[]>([]);
 
-export const fetchState = writable<"loading" | "done">("loading");
+export const fetchState = writable<'loading' | 'done'>('loading');
 
 export const errorState = writable<Error | null>(null);
 
@@ -20,17 +20,17 @@ export async function getJamRooms() {
         errorState.set(error as Error);
         notification.failure((error as AxiosError).message);
     } finally {
-        fetchState.set("done");
+        fetchState.set('done');
     }
 }
 
 const filteredJams = (query: string) =>
     derived([jamRoomStore], ([$jamRoomStore]) => {
-        if (query === "") return $jamRoomStore;
+        if (query === '') return $jamRoomStore;
         return fuzzysort
             .go(query, $jamRoomStore, {
                 all: false,
-                key: "name",
+                key: 'name',
             })
             .map((res) => res.obj);
     });

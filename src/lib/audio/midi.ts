@@ -1,12 +1,12 @@
-import type { Payload } from "@lib/message";
-import * as SoundFont from "soundfont-player";
+import type { Payload } from '@lib/message';
+import * as SoundFont from 'soundfont-player';
 
 class Instrument {
     private ac: AudioContext;
     private player: SoundFont.Player;
     constructor() {
         this.ac = new AudioContext();
-        SoundFont.instrument(this.ac, "acoustic_grand_piano")
+        SoundFont.instrument(this.ac, 'acoustic_grand_piano')
             .then((i) => {
                 this.player = i;
             })
@@ -23,7 +23,7 @@ class Instrument {
 
 const instrument = new Instrument();
 
-export function handleIncomingMIDI(midi: Payload<"midi">) {
+export function handleIncomingMIDI(midi: Payload<'midi'>) {
     switch (midi.state) {
         case 1: // NOTE_ON
             instrument.noteOn(midi.number, midi.velocity);

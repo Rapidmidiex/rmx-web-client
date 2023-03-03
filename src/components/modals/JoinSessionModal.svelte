@@ -1,16 +1,16 @@
 <script lang="ts">
-    import Modal from "@components/base/Modal.svelte";
-    import Button from "@components/base/Button.svelte";
-    import TextInput from "@components/base/TextInput.svelte";
-    import { applyTheme, themeStore } from "@lib/theme";
-    import { agent } from "@lib/api";
+    import Modal from '@components/base/Modal.svelte';
+    import Button from '@components/base/Button.svelte';
+    import TextInput from '@components/base/TextInput.svelte';
+    import { applyTheme, themeStore } from '@lib/theme';
+    import { agent } from '@lib/api';
     import {
         fetchState,
         errorState,
         getFilteredJams,
         getJamRooms,
-    } from "@lib/jam/rooms";
-    import { onMount } from "svelte";
+    } from '@lib/jam/rooms';
+    import { onMount } from 'svelte';
 
     onMount(async () => {
         await getJamRooms().then((value) => {
@@ -18,14 +18,14 @@
         });
     });
 
-    let searchQuery = "";
+    let searchQuery = '';
     $: rooms = getFilteredJams(searchQuery);
 </script>
 
 <Modal
     name="join"
     on:close>
-    {#if $fetchState === "loading"}
+    {#if $fetchState === 'loading'}
         <h2>Loading...</h2>
     {:else}
         <div

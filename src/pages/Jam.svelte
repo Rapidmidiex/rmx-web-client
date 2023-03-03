@@ -1,27 +1,27 @@
 <script lang="ts">
     // TODO -- I would like to ask why we are importing so much, try and reduce this
-    import { onDestroy, onMount } from "svelte";
-    import { agent } from "@lib/api";
-    import { notification } from "@lib/notification";
-    import Icon from "@components/base/Icon.svelte";
-    import Chat from "@components/chat/Chat.svelte";
-    import Piano from "@components/instruments/piano/Piano.svelte";
-    import DeviceSelect from "@components/DeviceSelect.svelte";
-    import SettingsModal from "@components/modals/SettingsModal.svelte";
-    import { chatStore } from "@lib/jam/chat";
-    import { freqAnalyze, noteFromPitch } from "@lib/audio/mic";
-    import { handleIncomingMIDI } from "@lib/audio/midi";
-    import Button from "@components/base/Button.svelte";
-    import Page from "@components/base/Page.svelte";
-    import { createToggle } from "@lib/toggle";
-    import { type Payload, MessageParser, type Message } from "@lib/message";
-    import { pingStats } from "@lib/ping";
-    import { jamStore } from "@lib/jam";
-    import { UserStore } from "@lib/user";
+    import { onDestroy, onMount } from 'svelte';
+    import { agent } from '@lib/api';
+    import { notification } from '@lib/notification';
+    import Icon from '@components/base/Icon.svelte';
+    import Chat from '@components/chat/Chat.svelte';
+    import Piano from '@components/instruments/piano/Piano.svelte';
+    import DeviceSelect from '@components/DeviceSelect.svelte';
+    import SettingsModal from '@components/modals/SettingsModal.svelte';
+    import { chatStore } from '@lib/jam/chat';
+    import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
+    import { handleIncomingMIDI } from '@lib/audio/midi';
+    import Button from '@components/base/Button.svelte';
+    import Page from '@components/base/Page.svelte';
+    import { createToggle } from '@lib/toggle';
+    import { type Payload, MessageParser, type Message } from '@lib/message';
+    import { pingStats } from '@lib/ping';
+    import { jamStore } from '@lib/jam';
+    import { UserStore } from '@lib/user';
 
     export let jamID: string;
 
-    let midi: Payload<"midi">;
+    let midi: Payload<'midi'>;
     let micOn = false;
     let micInit = false;
 
@@ -43,7 +43,7 @@
     $: async () => await handleDeviceSelect(audioDevice);
     async function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
-            console.warn("No device selected");
+            console.warn('No device selected');
             return;
         }
         await getUserMedia(device.deviceId);
@@ -63,7 +63,7 @@
 
             gotStream();
         } catch (error) {
-            alert("getUserMedia threw exception:" + error);
+            alert('getUserMedia threw exception:' + error);
             micInit = false;
         }
     }
@@ -104,7 +104,7 @@
         // logic anyhow though
         {
             // let raw = MessageParser.encode($UserStore.userId, 'midi', {
-            let raw = MessageParser.encode($UserStore.userId, "midi", {
+            let raw = MessageParser.encode($UserStore.userId, 'midi', {
                 state: 1,
                 number: noteNum,
                 velocity: 127,
@@ -119,8 +119,9 @@
         // TODO -- this can be done at the variable declaration level
         // easier to track
         // FIXME - webkitAudioContext doesn't exist in type `Window` (d.ts file needed)
-        audioContext = new (window.AudioContext || globalThis.webkitAudioContext)({
-            latencyHint: "interactive",
+        audioContext = new (window.AudioContext ||
+            globalThis.webkitAudioContext)({
+            latencyHint: 'interactive',
         });
         try {
             await getUserMedia();
@@ -156,29 +157,32 @@
         pingStats.msgIn(message.id);
 
         switch (message.type) {
-            case "text": {
+            case 'text': {
                 let displayMsg = message.payload; //as TextMsg;
                 if (message.userId === $UserStore.userId) {
-                    displayMsg.displayName = "You";
+                    displayMsg.displayName = 'You';
                 }
 
-                chatStore.saveMessage($jamStore.id, { ...message, payload: displayMsg });
+                chatStore.saveMessage($jamStore.id, {
+                    ...message,
+                    payload: displayMsg,
+                });
                 break;
             }
-            case "midi": {
+            case 'midi': {
                 handleIncomingMIDI(message.payload);
                 midi = message.payload;
                 break;
             }
-            case "connect": {
+            case 'connect': {
                 // TODO -- looks like this type is equal to teh User
                 // defined in `store/user.ts`
                 UserStore.set(message.payload);
                 break;
             }
             default: {
-                console.warn("Unknown message type", message);
-                notification.warning("Unknown message type");
+                console.warn('Unknown message type', message);
+                notification.warning('Unknown message type');
                 break;
             }
         }
@@ -188,7 +192,7 @@
         try {
             // TODO -- this can be handled by the store
             const roomInfo = await agent.jams.get(jamID);
-            notification.success("Jam data loaded");
+            notification.success('Jam data loaded');
 
             jamStore.updateRoomInfo(roomInfo);
             jamStore.connectWS(jamID, onMessage);
@@ -241,7 +245,7 @@
                 <Button
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? "mic" : "mic-off"} /></Button>
+                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
                 <Button
                     type="button"
                     on:click={togglePiano.toggle}><Icon name="music" /></Button>

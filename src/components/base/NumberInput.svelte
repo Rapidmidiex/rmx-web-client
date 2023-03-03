@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from "@lib/theme";
+    import { themeStore, applyTheme } from '@lib/theme';
 
-    export let placeholder = "";
+    export let placeholder = '';
     export let disabled = false;
     export let value: number;
 </script>

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { TextMessage } from "@lib/message";
-    import { themeStore, applyTheme } from "@lib/theme";
-    import { UserStore } from "@lib/user";
-    import { fly } from "svelte/transition";
+    import type { TextMessage } from '@lib/message';
+    import { themeStore, applyTheme } from '@lib/theme';
+    import { UserStore } from '@lib/user';
+    import { fly } from 'svelte/transition';
 
     export let message: TextMessage; //NOTE -- would rather use the Payload<"text"> type here
 </script>
@@ -11,7 +11,7 @@
     in:fly={{ y: 200, duration: 300 }}
     style={applyTheme($themeStore) +
         `justify-content: ${
-            message.userId === $UserStore.userId ? "flex-end" : "flex-start"
+            message.userId === $UserStore.userId ? 'flex-end' : 'flex-start'
         };`}
     class="wrapper">
     <div class="bubble">

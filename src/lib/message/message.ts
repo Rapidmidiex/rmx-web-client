@@ -1,4 +1,4 @@
-import { v4 as uuid } from "uuid";
+import { v4 as uuid } from 'uuid';
 
 export class MessageParser {
     constructor(private userId: string) {}
@@ -69,8 +69,8 @@ export type Message<T extends MessageType = MessageType> = {
     };
 }[T];
 
-export type MidiMessage = Message<"midi">;
+export type MidiMessage = Message<'midi'>;
 
-export type TextMessage = Message<"text">;
+export type TextMessage = Message<'text'>;
 
-export type ConnectMessage = Message<"connect">;
+export type ConnectMessage = Message<'connect'>;

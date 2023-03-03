@@ -6,7 +6,7 @@ export class PingStats {
     min: number;
     max: number;
 
-    constructor(init?: Omit<PingStats, "calcStats">) {
+    constructor(init?: Omit<PingStats, 'calcStats'>) {
         if (!init) {
             this.avg = 0;
             this.min = Infinity;

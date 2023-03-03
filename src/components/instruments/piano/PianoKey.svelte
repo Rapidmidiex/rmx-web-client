@@ -7,8 +7,8 @@
         DS,
         FS,
         GS,
-    } from "@lib/audio/piano";
-    import { applyTheme, themeStore } from "@lib/theme";
+    } from '@lib/audio/piano';
+    import { applyTheme, themeStore } from '@lib/theme';
 
     export let key: PianoKeyNote;
     export let black: boolean;
@@ -50,7 +50,7 @@
     on:mouseenter={handleKeyEnter}
     on:focus
     style={applyTheme($themeStore) +
-        `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ""}`}
+        `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}`}
     class="key"
     class:black
     class:pressed={$PianoStore.currNote === key}>

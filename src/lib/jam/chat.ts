@@ -1,9 +1,9 @@
-import type { TextMessage } from "@lib/message";
-import { createStorage } from "../storage";
+import type { TextMessage } from '@lib/message';
+import { createStorage } from '../storage';
 
 const createChatStorage = () => {
     const { subscribe, update } = createStorage<Map<string, TextMessage[]>>(
-        "CHAT_STORE",
+        'CHAT_STORE',
         new Map<string, TextMessage[]>()
     );
 

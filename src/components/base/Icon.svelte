@@ -1,5 +1,5 @@
 <script lang="ts">
-    import feather from "feather-icons";
+    import feather from 'feather-icons';
 
     export let name;
 

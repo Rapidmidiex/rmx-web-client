@@ -15,7 +15,7 @@ export class RoundTripTimer {
     stopTimer(messageId: string): number {
         const startTime = this.timestamps[messageId];
         if (!startTime) {
-            throw new Error("timestamp not found!");
+            throw new Error('timestamp not found!');
         }
 
         delete this.timestamps[messageId];

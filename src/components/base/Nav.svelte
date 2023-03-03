@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { applyTheme, switchTheme, themeStore } from "@lib/theme";
-    import { Link } from "svelte-navigator";
-    import { fly } from "svelte/transition";
-    import Button from "./Button.svelte";
-    import Icon from "./Icon.svelte";
-    import logo from "@assets/logo.png";
+    import { applyTheme, switchTheme, themeStore } from '@lib/theme';
+    import { Link } from 'svelte-navigator';
+    import { fly } from 'svelte/transition';
+    import Button from './Button.svelte';
+    import Icon from './Icon.svelte';
+    import logo from '@assets/logo.png';
 
     function toggleTheme() {
-        $themeStore.name === "DARK_THEME"
-            ? switchTheme("LIGHT_THEME")
-            : switchTheme("DARK_THEME");
+        $themeStore.name === 'DARK_THEME'
+            ? switchTheme('LIGHT_THEME')
+            : switchTheme('DARK_THEME');
     }
 </script>
 
@@ -42,9 +42,9 @@
         <div class="nav-options">
             <Button on:click={toggleTheme}
                 ><Icon
-                    name={$themeStore.name === "DARK_THEME"
-                        ? "moon"
-                        : "sun"} /></Button>
+                    name={$themeStore.name === 'DARK_THEME'
+                        ? 'moon'
+                        : 'sun'} /></Button>
         </div>
     </nav>
 </div>

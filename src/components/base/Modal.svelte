@@ -1,19 +1,19 @@
 <script lang="ts">
-    import { themeStore, applyTheme } from "@lib/theme";
+    import { themeStore, applyTheme } from '@lib/theme';
 
-    import { fade, fly } from "svelte/transition";
-    import Button from "./Button.svelte";
-    import Icon from "./Icon.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { fade, fly } from 'svelte/transition';
+    import Button from './Button.svelte';
+    import Icon from './Icon.svelte';
+    import { createEventDispatcher } from 'svelte';
 
-    let className = "";
+    let className = '';
     export { className as class };
     export let name: string;
 
     // TODO -- keydown for `esc` key
     let dispatch = createEventDispatcher();
     function onClose() {
-        dispatch("close");
+        dispatch('close');
     }
 </script>
 
