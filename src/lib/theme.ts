@@ -100,5 +100,8 @@ export const switchTheme = (name: ThemeName) => {
 };
 
 export const applyTheme = (theme: Theme) => {
-    return Object.entries(theme.vars).reduce((rules, [prop, val]) => `${rules}${prop}:${val};`, '');
+    return Object.entries(theme.vars).reduce(
+        (rules, [prop, val]) => `${rules}${prop}:${val};`,
+        ''
+    );
 };
