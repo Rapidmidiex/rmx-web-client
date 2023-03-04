@@ -7,6 +7,7 @@
         DS,
         FS,
         GS,
+        type KeyLabel,
     } from '@lib/audio/piano';
     import { applyTheme, themeStore } from '@lib/theme';
 
@@ -32,7 +33,7 @@
             break;
     }
 
-    function handleKeyDown() {
+    function handlePress() {
         $PianoStore = { keydown: true, currNote: key };
     }
 
@@ -40,13 +41,25 @@
         if (!$PianoStore.keydown) {
             return;
         }
-
         $PianoStore.currNote = key;
+    }
+
+    function keyLabel(labelType: KeyLabel, key: PianoKeyNote): string {
+        switch (labelType) {
+            case 'binding':
+                return key.binding?.keyName ?? '';
+            case 'note':
+                return key.note.name[0];
+            case 'midi':
+                return key.midi.toString();
+            default:
+                return key.note.name[0];
+        }
     }
 </script>
 
 <div
-    on:mousedown={handleKeyDown}
+    on:mousedown={handlePress}
     on:mouseenter={handleKeyEnter}
     on:focus
     style={applyTheme($themeStore) +
@@ -54,7 +67,8 @@
     class="key"
     class:black
     class:pressed={$PianoStore.currNote === key}>
-    <p>{key.note.name[0]}</p>
+    <!-- TODO: Switch label type in settings -->
+    <p>{keyLabel('binding', key)}</p>
 </div>
 
 <style lang="scss">

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {
         genPianoKeys,
+        keyBindings,
         PianoStore,
         type PianoKeyNote,
     } from '@lib/audio/piano';
@@ -20,6 +21,26 @@
 
     function handleKeyUp() {
         $PianoStore = { keydown: false, currNote: null };
+    }
+
+    function handleKeyDown(keyMap: Record<string, number>) {
+        return (e: KeyboardEvent) => {
+            const midi = keyMap[e.key];
+            if (!midi) return;
+            const message: Message = {
+                id: uuid(),
+                type: 'midi',
+                payload: {
+                    state: 1,
+                    number: midi,
+                    velocity: 120,
+                },
+                userId: $UserStore.userId,
+            };
+
+            pingStats.msgOut(message.id);
+            $jamStore.ws.send(JSON.stringify(message));
+        };
     }
 
     const unsubscribe = PianoStore.subscribe((v) => {
@@ -46,12 +67,17 @@
         }
     });
 
-    $: keyboard = genPianoKeys(keyboardSize);
+    // TODO: Fix this double call of genPianoKeys.
+    // The destructuring breaks the piano size setting
+    const { keyMap } = genPianoKeys(keyboardSize, keyBindings);
+    $: keyboard = genPianoKeys(keyboardSize, keyBindings).keyboard;
 
     onDestroy(() => unsubscribe());
 </script>
 
-<svelte:window on:mouseup={handleKeyUp} />
+<svelte:window
+    on:mouseup={handleKeyUp}
+    on:keydown={handleKeyDown(keyMap)} />
 
 <div
     transition:fly={{ y: 200, duration: 300 }}
