@@ -39,7 +39,7 @@
 
     let audioDevice: MediaDeviceInfo;
 
-    $:  () => handleDeviceSelect(audioDevice);
+    $: () => handleDeviceSelect(audioDevice);
     async function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
