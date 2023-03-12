@@ -35,7 +35,7 @@ export const agent = {
         list: async () => {
             const {
                 data: { rooms },
-            } = await api.get<{ rooms: JamRoom[]; }>('/jams');
+            } = await api.get<{ rooms: JamRoom[] }>('/jams');
 
             return rooms;
         },

@@ -13,7 +13,7 @@
     import { onMount } from 'svelte';
 
     onMount(async () => {
-       rooms =  await getJamRooms()
+        rooms = await getJamRooms();
     });
 
     let searchQuery = '';

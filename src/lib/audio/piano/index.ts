@@ -13,70 +13,50 @@ export const FS: Note = { name: ['F#', 'Fa#'], black: true };
 export const G: Note = { name: ['G', 'So'], black: false };
 export const GS: Note = { name: ['G#', 'So#'], black: true };
 
-const octaveNotes: PianoKeyNote[] = [
-    { midi: 21, note: A },
-    { midi: 22, note: AS },
-    { midi: 23, note: B },
-    { midi: 24, note: C },
-    { midi: 25, note: CS },
-    { midi: 26, note: D },
-    { midi: 27, note: DS },
-    { midi: 28, note: E },
-    { midi: 29, note: F },
-    { midi: 30, note: FS },
-    { midi: 31, note: G },
-    { midi: 32, note: GS },
+export const [smallKeyboard, mediumKeyboard]: KeyboardSize[] = [
+    { length: 49, startingNote: { midi: 24, note: C } },
+    { length: 61, startingNote: { midi: 24, note: C } },
 ];
 
-export function genPianoKeys(size: 49 | 61): PianoKeyNote[][] {
-    const notes: PianoKeyNote[] = [];
-    let startIdx: number;
+type NoteName =
+    | 'A'
+    | 'A#'
+    | 'B'
+    | 'C'
+    | 'C#'
+    | 'D'
+    | 'D#'
+    | 'E'
+    | 'F'
+    | 'F#'
+    | 'G'
+    | 'G#';
+type NoteSound =
+    | 'La'
+    | 'La#'
+    | 'Ti'
+    | 'Do'
+    | 'Do#'
+    | 'Re'
+    | 'Re#'
+    | 'Mi'
+    | 'Fa'
+    | 'Fa#'
+    | 'So'
+    | 'So#';
 
-    switch (size) {
-        case 49:
-            startIdx = 3;
-            break;
-        case 61:
-            startIdx = 3;
-            break;
-        // case 76:
-        //     startIdx = 7;
-        //     break;
-        // case 88:
-        //     startIdx = 0;
-        //     break;
-        default:
-            startIdx = 3;
-    }
-
-    const firstNoteMIDI = 21 + startIdx;
-
-    for (let i = 0; i < size; i++) {
-        const { note } =
-            octaveNotes[
-                ((i % octaveNotes.length) + startIdx) % octaveNotes.length
-            ];
-        const n: PianoKeyNote = { midi: i + firstNoteMIDI, note };
-        notes.push(n);
-    }
-
-    return chunkBy(notes, octaveNotes.length);
-}
-
-function chunkBy<T>(arr: T[], chunkSize: number): T[][] {
-    const result: T[][] = [];
-
-    for (let i = 0; i < arr.length; i += chunkSize) {
-        const chunk = arr.slice(i, i + chunkSize);
-        result.push(chunk);
-    }
-
-    return result;
-}
+export type KeyLabel = 'note' | 'midi';
 
 export interface Note {
-    name: string[];
+    name: [NoteName, NoteSound];
     black: boolean;
+}
+
+type KeyboardLength = 49 | 61
+
+export interface KeyboardSize {
+    length: KeyboardLength;
+    startingNote: PianoKeyNote;
 }
 
 export interface PianoKeyNote {
@@ -85,11 +65,30 @@ export interface PianoKeyNote {
 }
 
 export interface PianoState {
+    size?: KeyboardSize;
     keydown?: boolean;
+    currOctave?: number;
     currNote?: PianoKeyNote;
+    octaveNotes?: PianoKeyNote[];
 }
 
 export const PianoStore = writable<PianoState>({
+    size: smallKeyboard,
     keydown: false,
+    currOctave: 1,
     currNote: null,
+    octaveNotes: [
+        { midi: 21, note: A },
+        { midi: 22, note: AS },
+        { midi: 23, note: B },
+        { midi: 24, note: C },
+        { midi: 25, note: CS },
+        { midi: 26, note: D },
+        { midi: 27, note: DS },
+        { midi: 28, note: E },
+        { midi: 29, note: F },
+        { midi: 30, note: FS },
+        { midi: 31, note: G },
+        { midi: 32, note: GS },
+    ],
 });

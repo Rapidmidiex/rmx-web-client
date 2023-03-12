@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 export class MessageParser {
-    constructor(private userId: string) { }
+    constructor(private userId: string) {}
 
     static decode<T extends MessageType>(raw: string): Message<T> {
         return JSON.parse(raw);

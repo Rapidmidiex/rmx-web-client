@@ -84,7 +84,8 @@ export function noteFromPitch(
     octaveLength = 12
 ): number | null {
     const A4 = { freq: 440, midi: 69 };
-    const noteNum = octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
+    const noteNum =
+        octaveLength * (Math.log(frequency / A4.freq) / Math.log(2));
     const midiNote = Math.round(noteNum) + A4.midi;
     if (midiNote < 0 || midiNote > 127) {
         return null;
