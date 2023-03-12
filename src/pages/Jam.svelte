@@ -11,13 +11,13 @@
     import { chatStore } from '@lib/jam/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
     import { handleIncomingMIDI } from '@lib/audio/midi';
-    import Button from '@components/base/Button.svelte';
     import Page from '@components/base/Page.svelte';
     import { createToggle } from '@lib/toggle';
     import { type Payload, MessageParser, type Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
     import { jamStore } from '@lib/jam';
     import { UserStore } from '@lib/user';
+    import ActionButton from '@components/base/ActionButton.svelte';
 
     export let jamID: string;
 
@@ -237,24 +237,25 @@
                 </div>
             </div>
             <div class="input">
-                <Button
+                <ActionButton
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
-                <Button
+                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></ActionButton>
+                <ActionButton
                     type="button"
-                    on:click={togglePiano.toggle}><Icon name="music" /></Button>
-                <Button
+                    on:click={togglePiano.toggle}
+                    ><Icon name="music" /></ActionButton>
+                <ActionButton
                     type="button"
                     on:click={toggleSettings.toggle}
-                    ><Icon name="settings" /></Button>
+                    ><Icon name="settings" /></ActionButton>
             </div>
             <div class="chat">
-                <Button
+                <ActionButton
                     type="button"
                     on:click={toggleChat.toggle}>
                     <Icon name="message-square" />
-                </Button>
+                </ActionButton>
             </div>
         </div>
     </div>

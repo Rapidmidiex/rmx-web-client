@@ -5,12 +5,12 @@
     import { pingStats } from '@lib/ping';
     import Icon from '../base/Icon.svelte';
     import { chatStore } from '@lib/jam/chat';
-    import Button from '../base/Button.svelte';
     import TextInput from '../base/TextInput.svelte';
     import { themeStore, applyTheme } from '@lib/theme';
     import { fly } from 'svelte/transition';
     import { UserStore } from '@lib/user';
     import type { Message, TextMessage } from '@lib/message';
+    import ActionButton from '@components/base/ActionButton.svelte';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -66,9 +66,9 @@
         <TextInput
             placeholder="Write your message here..."
             bind:value={message} />
-        <Button
+        <ActionButton
             size="small"
-            type="submit"><Icon name="send" /></Button>
+            tyee="submit"><Icon name="send" /></ActionButton>
     </form>
 </div>
 

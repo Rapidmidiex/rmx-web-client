@@ -1,46 +1,119 @@
 <script lang="ts">
+    import Button from '@components/base/Button.svelte';
+    import Icon from '@components/base/Icon.svelte';
     import {
-        genPianoKeys,
-        keyBindings,
         PianoStore,
+        smallKeyboard,
+        mediumKeyboard,
         type PianoKeyNote,
     } from '@lib/audio/piano';
     import { jamStore } from '@lib/jam';
     import type { Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
     import { UserStore } from '@lib/user';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import { fly } from 'svelte/transition';
     import { v4 as uuid } from 'uuid';
     import Select from '../../base/Select.svelte';
     import PianoOctave from './PianoOctave.svelte';
 
-    const sizes = [49, 61];
-    let keyboardSize: 49 | 61 = 49;
-    let keyboard: PianoKeyNote[][];
+    // map available octaves
+    let octaveNums: number[] = [];
+    $: octaveNums = Array.from(
+        {
+            length: Math.ceil($PianoStore.size.length / 12),
+        },
+        (_, i) => i + 1
+    );
 
-    function handleKeyUp() {
-        $PianoStore = { keydown: false, currNote: null };
+    let octaveLength = 12;
+    $: octaveLength = $PianoStore.octaveNotes.length;
+
+    let octaveThres = 0;
+    $: octaveThres = ($PianoStore.currOctave - 1) * 12;
+
+    let keys: PianoKeyNote[] = [];
+    $: keys = $PianoStore.octaveNotes.map((item) => ({
+        ...item,
+        midi: octaveThres + item.midi,
+    }));
+
+    const keyMap = new Map([
+        ['KeyA', 0],
+        ['KeyW', 1],
+        ['KeyS', 2],
+        ['KeyD', 3],
+        ['KeyR', 4],
+        ['KeyF', 5],
+        ['KeyT', 6],
+        ['KeyG', 7],
+        ['KeyH', 8],
+        ['KeyU', 9],
+        ['KeyJ', 10],
+        ['KeyI', 11],
+    ]);
+
+    function nextOctave() {
+        if ($PianoStore.currOctave === octaveNums[octaveNums.length - 1]) {
+            $PianoStore.currOctave = octaveNums[0];
+        } else {
+            $PianoStore.currOctave = octaveNums[$PianoStore.currOctave];
+        }
+        // the last octave may not be a full octave
+        // so we just remove the remaining notes
+        if ($PianoStore.currOctave * 12 > $PianoStore.size.length) {
+            // decrease the octave length by the difference between
+            // the keyboard size and keyboard with full last octave
+            octaveLength -=
+                $PianoStore.currOctave * 12 - $PianoStore.size.length;
+        }
     }
 
-    function handleKeyDown(keyMap: Record<string, number>) {
-        return (e: KeyboardEvent) => {
-            const midi = keyMap[e.key];
-            if (!midi) return;
-            const message: Message = {
-                id: uuid(),
-                type: 'midi',
-                payload: {
-                    state: 1,
-                    number: midi,
-                    velocity: 120,
-                },
-                userId: $UserStore.userId,
-            };
+    function prevOctave() {
+        if ($PianoStore.currOctave === octaveNums[0]) {
+            $PianoStore.currOctave = octaveNums[octaveNums.length - 1];
+        } else {
+            $PianoStore.currOctave = octaveNums[$PianoStore.currOctave - 2];
+        }
+    }
 
-            pingStats.msgOut(message.id);
-            $jamStore.ws.send(JSON.stringify(message));
+    function shiftOctaveNotes() {
+        for (
+            let i = 0;
+            i <
+            $PianoStore.size.startingNote.midi -
+                $PianoStore.octaveNotes[0].midi;
+            i++
+        ) {
+            let note = $PianoStore.octaveNotes.shift();
+            note.midi =
+                $PianoStore.octaveNotes[$PianoStore.octaveNotes.length - 1]
+                    .midi + 1;
+            $PianoStore.octaveNotes.push(note);
+        }
+    }
+
+    function handleKeyUp() {
+        $PianoStore.keydown = false;
+        $PianoStore.currNote = null;
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+        if (!keyMap.has(e.code)) return;
+        const key = keyMap.get(e.code);
+        const message: Message = {
+            id: uuid(),
+            type: 'midi',
+            payload: {
+                state: 1,
+                number: octaveThres + $PianoStore.octaveNotes[key].midi,
+                velocity: 120,
+            },
+            userId: $UserStore.userId,
         };
+
+        pingStats.msgOut(message.id);
+        $jamStore.ws.send(JSON.stringify(message));
     }
 
     const unsubscribe = PianoStore.subscribe((v) => {
@@ -67,17 +140,13 @@
         }
     });
 
-    // TODO: Fix this double call of genPianoKeys.
-    // The destructuring breaks the piano size setting
-    const { keyMap } = genPianoKeys(keyboardSize, keyBindings);
-    $: keyboard = genPianoKeys(keyboardSize, keyBindings).keyboard;
-
+    onMount(shiftOctaveNotes);
     onDestroy(() => unsubscribe());
 </script>
 
 <svelte:window
     on:mouseup={handleKeyUp}
-    on:keydown={handleKeyDown(keyMap)} />
+    on:keydown={handleKeyDown} />
 
 <div
     transition:fly={{ y: 200, duration: 300 }}
@@ -85,15 +154,15 @@
     <div class="controls">
         <Select
             label="Size:"
-            options={sizes}
-            display={(o) => o}
-            bind:value={keyboardSize} />
+            options={[smallKeyboard, mediumKeyboard]}
+            display={(o) => o.length}
+            bind:value={$PianoStore.size} />
+        <Button on:click={prevOctave}><Icon name="chevron-left" /></Button>
+        <Button on:click={nextOctave}><Icon name="chevron-right" /></Button>
     </div>
     <div class="wrapper">
         <div class="con">
-            {#each keyboard as octave}
-                <PianoOctave keys={octave} />
-            {/each}
+            <PianoOctave {keys} />
         </div>
     </div>
 </div>

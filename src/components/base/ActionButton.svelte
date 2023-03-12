@@ -24,10 +24,10 @@
 
 <style lang="scss">
     button {
-        border: 1px solid var(--border-color);
+        border: none;
         outline: none;
-        background-color: var(--background-accent);
-        color: var(--on-background);
+        background-color: var(--primary);
+        color: var(--on-primary);
         border-radius: var(--border-radius);
         font-size: 1rem;
         cursor: pointer;
@@ -35,9 +35,8 @@
     }
 
     button:hover {
-        background-color: var(--border-color);
+        background-color: var(--primary-dark);
     }
-
     button.small {
         padding: 0.5rem;
     }

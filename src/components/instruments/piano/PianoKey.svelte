@@ -2,39 +2,36 @@
     import {
         type PianoKeyNote,
         PianoStore,
-        AS,
-        CS,
-        DS,
-        FS,
-        GS,
         type KeyLabel,
     } from '@lib/audio/piano';
     import { applyTheme, themeStore } from '@lib/theme';
 
+    export let index: number;
     export let key: PianoKeyNote;
     export let black: boolean;
 
     let keySpacing: number; // spacing for black keys only
-    switch (key.note) {
-        case CS:
+    switch (index) {
+        case 1:
             keySpacing = 0;
             break;
-        case DS:
+        case 3:
             keySpacing = 1;
             break;
-        case FS:
+        case 6:
             keySpacing = 3;
             break;
-        case GS:
+        case 8:
             keySpacing = 4;
             break;
-        case AS:
+        case 10:
             keySpacing = 5;
             break;
     }
 
     function handlePress() {
-        $PianoStore = { keydown: true, currNote: key };
+        $PianoStore.keydown = true;
+        $PianoStore.currNote = key;
     }
 
     function handleKeyEnter() {
@@ -46,8 +43,6 @@
 
     function keyLabel(labelType: KeyLabel, key: PianoKeyNote): string {
         switch (labelType) {
-            case 'binding':
-                return key.binding?.keyName ?? '';
             case 'note':
                 return key.note.name[0];
             case 'midi':
@@ -68,7 +63,7 @@
     class:black
     class:pressed={$PianoStore.currNote === key}>
     <!-- TODO: Switch label type in settings -->
-    <p>{keyLabel('binding', key)}</p>
+    <p>{key.midi} - {$PianoStore.currOctave}</p>
 </div>
 
 <style lang="scss">
