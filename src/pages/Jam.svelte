@@ -5,7 +5,6 @@
     import { notification } from '@lib/notification';
     import Icon from '@components/base/Icon.svelte';
     import Chat from '@components/chat/Chat.svelte';
-    import Piano from '@components/instruments/piano/Piano.svelte';
     import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
     import { chatStore } from '@lib/jam/chat';
@@ -18,6 +17,7 @@
     import { jamStore } from '@lib/jam';
     import { UserStore } from '@lib/user';
     import ActionButton from '@components/base/ActionButton.svelte';
+    import Keyboard from '@components/instruments/keyboard/Keyboard.svelte';
 
     export let jamID: string;
 
@@ -199,7 +199,7 @@
 
     const toggleChat = createToggle(false);
 
-    const togglePiano = createToggle(false);
+    const toggleKeyboard = createToggle(false);
 
     const toggleSettings = createToggle(false);
 
@@ -216,8 +216,8 @@
                     <p>No message available</p>
                 {/if}
             </div>
-            {#if $togglePiano}
-                <Piano />
+            {#if $toggleKeyboard}
+                <Keyboard />
             {/if}
         </div>
         <div class="jam-extras">
@@ -243,7 +243,7 @@
                     ><Icon name={micOn ? 'mic' : 'mic-off'} /></ActionButton>
                 <ActionButton
                     type="button"
-                    on:click={togglePiano.toggle}
+                    on:click={toggleKeyboard.toggle}
                     ><Icon name="music" /></ActionButton>
                 <ActionButton
                     type="button"
