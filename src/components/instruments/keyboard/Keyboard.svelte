@@ -3,7 +3,6 @@
     import Icon from '@components/base/Icon.svelte';
     import {
         KeyboardStore,
-        keyboardLayouts,
         keyMap,
         type KeyNote,
         generateNotes,
@@ -15,15 +14,9 @@
     import { onDestroy, onMount } from 'svelte';
     import { fly } from 'svelte/transition';
     import { v4 as uuid } from 'uuid';
-    import Select from '../../base/Select.svelte';
     import KeyboardKey from './KeyboardKey.svelte';
 
     let notes: KeyNote[] = generateNotes($KeyboardStore.layout);
-
-    function changeLayout() {
-        notes = generateNotes($KeyboardStore.layout);
-        shiftNotes(0);
-    }
 
     function shiftNotes(thres: number) {
         const map = notes.map((k) => k.midi);
@@ -32,6 +25,7 @@
             $KeyboardStore.currNotes[$KeyboardStore.currNotes.length - 1].midi
         );
 
+        console.log(startIdx, endIdx);
         // don't allow out of boundaries
         if (startIdx + thres < 0 || endIdx + thres > notes.length - 1) return;
 
@@ -96,12 +90,12 @@
     const topRowNames = 'WETYUOP';
     const bottomRowNames = "ASDFGHJKL;'";
 
-    $: topRowKeys = $KeyboardStore.currNotes.filter(
-        (note) => note.note.black === true
-    );
-    $: bottomRowKeys = $KeyboardStore.currNotes.filter(
-        (note) => note.note.black === false
-    );
+    $: topRowKeys = $KeyboardStore.currNotes
+        .filter((note) => note.note.black === true)
+        .map((note, idx) => ({ note: note, binding: topRowNames[idx] }));
+    $: bottomRowKeys = $KeyboardStore.currNotes
+        .filter((note) => note.note.black === false)
+        .map((note, idx) => ({ note: note, binding: bottomRowNames[idx] }));
 </script>
 
 <svelte:window
@@ -112,30 +106,20 @@
     transition:fly={{ y: 200, duration: 300 }}
     class="keyboard">
     <div class="controls">
-        <Select
-            label="Size:"
-            options={keyboardLayouts}
-            display={(o) => o.length}
-            on:change={changeLayout}
-            value={$KeyboardStore.layout} />
-        <Button on:click={() => shiftNotes(-1)}
+        <Button on:click={() => shiftNotes(-12)}
             ><Icon name="chevron-left" /></Button>
-        <Button on:click={() => shiftNotes(1)}
+        <Button on:click={() => shiftNotes(12)}
             ><Icon name="chevron-right" /></Button>
     </div>
     <div class="wrapper">
         <div class="row">
             {#each topRowKeys as key, idx}
-                <KeyboardKey
-                    {key}
-                    label={topRowNames[idx]} />
+                <KeyboardKey {key} />
             {/each}
         </div>
         <div class="row">
             {#each bottomRowKeys as key, idx}
-                <KeyboardKey
-                    {key}
-                    label={bottomRowNames[idx]} />
+                <KeyboardKey {key} />
             {/each}
         </div>
     </div>

@@ -70,7 +70,7 @@ export const themes: Theme[] = [
             '--error': '#b00020',
             '--on-primary': '#ffffff',
             '--on-secondary': '#ffffff',
-            '--on-background': '#aaaaaa',
+            '--on-background': '#bbbbbb',
             '--on-surface': '#aaaaaa',
             '--on-error': '#ffffff',
             '--shadow': '0 0 1rem rgba(0, 0, 0, 0.3)',

@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { KeyboardStore, type KeyNote } from '@lib/audio/keyboard';
+    import { KeyboardStore, type RowKey } from '@lib/audio/keyboard';
     import { applyTheme, themeStore } from '@lib/theme';
 
-    export let label: string;
-    export let key: KeyNote;
+    export let key: RowKey;
 
     function handlePress() {
         $KeyboardStore.keydown = true;
-        $KeyboardStore.currNote = key;
+        $KeyboardStore.currNote = key.note;
     }
 
     function handleKeyEnter() {
         if (!$KeyboardStore.keydown) {
             return;
         }
-        $KeyboardStore.currNote = key;
+        $KeyboardStore.currNote = key.note;
     }
 </script>
 
@@ -25,8 +24,9 @@
     on:focus
     style={applyTheme($themeStore)}
     class="key">
+    <p class="name">{key.note.note.name[0]} | {key.note.note.name[1]}</p>
     <!-- TODO: Switch label type in settings -->
-    <p>{label}</p>
+    <p class="binding">{key.binding}</p>
 </button>
 
 <style lang="scss">
@@ -39,8 +39,21 @@
         font-size: 1rem;
         cursor: pointer;
         transition: 0.3s ease;
-        padding: 2rem;
+        width: 6rem;
+        height: 6rem;
         margin: 0.5rem;
+        position: relative;
+        overflow: hidden;
+
+        .binding {
+            position: absolute;
+            width: 100%;
+            padding: 0.3rem;
+            background-color: var(--primary);
+            bottom: 0;
+            font-weight: bold;
+            color: var(--on-primary);
+        }
     }
 
     .key:hover {

@@ -35,67 +35,12 @@ export const keyMap = new Map([
     ['Quote', 17],
 ]);
 
-
-export const keyboardLayouts: KeyboardLayout[] = [
-    {
-        length: 49,
-        firstOctave: [
-            { midi: 24, note: C },
-            { midi: 25, note: CS },
-            { midi: 26, note: D },
-            { midi: 27, note: DS },
-            { midi: 28, note: E },
-            { midi: 29, note: F },
-            { midi: 30, note: FS },
-            { midi: 31, note: G },
-            { midi: 32, note: GS },
-            { midi: 33, note: A },
-            { midi: 34, note: AS },
-            { midi: 35, note: B },
-        ]
-    },
-    {
-        length: 61,
-        firstOctave: [
-            { midi: 24, note: C },
-            { midi: 25, note: CS },
-            { midi: 26, note: D },
-            { midi: 27, note: DS },
-            { midi: 28, note: E },
-            { midi: 29, note: F },
-            { midi: 30, note: FS },
-            { midi: 31, note: G },
-            { midi: 32, note: GS },
-            { midi: 33, note: A },
-            { midi: 34, note: AS },
-            { midi: 35, note: B },
-        ]
-    },
-    {
-        length: 76,
-        firstOctave: [
-            { midi: 21, note: A },
-            { midi: 22, note: AS },
-            { midi: 23, note: B },
-            { midi: 24, note: C },
-            { midi: 25, note: CS },
-            { midi: 26, note: D },
-            { midi: 27, note: DS },
-            { midi: 28, note: E },
-            { midi: 29, note: F },
-            { midi: 30, note: FS },
-            { midi: 31, note: G },
-            { midi: 32, note: GS },
-        ]
-    }
-];
-
-
-export const KeyboardStore = writable<KeyboardState>({
-    layout: keyboardLayouts[0],
-    keydown: false,
-    currNote: null,
-    currNotes: [
+export const defaultPianoLayout: KeyboardLayout = {
+    length: 54,
+    firstOctave: [
+        { midi: 21, note: A },
+        { midi: 22, note: AS },
+        { midi: 23, note: B },
         { midi: 24, note: C },
         { midi: 25, note: CS },
         { midi: 26, note: D },
@@ -105,10 +50,15 @@ export const KeyboardStore = writable<KeyboardState>({
         { midi: 30, note: FS },
         { midi: 31, note: G },
         { midi: 32, note: GS },
-        { midi: 33, note: A },
-        { midi: 34, note: AS },
-        { midi: 35, note: B },
-    ],
+    ]
+}
+
+
+export const KeyboardStore = writable<KeyboardState>({
+    layout: defaultPianoLayout,
+    keydown: false,
+    currNote: null,
+    currNotes: defaultPianoLayout.firstOctave,
 });
 
 export function generateNotes(layout: KeyboardLayout): KeyNote[] {
@@ -164,10 +114,8 @@ export interface KeyNote {
     note: Note;
 }
 
-type KeyboardLength = 49 | 61 | 76
-
 export interface KeyboardLayout {
-    length: KeyboardLength;
+    length: number;
     firstOctave: KeyNote[];
 }
 
@@ -178,3 +126,7 @@ export interface KeyboardState {
     currNotes?: KeyNote[];
 }
 
+export interface RowKey {
+    note: KeyNote
+    binding: string;
+}
