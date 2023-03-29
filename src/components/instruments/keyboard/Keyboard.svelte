@@ -17,21 +17,42 @@
     import KeyboardKey from './KeyboardKey.svelte';
 
     let notes: KeyNote[] = generateNotes($KeyboardStore.layout);
+    let reversedNotes: KeyNote[];
+    $: reversedNotes = notes.slice().reverse();
 
-    function shiftNotes(thres: number) {
-        const map = notes.map((k) => k.midi);
-        const startIdx = map.indexOf($KeyboardStore.currNotes[0].midi);
-        const endIdx = map.indexOf(
+    function shiftOctave(thres: -1 | 1) {
+        const map = notes.map((n) => n.midi);
+
+        let startIdx = map.indexOf($KeyboardStore.currNotes[0].midi);
+        let endIdx = map.indexOf(
             $KeyboardStore.currNotes[$KeyboardStore.currNotes.length - 1].midi
         );
 
-        console.log(startIdx, endIdx);
         // don't allow out of boundaries
-        if (startIdx + thres < 0 || endIdx + thres > notes.length - 1) return;
+        if (startIdx + thres * 12 < 0) {
+            startIdx = 0;
+            endIdx = keyMap.size - 1;
+        } else if (endIdx + thres * 12 > notes.length - 1) {
+            startIdx = map.indexOf(
+                reversedNotes.find(
+                    (n) =>
+                        n.note.name[0] ===
+                        $KeyboardStore.layout.firstOctave[0].note.name[0]
+                ).midi
+            );
+
+            endIdx = notes.length - 1;
+        } else {
+            endIdx = startIdx + keyMap.size - 1 + thres * 12;
+            startIdx =
+                map.indexOf($KeyboardStore.currNotes[0].midi) + thres * 12;
+        }
+
+        console.log(startIdx, endIdx);
 
         $KeyboardStore.currNotes = notes.slice(
-            startIdx + thres,
-            endIdx + thres + 1 // +1 because slice method returns everything before ending index
+            startIdx,
+            endIdx + 1 // +1 because slice method returns everything before ending index
         );
     }
 
@@ -43,6 +64,7 @@
     function handleKeyDown(e: KeyboardEvent) {
         if (!keyMap.has(e.code)) return;
         const key = keyMap.get(e.code);
+        if ($KeyboardStore.currNotes[key] === undefined) return;
         const message: Message = {
             id: uuid(),
             type: 'midi',
@@ -106,9 +128,9 @@
     transition:fly={{ y: 200, duration: 300 }}
     class="keyboard">
     <div class="controls">
-        <Button on:click={() => shiftNotes(-12)}
+        <Button on:click={() => shiftOctave(-1)}
             ><Icon name="chevron-left" /></Button>
-        <Button on:click={() => shiftNotes(12)}
+        <Button on:click={() => shiftOctave(1)}
             ><Icon name="chevron-right" /></Button>
     </div>
     <div class="wrapper">

@@ -36,7 +36,7 @@ export const keyMap = new Map([
 ]);
 
 export const defaultPianoLayout: KeyboardLayout = {
-    length: 54,
+    length: 88,
     firstOctave: [
         { midi: 21, note: A },
         { midi: 22, note: AS },
