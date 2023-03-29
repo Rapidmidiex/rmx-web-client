@@ -62,6 +62,14 @@
     }
 
     function handleKeyDown(e: KeyboardEvent) {
+        if (e.code === 'KeyZ') {
+            shiftOctave(-1);
+            return;
+        }
+        if (e.code === 'KeyX') {
+            shiftOctave(1);
+            return;
+        }
         if (!keyMap.has(e.code)) return;
         const key = keyMap.get(e.code);
         if ($KeyboardStore.currNotes[key] === undefined) return;
