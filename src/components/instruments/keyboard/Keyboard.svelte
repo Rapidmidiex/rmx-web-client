@@ -10,6 +10,7 @@
     import { jamStore } from '@lib/jam';
     import type { Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
+    import { settingsStore } from '@lib/settings';
     import { UserStore } from '@lib/user';
     import { onDestroy, onMount } from 'svelte';
     import { fly } from 'svelte/transition';
@@ -62,11 +63,11 @@
     }
 
     function handleKeyDown(e: KeyboardEvent) {
-        if (e.code === 'KeyZ') {
+        if (e.code === $settingsStore.keyBindings.octaveSwitch[0]) {
             shiftOctave(-1);
             return;
         }
-        if (e.code === 'KeyX') {
+        if (e.code === $settingsStore.keyBindings.octaveSwitch[1]) {
             shiftOctave(1);
             return;
         }
