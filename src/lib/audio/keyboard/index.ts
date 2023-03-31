@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export const A: Note = { name: ['A', 'La'], black: false };
 export const AS: Note = { name: ['A#', 'La#'], black: true };
@@ -31,9 +31,30 @@ export const keyMap = new Map([
     ['KeyO', 13],
     ['KeyL', 14],
     ['Semicolon', 15],
-    ['KeyP', 16],
+    ['BracketLeft', 16],
     ['Quote', 17],
 ]);
+
+export const keySpacingMap = new Map<number, number>([
+    [0, 0],
+    [1, 0.5],
+    [2, 1],
+    [3, 2],
+    [4, 2.5],
+    [5, 3],
+    [6, 3.5],
+    [7, 4],
+    [8, 5],
+    [9, 5.5],
+    [10, 6],
+    [11, 6.5],
+    [12, 7],
+    [13, 7.5],
+    [14, 8],
+    [15, 9],
+    [16, 9.5],
+    [17, 10]
+])
 
 export const defaultPianoLayout: KeyboardLayout = {
     length: 88,
@@ -52,7 +73,6 @@ export const defaultPianoLayout: KeyboardLayout = {
         { midi: 32, note: GS },
     ]
 }
-
 
 export const KeyboardStore = writable<KeyboardState>({
     layout: defaultPianoLayout,
@@ -126,7 +146,7 @@ export interface KeyboardState {
     currNotes?: KeyNote[];
 }
 
-export interface RowKey {
+export interface KeyWithBinding {
     note: KeyNote
     binding: string;
 }

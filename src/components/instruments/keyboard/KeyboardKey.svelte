@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { KeyboardStore, type RowKey } from '@lib/audio/keyboard';
+    import { KeyboardStore, type KeyWithBinding } from '@lib/audio/keyboard';
     import { applyTheme, themeStore } from '@lib/theme';
 
-    export let key: RowKey;
+    export let key: KeyWithBinding;
 
     function handlePress() {
         $KeyboardStore.keydown = true;

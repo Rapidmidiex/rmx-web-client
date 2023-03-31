@@ -17,7 +17,7 @@
     import { jamStore } from '@lib/jam';
     import { UserStore } from '@lib/user';
     import ActionButton from '@components/base/ActionButton.svelte';
-    import Keyboard from '@components/instruments/keyboard/Keyboard.svelte';
+    import Instrument from '@components/instruments/Instrument.svelte';
 
     export let jamID: string;
 
@@ -217,7 +217,7 @@
                 {/if}
             </div>
             {#if $toggleKeyboard}
-                <Keyboard />
+                <Instrument />
             {/if}
         </div>
         <div class="jam-extras">

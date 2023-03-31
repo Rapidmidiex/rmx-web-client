@@ -13,9 +13,13 @@ export const settingsPages: SettingsPage[] = [
 type OctaveSwitchKeyBinding = ["Minus", "Equal"] | ["KeyZ", "KeyX"]
 export const octaveKeyBindings: OctaveSwitchKeyBinding[] = [["Minus", "Equal"], ["KeyZ", "KeyX"]]
 
+type InstrumentDisplay = "Piano" | "Keyboard"
+export const instrumentDisplays: InstrumentDisplay[] = ["Piano", "Keyboard"]
+
 export interface Settings {
-    currPage: SettingsPage,
+    currPage: SettingsPage
     keyBindings: {
         octaveSwitch: OctaveSwitchKeyBinding
     }
+    instrumentDisplay: InstrumentDisplay
 }

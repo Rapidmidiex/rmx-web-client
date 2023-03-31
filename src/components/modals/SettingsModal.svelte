@@ -35,6 +35,8 @@
 <style lang="scss">
     .settings {
         display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
 
         .categories {
             width: 100%;
@@ -44,9 +46,17 @@
             gap: 1rem; /* supported since chromium version 84 */
 
             :global(button) {
-                width: 100%;
-                width: 10rem;
+                width: 8rem;
             }
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0 1rem;
         }
     }
 </style>
