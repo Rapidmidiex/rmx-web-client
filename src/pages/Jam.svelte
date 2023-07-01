@@ -18,6 +18,7 @@
     import { UserStore } from '@lib/user';
     import ActionButton from '@components/base/ActionButton.svelte';
     import Instrument from '@components/instruments/Instrument.svelte';
+    import { Icons } from '@assets/icons';
 
     export let jamID: string;
 
@@ -206,7 +207,7 @@
     onDestroy(() => unsubscribe());
 </script>
 
-<Page class="jam">
+<Page class="jam-page">
     <div class="jam-content">
         <div class="jam-player">
             <div class="messages">
@@ -240,21 +241,31 @@
                 <ActionButton
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></ActionButton>
+                    ><Icon
+                        size="1.5rem"
+                        src={micOn
+                            ? Icons.MicOn
+                            : Icons.MicOff} /></ActionButton>
                 <ActionButton
                     type="button"
                     on:click={toggleKeyboard.toggle}
-                    ><Icon name="music" /></ActionButton>
+                    ><Icon
+                        size="1.5rem"
+                        src={Icons.MusicalNotes} /></ActionButton>
                 <ActionButton
                     type="button"
                     on:click={toggleSettings.toggle}
-                    ><Icon name="settings" /></ActionButton>
+                    ><Icon
+                        size="1.5rem"
+                        src={Icons.Settings} /></ActionButton>
             </div>
             <div class="chat">
                 <ActionButton
                     type="button"
                     on:click={toggleChat.toggle}>
-                    <Icon name="message-square" />
+                    <Icon
+                        size="1.5rem"
+                        src={Icons.ChatBubbles} />
                 </ActionButton>
             </div>
         </div>
@@ -265,7 +276,7 @@
 </Page>
 
 <style lang="scss">
-    :global(.jam) {
+    :global(.jam-page) {
         display: flex;
         flex-direction: column;
 
@@ -358,6 +369,9 @@
                     :global(button) {
                         border-radius: 100%;
                         margin: 0.5rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                 }
 
@@ -367,6 +381,9 @@
                     :global(button) {
                         border-radius: 100%;
                         margin: 0.5rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                     }
                 }
             }

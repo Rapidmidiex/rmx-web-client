@@ -37,6 +37,7 @@
     button:hover {
         background-color: var(--primary-dark);
     }
+
     button.small {
         padding: 0.5rem;
     }

@@ -1,28 +1,17 @@
 <script lang="ts">
-    import feather from 'feather-icons';
+    import { themeStore } from '@lib/theme';
 
-    export let name;
-
-    $: icon = feather.icons[name];
+    export let src;
+    export let size = '2rem';
+    $: invert = $themeStore.variant === 'DARK';
 </script>
 
-{#if icon}
-    <div>
-        <svg {...icon.attrs}>
-            <g>
-                {@html icon.contents}
-            </g>
-        </svg>
-    </div>
+{#if src}
+    <img
+        style={`width: ${size};
+        height: ${size};
+        max-width: ${size};
+        max-height: ${size}; ${invert ? 'filter: invert(1);' : ''}`}
+        {src}
+        alt={src} />
 {/if}
-
-<style lang="scss">
-    svg {
-        width: 1em;
-        height: 1em;
-        overflow: visible;
-        transform-origin: 50% 50%;
-        display: block;
-        margin: auto;
-    }
-</style>

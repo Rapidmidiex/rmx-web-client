@@ -9,7 +9,7 @@
     const toggleJoin = createToggle(false);
 </script>
 
-<NavPage class="home">
+<NavPage class="home-page">
     <div class="content">
         <section class="welcome">
             <h2>Welcome to Rapidmidiex!</h2>
@@ -31,7 +31,7 @@
 </NavPage>
 
 <style lang="scss">
-    :global(.home) {
+    :global(.home-page) {
         display: flex;
 
         & > .content {

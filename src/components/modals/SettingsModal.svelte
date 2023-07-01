@@ -18,7 +18,9 @@
                         $settingsStore.currPage = page;
                     }}
                     type="button"
-                    ><Icon name={page.icon} />
+                    ><Icon
+                        size="1.5rem"
+                        src={page.icon} />
                     <p>{page.name}</p></ActionButton>
             {/each}
         </div>

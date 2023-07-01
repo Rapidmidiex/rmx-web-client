@@ -3,6 +3,7 @@
     import Home from '@pages/Home.svelte';
     import Jam from '@pages/Jam.svelte';
     import { themeStore } from '@lib/theme';
+    import Auth from '@pages/Auth.svelte';
 </script>
 
 <svelte:head>
@@ -45,6 +46,9 @@
             path="/jam/:id"
             let:params>
             <Jam jamID={params.id} />
+        </Route>
+        <Route path="/auth">
+            <Auth />
         </Route>
     </Router>
 </main>
