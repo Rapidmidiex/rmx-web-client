@@ -11,6 +11,7 @@
     import { UserStore } from '@lib/user';
     import type { Message, TextMessage } from '@lib/message';
     import ActionButton from '@components/base/ActionButton.svelte';
+    import { Icons } from '@assets/icons';
 
     let message: string;
     let messagesDiv: HTMLDivElement = null;
@@ -68,7 +69,10 @@
             bind:value={message} />
         <ActionButton
             size="small"
-            tyee="submit"><Icon name="send" /></ActionButton>
+            tyee="submit"
+            ><Icon
+                src={Icons.Send}
+                size="small" /></ActionButton>
     </form>
 </div>
 

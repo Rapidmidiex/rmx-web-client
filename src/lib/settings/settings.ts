@@ -1,25 +1,30 @@
-type SettingsPageName = "Playback" | "Keyboard"
+import { Icons } from '@assets/icons';
+
+type SettingsPageName = 'Playback' | 'Keyboard';
 
 interface SettingsPage {
-    name: SettingsPageName,
-    icon: string
+    name: SettingsPageName;
+    icon: string;
 }
 
 export const settingsPages: SettingsPage[] = [
-    { name: "Playback", icon: "speaker" },
-    { name: "Keyboard", icon: "command" }
-]
+    { name: 'Playback', icon: Icons.MusicalNotes },
+    { name: 'Keyboard', icon: Icons.Text },
+];
 
-type OctaveSwitchKeyBinding = ["Minus", "Equal"] | ["KeyZ", "KeyX"]
-export const octaveKeyBindings: OctaveSwitchKeyBinding[] = [["Minus", "Equal"], ["KeyZ", "KeyX"]]
+type OctaveSwitchKeyBinding = ['Minus', 'Equal'] | ['KeyZ', 'KeyX'];
+export const octaveKeyBindings: OctaveSwitchKeyBinding[] = [
+    ['Minus', 'Equal'],
+    ['KeyZ', 'KeyX'],
+];
 
-type InstrumentDisplay = "Piano" | "Keyboard"
-export const instrumentDisplays: InstrumentDisplay[] = ["Piano", "Keyboard"]
+type InstrumentDisplay = 'Piano' | 'Keyboard';
+export const instrumentDisplays: InstrumentDisplay[] = ['Piano', 'Keyboard'];
 
 export interface Settings {
-    currPage: SettingsPage
+    currPage: SettingsPage;
     keyBindings: {
-        octaveSwitch: OctaveSwitchKeyBinding
-    }
-    instrumentDisplay: InstrumentDisplay
+        octaveSwitch: OctaveSwitchKeyBinding;
+    };
+    instrumentDisplay: InstrumentDisplay;
 }

@@ -18,6 +18,7 @@
     import { UserStore } from '@lib/user';
     import ActionButton from '@components/base/ActionButton.svelte';
     import Instrument from '@components/instruments/Instrument.svelte';
+    import { Icons } from '@assets/icons';
 
     export let jamID: string;
 
@@ -240,21 +241,29 @@
                 <ActionButton
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></ActionButton>
+                    ><Icon
+                        src={micOn ? Icons.MicOn : Icons.MicOff}
+                        size="medium" /></ActionButton>
                 <ActionButton
                     type="button"
                     on:click={toggleKeyboard.toggle}
-                    ><Icon name="music" /></ActionButton>
+                    ><Icon
+                        src={Icons.MusicalNotes}
+                        size="medium" /></ActionButton>
                 <ActionButton
                     type="button"
                     on:click={toggleSettings.toggle}
-                    ><Icon name="settings" /></ActionButton>
+                    ><Icon
+                        src={Icons.Settings}
+                        size="medium" /></ActionButton>
             </div>
             <div class="chat">
                 <ActionButton
                     type="button"
                     on:click={toggleChat.toggle}>
-                    <Icon name="message-square" />
+                    <Icon
+                        src={Icons.ChatBubbles}
+                        size="medium" />
                 </ActionButton>
             </div>
         </div>

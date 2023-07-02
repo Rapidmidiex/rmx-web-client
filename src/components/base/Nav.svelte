@@ -5,6 +5,7 @@
     import Button from './Button.svelte';
     import Icon from './Icon.svelte';
     import logo from '@assets/logo.png';
+    import { Icons } from '@assets/icons';
 
     function toggleTheme() {
         $themeStore.name === 'DARK_THEME'
@@ -26,25 +27,32 @@
         </div>
         <div class="nav-items">
             <Link to="/"
-                ><Icon name="home" />
+                ><Icon
+                    src={Icons.Home}
+                    size="medium" />
                 <p>Home</p></Link>
             <Link to="/learn">
-                <Icon name="book-open" />
+                <Icon
+                    src={Icons.Book}
+                    size="medium" />
                 <p>Learn</p></Link>
 
             <a
                 href="https://github.com/Rapidmidiex/rmx-web-client"
                 target="_blank"
                 rel="noopener noreferrer">
-                <Icon name="github" />
+                <Icon
+                    src={Icons.Github}
+                    size="medium" />
                 <p>GitHub</p></a>
         </div>
         <div class="nav-options">
             <Button on:click={toggleTheme}
                 ><Icon
-                    name={$themeStore.name === 'DARK_THEME'
-                        ? 'moon'
-                        : 'sun'} /></Button>
+                    src={$themeStore.name === 'DARK_THEME'
+                        ? Icons.Moon
+                        : Icons.Sun}
+                    size="medium" /></Button>
         </div>
     </nav>
 </div>

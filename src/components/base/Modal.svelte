@@ -5,6 +5,7 @@
     import Button from './Button.svelte';
     import Icon from './Icon.svelte';
     import { createEventDispatcher } from 'svelte';
+    import { Icons } from '@assets/icons';
 
     let className = '';
     export { className as class };
@@ -30,7 +31,10 @@
             <p>{name.toUpperCase()}</p>
             <Button
                 size="small"
-                on:click={onClose}><Icon name="x" /></Button>
+                on:click={onClose}
+                ><Icon
+                    src={Icons.Close}
+                    size="small" /></Button>
         </div>
         <div class="content">
             <slot />

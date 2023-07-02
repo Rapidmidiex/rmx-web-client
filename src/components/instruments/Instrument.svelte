@@ -17,6 +17,7 @@
     import Button from '@components/base/Button.svelte';
     import { fly } from 'svelte/transition';
     import Icon from '@components/base/Icon.svelte';
+    import { Icons } from '@assets/icons';
 
     let notes: KeyNote[] = generateNotes($KeyboardStore.layout);
     let reversedNotes: KeyNote[];
@@ -127,9 +128,13 @@
     class="instrument">
     <div class="controls">
         <Button on:click={() => shiftOctave(-1)}
-            ><Icon name="chevron-left" /></Button>
+            ><Icon
+                src={Icons.ChevronLeft}
+                size="small" /></Button>
         <Button on:click={() => shiftOctave(1)}
-            ><Icon name="chevron-right" /></Button>
+            ><Icon
+                src={Icons.ChevronRight}
+                size="small" /></Button>
     </div>
     {#if $settingsStore.instrumentDisplay === 'Piano'}
         <Piano notes={$KeyboardStore.currNotes} />
