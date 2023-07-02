@@ -64,6 +64,7 @@
             width: 100%;
             padding: 0.5rem;
             background-color: var(--primary);
+            color: var(--on-primary);
             font-weight: bold;
         }
     }
