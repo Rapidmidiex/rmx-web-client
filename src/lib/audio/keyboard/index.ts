@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 export const A: Note = { name: ['A', 'La'], black: false };
 export const AS: Note = { name: ['A#', 'La#'], black: true };
@@ -19,14 +19,14 @@ export const keyMap = new Map([
     ['KeyW', 1],
     ['KeyS', 2],
     ['KeyD', 3],
-    ['KeyE', 4],
+    ['KeyR', 4],
     ['KeyF', 5],
     ['KeyT', 6],
     ['KeyG', 7],
     ['KeyH', 8],
-    ['KeyY', 9],
+    ['KeyU', 9],
     ['KeyJ', 10],
-    ['KeyU', 11],
+    ['KeyI', 11],
     ['KeyK', 12],
     ['KeyO', 13],
     ['KeyL', 14],
@@ -53,8 +53,8 @@ export const keySpacingMap = new Map<number, number>([
     [14, 8],
     [15, 9],
     [16, 9.5],
-    [17, 10]
-])
+    [17, 10],
+]);
 
 export const defaultPianoLayout: KeyboardLayout = {
     length: 88,
@@ -71,8 +71,8 @@ export const defaultPianoLayout: KeyboardLayout = {
         { midi: 30, note: FS },
         { midi: 31, note: G },
         { midi: 32, note: GS },
-    ]
-}
+    ],
+};
 
 export const KeyboardStore = writable<KeyboardState>({
     layout: defaultPianoLayout,
@@ -89,8 +89,8 @@ export function generateNotes(layout: KeyboardLayout): KeyNote[] {
         // create the note object and add it to the notes array
         const note: KeyNote = {
             midi: firstOctave[0].midi + i,
-            note: firstOctave[i % firstOctave.length].note
-        }
+            note: firstOctave[i % firstOctave.length].note,
+        };
         notes.push(note);
     }
 
@@ -147,6 +147,6 @@ export interface KeyboardState {
 }
 
 export interface KeyWithBinding {
-    note: KeyNote
+    note: KeyNote;
     binding: string;
 }
