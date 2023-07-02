@@ -1,7 +1,7 @@
 import type { Writable } from 'svelte/store';
 import { writable, get } from 'svelte/store';
 
-export type StoreName = `${'CHAT' | 'THEME'}_STORE`;
+export type StoreName = `${'CHAT' | 'THEME' | 'SETTINGS'}_STORE`;
 
 export const createStorage = <T>(key: StoreName, initValue: T): Writable<T> => {
     const storage = writable(initValue);

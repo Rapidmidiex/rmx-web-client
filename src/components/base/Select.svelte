@@ -7,32 +7,43 @@
     export let value: any;
 </script>
 
-<label>
-    {label}
+<div style={applyTheme($themeStore)}>
+    <p class="label">{label}</p>
     <select
-        style={applyTheme($themeStore)}
         on:change
         bind:value>
         {#each options as opt}
             <option value={opt}>{display(opt)}</option>
         {/each}
     </select>
-</label>
+</div>
 
 <style lang="scss">
-    select {
-        padding: 0.5rem 1rem;
-        outline: none;
-        border: none;
-        background-color: var(--background);
-        border-radius: var(--border-radius);
-        border: 3px solid var(--background-accent);
-        color: var(--input-text);
-        transition: 0.3s ease;
-    }
+    div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
 
-    select:focus {
-        background-color: var(--background-focus);
-        border-color: var(--primary);
+        p {
+            color: var(--on-background);
+            white-space: nowrap;
+        }
+
+        select {
+            padding: 0.5rem 1rem;
+            outline: none;
+            border: none;
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            border: 3px solid var(--background-accent);
+            color: var(--input-text);
+            transition: 0.3s ease;
+        }
+
+        select:focus {
+            background-color: var(--background-focus);
+            border-color: var(--primary);
+        }
     }
 </style>

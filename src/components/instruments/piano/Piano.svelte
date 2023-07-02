@@ -1,109 +1,46 @@
 <script lang="ts">
-    import {
-        genPianoKeys,
-        PianoStore,
-        type PianoKeyNote,
-    } from '@lib/audio/piano';
-    import { jamStore } from '@lib/jam';
-    import type { Message } from '@lib/message';
-    import { pingStats } from '@lib/ping';
-    import { UserStore } from '@lib/user';
-    import { onDestroy } from 'svelte';
-    import { fly } from 'svelte/transition';
-    import { v4 as uuid } from 'uuid';
-    import Select from '../../base/Select.svelte';
-    import PianoOctave from './PianoOctave.svelte';
+    import { keyMap, type KeyNote } from '@lib/audio/keyboard';
+    import PianoKey from './PianoKey.svelte';
+    import { applyTheme, themeStore } from '@lib/theme';
 
-    const sizes = [49, 61];
-    let keyboardSize: 49 | 61 = 49;
-    let keyboard: PianoKeyNote[][];
+    export let notes: KeyNote[];
 
-    function handleKeyUp() {
-        $PianoStore = { keydown: false, currNote: null };
-    }
-
-    const unsubscribe = PianoStore.subscribe((v) => {
-        if (v.keydown && v.currNote) {
-            // TODO -- clean this up with a better API
-            // at least its a bit more consistent
-            // due to pingStags, needing an ID
-            // I can't use the `MessageParser, so will need to revise that
-            {
-                let message = {
-                    id: uuid(),
-                    type: 'midi',
-                    payload: {
-                        state: 1,
-                        number: v.currNote.midi,
-                        velocity: 120,
-                    },
-                    userId: $UserStore.userId,
-                } satisfies Message;
-
-                pingStats.msgOut(message.id);
-                $jamStore.ws.send(JSON.stringify(message));
-            }
-        }
-    });
-
-    $: keyboard = genPianoKeys(keyboardSize);
-
-    onDestroy(() => unsubscribe());
+    const keyBindings = [...keyMap.keys()];
+    $: keys = notes.map((note, idx) => ({
+        note: note,
+        binding: keyBindings[idx],
+    }));
 </script>
 
-<svelte:window on:mouseup={handleKeyUp} />
-
 <div
-    transition:fly={{ y: 200, duration: 300 }}
-    class="piano">
-    <div class="controls">
-        <Select
-            label="Size:"
-            options={sizes}
-            display={(o) => o}
-            bind:value={keyboardSize} />
-    </div>
+    class="piano"
+    style={applyTheme($themeStore)}>
     <div class="wrapper">
-        <div class="con">
-            {#each keyboard as octave}
-                <PianoOctave keys={octave} />
-            {/each}
-        </div>
+        {#each keys as key, i}
+            <PianoKey
+                {key}
+                index={i} />
+        {/each}
     </div>
 </div>
 
 <style lang="scss">
     .piano {
-        width: 100%;
+        height: 15rem;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        user-select: none;
-
-        & > div {
-            width: 100%;
-        }
-
-        .controls {
-            height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
+        justify-content: center;
+        padding: 1rem;
+        background-color: var(--background-accent);
+        border-radius: var(--border-radius);
 
         .wrapper {
-            height: 15rem;
+            height: 100%;
             display: flex;
             align-items: center;
-            justify-content: center;
-
-            .con {
-                height: 100%;
-                padding: 1rem;
-                display: flex;
-                align-items: center;
-                overflow: auto;
-            }
+            justify-content: flex-start;
+            position: relative;
+            gap: 0.3rem;
         }
     }
 </style>

@@ -45,14 +45,14 @@ export const themes: Theme[] = [
             '--error': '#b00020',
             '--on-primary': '#ffffff',
             '--on-secondary': '#ffffff',
-            '--on-background': '#000000',
+            '--on-background': '#444444',
             '--on-surface': '#000000',
             '--on-error': '#ffffff',
             '--shadow': '0 0 1rem rgba(0, 0, 0, 0.3)',
             '--shadow-light': '0 0 0.5rem rgba(0, 0, 0, 0.3)',
             '--border': '1px solid #000000',
-            '--border-color': '#000000',
-            '--border-radius': '0.8rem',
+            '--border-color': '#aaaaaa',
+            '--border-radius': '0.5rem',
         },
     },
     {
@@ -62,22 +62,22 @@ export const themes: Theme[] = [
             '--primary': '#a93aff',
             '--primary-light': '#ce5eff',
             '--primary-dark': '#8400ff',
-            '--background': '#333333',
-            '--background-accent': '#444444',
-            '--background-hover': '#444444',
-            '--background-focus': '#555555',
-            '--surface': '#333333',
+            '--background': '#151515',
+            '--background-accent': '#222222',
+            '--background-hover': '#333333',
+            '--background-focus': '#333333',
+            '--surface': '#222222',
             '--error': '#b00020',
             '--on-primary': '#ffffff',
             '--on-secondary': '#ffffff',
-            '--on-background': '#ffffff',
-            '--on-surface': '#ffffff',
+            '--on-background': '#bbbbbb',
+            '--on-surface': '#aaaaaa',
             '--on-error': '#ffffff',
             '--shadow': '0 0 1rem rgba(0, 0, 0, 0.3)',
             '--shadow-light': '0 0 0.5rem rgba(0, 0, 0, 0.3)',
             '--border': '1px solid #000000',
-            '--border-color': '#000000',
-            '--border-radius': '0.8rem',
+            '--border-color': '#555555',
+            '--border-radius': '0.5rem',
         },
     },
 ];
@@ -100,5 +100,8 @@ export const switchTheme = (name: ThemeName) => {
 };
 
 export const applyTheme = (theme: Theme) => {
-    return Object.entries(theme.vars).reduce((rules, [prop, val]) => `${rules}${prop}:${val};`, '');
+    return Object.entries(theme.vars).reduce(
+        (rules, [prop, val]) => `${rules}${prop}:${val};`,
+        ''
+    );
 };

@@ -26,22 +26,14 @@
         background-color: var(--background);
         color: var(--on-background);
         display: flex;
+        flex-direction: column;
 
         & > div {
-            height: 100%;
+            width: 100%;
         }
 
         .content {
             width: 100%;
-        }
-
-        @media screen and (max-width: 35rem) {
-            flex-direction: column-reverse;
-
-            .content {
-                width: auto;
-                height: 100%;
-            }
         }
     }
 </style>

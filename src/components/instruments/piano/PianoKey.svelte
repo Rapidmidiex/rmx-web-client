@@ -1,106 +1,85 @@
 <script lang="ts">
     import {
-        type PianoKeyNote,
-        PianoStore,
-        AS,
-        CS,
-        DS,
-        FS,
-        GS,
-    } from '@lib/audio/piano';
+        KeyboardStore,
+        keySpacingMap,
+        type KeyWithBinding,
+    } from '@lib/audio/keyboard';
     import { applyTheme, themeStore } from '@lib/theme';
 
-    export let key: PianoKeyNote;
-    export let black: boolean;
+    export let key: KeyWithBinding;
+    export let index: number;
 
-    let keySpacing: number; // spacing for black keys only
-    switch (key.note) {
-        case CS:
-            keySpacing = 0;
-            break;
-        case DS:
-            keySpacing = 1;
-            break;
-        case FS:
-            keySpacing = 3;
-            break;
-        case GS:
-            keySpacing = 4;
-            break;
-        case AS:
-            keySpacing = 5;
-            break;
-    }
+    let spacing: number;
+    $: spacing = keySpacingMap.get(index) * (4 + 0.3) + 0.5;
 
-    function handleKeyDown() {
-        $PianoStore = { keydown: true, currNote: key };
+    function handlePress() {
+        $KeyboardStore.keydown = true;
+        $KeyboardStore.currNote = key.note;
     }
 
     function handleKeyEnter() {
-        if (!$PianoStore.keydown) {
+        if (!$KeyboardStore.keydown) {
             return;
         }
-
-        $PianoStore.currNote = key;
+        $KeyboardStore.currNote = key.note;
     }
 </script>
 
-<div
-    on:mousedown={handleKeyDown}
+<button
+    on:mousedown={handlePress}
     on:mouseenter={handleKeyEnter}
     on:focus
-    style={applyTheme($themeStore) +
-        `${black ? `left: ${keySpacing * 2.2 + 1 + 2 * 0.2}rem;` : ''}`}
-    class="key"
-    class:black
-    class:pressed={$PianoStore.currNote === key}>
-    <p>{key.note.name[0]}</p>
-</div>
+    class:black={key.note.note.black}
+    style={`${applyTheme($themeStore)} ${
+        key.note.note.black ? 'left: ' + spacing.toString() + 'rem;' : ''
+    } ${
+        $KeyboardStore.currNote &&
+        $KeyboardStore.currNote.midi === key.note.midi
+            ? 'background-color: #bbb;'
+            : ''
+    }`}>
+    <p class="name">{key.note.note.name[0]}</p>
+    <!-- TODO: Switch label type in settings -->
+    <p class="binding">{key.binding}</p>
+</button>
 
 <style lang="scss">
-    .key {
-        width: 2rem;
+    button {
+        width: 4rem;
         height: 100%;
-        padding: 0.5rem;
-        margin: 0.1rem;
-        border-bottom-left-radius: 0.3rem;
-        border-bottom-right-radius: 0.3rem;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
         background-color: #fff;
-        box-shadow: var(--shadow);
-        transition: 0.3s ease;
-        cursor: pointer;
+        color: #000;
+        border-radius: 0.3rem;
+        border: none;
+        outline: none;
+        border-radius: 0;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        overflow: hidden;
 
-        p {
-            color: #000;
-            font-size: 1rem;
+        .name {
+            padding: 0.5rem;
+        }
+
+        .binding {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            font-weight: bold;
         }
     }
 
-    .key:hover {
-        background-color: #aaa;
-    }
-
-    .black {
-        position: absolute;
-        width: 1.5rem;
-        height: 60%;
-        margin: none;
+    button.black {
+        width: 3rem;
+        height: 8rem;
         background-color: #000;
-
-        p {
-            color: #fff;
-            font-size: 0.8rem;
-        }
-    }
-
-    .black:hover {
-        background-color: #333;
-    }
-
-    .pressed {
-        box-shadow: none;
+        color: #fff;
+        position: absolute;
+        top: 0;
     }
 </style>

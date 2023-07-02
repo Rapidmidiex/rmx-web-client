@@ -5,6 +5,7 @@
     import Button from './Button.svelte';
     import Icon from './Icon.svelte';
     import logo from '@assets/logo.png';
+    import { Icons } from '@assets/icons';
 
     function toggleTheme() {
         $themeStore.name === 'DARK_THEME'
@@ -17,7 +18,7 @@
     class="con"
     style="--url: url({logo})">
     <nav
-        transition:fly={{ x: -200, duration: 300, delay: 300 }}
+        transition:fly={{ y: -200, duration: 300, delay: 300 }}
         style={applyTheme($themeStore)}>
         <div class="logo-con">
             <div class="logo">
@@ -26,47 +27,53 @@
         </div>
         <div class="nav-items">
             <Link to="/"
-                ><Icon name="home" />
+                ><Icon
+                    src={Icons.Home}
+                    size="medium" />
                 <p>Home</p></Link>
             <Link to="/learn">
-                <Icon name="book-open" />
+                <Icon
+                    src={Icons.Book}
+                    size="medium" />
                 <p>Learn</p></Link>
 
             <a
                 href="https://github.com/Rapidmidiex/rmx-web-client"
                 target="_blank"
                 rel="noopener noreferrer">
-                <Icon name="github" />
+                <Icon
+                    src={Icons.Github}
+                    size="medium" />
                 <p>GitHub</p></a>
         </div>
         <div class="nav-options">
             <Button on:click={toggleTheme}
                 ><Icon
-                    name={$themeStore.name === 'DARK_THEME'
-                        ? 'moon'
-                        : 'sun'} /></Button>
+                    src={$themeStore.name === 'DARK_THEME'
+                        ? Icons.Moon
+                        : Icons.Sun}
+                    size="medium" /></Button>
         </div>
     </nav>
 </div>
 
 <style lang="scss">
     .con {
-        height: inherit;
-        width: 5rem;
+        width: inherit;
+        height: 5rem;
 
         nav {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-direction: column;
+            justify-content: space-around;
             background-color: var(--background-accent);
             padding: 0.5rem;
             overflow: hidden;
 
             & > div {
-                width: 100%;
+                height: 100%;
             }
 
             & > .logo-con {
@@ -105,7 +112,6 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-start;
-                flex-direction: column;
                 height: 100%;
 
                 & > :global(a) {
@@ -117,9 +123,9 @@
                     text-decoration: none;
                     color: var(--on-background);
                     width: inherit;
-                    padding: 0.8rem 0;
                     border-radius: var(--border-radius);
                     transition: 0.3s ease;
+                    margin: 0 1rem;
                 }
 
                 :global(a:hover) {
@@ -130,30 +136,6 @@
             & > .nav-options {
                 display: flex;
                 align-items: center;
-                flex-direction: column;
-            }
-        }
-
-        @media screen and (max-width: 35rem) {
-            width: 100%;
-            height: 5rem;
-
-            nav {
-                flex-direction: row;
-
-                & > div {
-                    height: 100%;
-                    width: auto;
-                }
-
-                .nav-items {
-                    width: 100%;
-                    flex-direction: row-reverse;
-
-                    :global(a) {
-                        padding: 0.5rem;
-                    }
-                }
             }
         }
     }

@@ -12,6 +12,7 @@
     {placeholder}
     {disabled}
     on:input
+    on:keydown|stopPropagation
     bind:value />
 
 <style lang="scss">

@@ -5,19 +5,20 @@
     import { notification } from '@lib/notification';
     import Icon from '@components/base/Icon.svelte';
     import Chat from '@components/chat/Chat.svelte';
-    import Piano from '@components/instruments/piano/Piano.svelte';
     import DeviceSelect from '@components/DeviceSelect.svelte';
     import SettingsModal from '@components/modals/SettingsModal.svelte';
     import { chatStore } from '@lib/jam/chat';
     import { freqAnalyze, noteFromPitch } from '@lib/audio/mic';
     import { handleIncomingMIDI } from '@lib/audio/midi';
-    import Button from '@components/base/Button.svelte';
     import Page from '@components/base/Page.svelte';
     import { createToggle } from '@lib/toggle';
     import { type Payload, MessageParser, type Message } from '@lib/message';
     import { pingStats } from '@lib/ping';
     import { jamStore } from '@lib/jam';
     import { UserStore } from '@lib/user';
+    import ActionButton from '@components/base/ActionButton.svelte';
+    import Instrument from '@components/instruments/Instrument.svelte';
+    import { Icons } from '@assets/icons';
 
     export let jamID: string;
 
@@ -39,7 +40,7 @@
 
     let audioDevice: MediaDeviceInfo;
 
-    $:  () => handleDeviceSelect(audioDevice);
+    $: () => handleDeviceSelect(audioDevice);
     async function handleDeviceSelect(device?: MediaDeviceInfo) {
         if (!device) {
             console.warn('No device selected');
@@ -199,7 +200,7 @@
 
     const toggleChat = createToggle(false);
 
-    const togglePiano = createToggle(false);
+    const toggleKeyboard = createToggle(false);
 
     const toggleSettings = createToggle(false);
 
@@ -216,8 +217,8 @@
                     <p>No message available</p>
                 {/if}
             </div>
-            {#if $togglePiano}
-                <Piano />
+            {#if $toggleKeyboard}
+                <Instrument />
             {/if}
         </div>
         <div class="jam-extras">
@@ -237,24 +238,33 @@
                 </div>
             </div>
             <div class="input">
-                <Button
+                <ActionButton
                     type="button"
                     on:click={toggleMic}
-                    ><Icon name={micOn ? 'mic' : 'mic-off'} /></Button>
-                <Button
+                    ><Icon
+                        src={micOn ? Icons.MicOn : Icons.MicOff}
+                        size="medium" /></ActionButton>
+                <ActionButton
                     type="button"
-                    on:click={togglePiano.toggle}><Icon name="music" /></Button>
-                <Button
+                    on:click={toggleKeyboard.toggle}
+                    ><Icon
+                        src={Icons.MusicalNotes}
+                        size="medium" /></ActionButton>
+                <ActionButton
                     type="button"
                     on:click={toggleSettings.toggle}
-                    ><Icon name="settings" /></Button>
+                    ><Icon
+                        src={Icons.Settings}
+                        size="medium" /></ActionButton>
             </div>
             <div class="chat">
-                <Button
+                <ActionButton
                     type="button"
                     on:click={toggleChat.toggle}>
-                    <Icon name="message-square" />
-                </Button>
+                    <Icon
+                        src={Icons.ChatBubbles}
+                        size="medium" />
+                </ActionButton>
             </div>
         </div>
     </div>
