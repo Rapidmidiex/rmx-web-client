@@ -1,6 +1,7 @@
 <script lang="ts">
     import { type KeyNote } from '@lib/audio/keyboard';
     import PianoKey from './PianoKey.svelte';
+    import { applyTheme, themeStore } from '@lib/theme';
 
     export let notes: KeyNote[];
 
@@ -11,7 +12,9 @@
     }));
 </script>
 
-<div class="piano">
+<div
+    class="piano"
+    style={applyTheme($themeStore)}>
     <div class="wrapper">
         {#each keys as key, i}
             <PianoKey
@@ -27,6 +30,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 1rem;
+        background-color: var(--background-accent);
+        border-radius: var(--border-radius);
 
         .wrapper {
             height: 100%;
