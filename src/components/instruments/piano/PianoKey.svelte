@@ -32,6 +32,11 @@
     class:black={key.note.note.black}
     style={`${applyTheme($themeStore)} ${
         key.note.note.black ? 'left: ' + spacing.toString() + 'rem;' : ''
+    } ${
+        $KeyboardStore.currNote &&
+        $KeyboardStore.currNote.midi === key.note.midi
+            ? 'background-color: #bbb;'
+            : ''
     }`}>
     <p class="name">{key.note.note.name[0]}</p>
     <!-- TODO: Switch label type in settings -->

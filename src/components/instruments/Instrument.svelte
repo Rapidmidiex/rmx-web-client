@@ -63,16 +63,16 @@
     }
 
     function handleKeyDown(e: KeyboardEvent) {
-        if (e.code === $settingsStore.keyBindings.octaveSwitch[0]) {
+        if (e.key === $settingsStore.keyBindings.octaveSwitch[0]) {
             shiftOctave(-1);
             return;
         }
-        if (e.code === $settingsStore.keyBindings.octaveSwitch[1]) {
+        if (e.key === $settingsStore.keyBindings.octaveSwitch[1]) {
             shiftOctave(1);
             return;
         }
-        if (!keyMap.has(e.code)) return;
-        const key = keyMap.get(e.code);
+        if (!keyMap.has(e.key)) return;
+        const key = keyMap.get(e.key);
         if ($KeyboardStore.currNotes[key] === undefined) return;
         const message: Message = {
             id: uuid(),

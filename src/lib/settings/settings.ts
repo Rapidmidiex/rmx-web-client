@@ -12,10 +12,10 @@ export const settingsPages: SettingsPage[] = [
     { name: 'Keyboard', icon: Icons.Text },
 ];
 
-type OctaveSwitchKeyBinding = ['Minus', 'Equal'] | ['KeyZ', 'KeyX'];
+type OctaveSwitchKeyBinding = ['-', '='] | ['z', 'x'];
 export const octaveKeyBindings: OctaveSwitchKeyBinding[] = [
-    ['Minus', 'Equal'],
-    ['KeyZ', 'KeyX'],
+    ['-', '='],
+    ['z', 'x'],
 ];
 
 type InstrumentDisplay = 'Piano' | 'Keyboard';

@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { type KeyNote } from '@lib/audio/keyboard';
+    import { keyMap, type KeyNote } from '@lib/audio/keyboard';
     import PianoKey from './PianoKey.svelte';
     import { applyTheme, themeStore } from '@lib/theme';
 
     export let notes: KeyNote[];
 
-    const keyBindings = "AWSDRFTGHUJIKOL;['";
+    const keyBindings = [...keyMap.keys()];
     $: keys = notes.map((note, idx) => ({
         note: note,
         binding: keyBindings[idx],
