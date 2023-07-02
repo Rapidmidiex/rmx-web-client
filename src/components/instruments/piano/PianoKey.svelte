@@ -10,7 +10,7 @@
     export let index: number;
 
     let spacing: number;
-    $: spacing = keySpacingMap.get(index) * (4 + 0.3) + 1;
+    $: spacing = keySpacingMap.get(index) * (4 + 0.3) + 0.5;
 
     function handlePress() {
         $KeyboardStore.keydown = true;
