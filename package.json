@@ -17,7 +17,6 @@
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.0.3",
         "@tsconfig/svelte": "^3.0.0",
-        "@types/tinycolor2": "^1.4.3",
         "@typescript-eslint/eslint-plugin": "^5.53.0",
         "@typescript-eslint/parser": "^5.53.0",
         "eslint": "^8.35.0",
@@ -42,7 +41,6 @@
         "notiflix": "^3.2.6",
         "soundfont-player": "^0.12.0",
         "svelte-navigator": "^3.2.2",
-        "tinycolor2": "^1.6.0",
         "uuid": "^9.0.0"
     }
 }
