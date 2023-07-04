@@ -7,6 +7,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    withCredentials: true,
 });
 
 type CreateJamRoom = {
@@ -46,6 +47,13 @@ export const agent = {
         },
         ws: (id: string) => {
             return new WebSocket(ws + `/jams/${id}/ws`);
+        },
+    },
+    auth: {
+        protected: async (token: string) => {
+            api.defaults.headers.common.Authorization = token
+            const { data } = await api.get("/auth/protected");
+            console.log(data)
         },
     },
     redirect: {

@@ -2,11 +2,13 @@
     import { Icons } from '@assets/icons';
     import Icon from '@components/base/Icon.svelte';
     import Page from '@components/base/Page.svelte';
+    import { agent } from '@lib/api';
     import { applyTheme, themeStore } from '@lib/theme';
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('accessToken')) {
         console.log(urlParams.get('accessToken'));
+        agent.auth.protected(urlParams.get('accessToken'));
     }
 </script>
 
